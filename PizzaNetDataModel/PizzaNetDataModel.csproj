@@ -32,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -45,17 +41,20 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Ingredient.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\OrderDetail.cs" />
     <Compile Include="Model\OrderIngredient.cs" />
+    <Compile Include="PizzaContext.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Model\Recipe.cs" />
     <Compile Include="Model\Size.cs" />
     <Compile Include="Model\State.cs" />
-    <Compile Include="PizzaContext.cs" />
-    <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
