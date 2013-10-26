@@ -1,0 +1,72 @@
+﻿<Window x:Class="PizzaNetClient.PizzaNetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
+        xmlns:local="clr-namespace:PizzaNetClient"
+        Title="PizzaNet" Height="600" Width="800" Icon="res/PizzaSliceIcon.png">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top"
+    		Orientation="Horizontal" 
+    		HorizontalAlignment="Left"
+            Margin="5"
+            Height="auto">
+            <Image Height="50" Width="50" Source="res/PizzaSliceIcon.png"/>
+            <TextBlock VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="30" Margin="10,0,0,0">
+                PizzaNet
+            </TextBlock>
+        </StackPanel>
+        <Separator DockPanel.Dock="Top"/>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="5">
+            <Button FontSize="18" Padding="20, 5, 20, 5">
+                Order
+            </Button>
+        </StackPanel>
+        <Separator DockPanel.Dock="Bottom"/>
+        <DockPanel LastChildFill="True">
+            <DockPanel DockPanel.Dock="Right" Name="PanelControl" Width="200" LastChildFill="True">
+                <TextBlock DockPanel.Dock="Top" FontSize="18">
+                    Ingredients
+                </TextBlock>
+                <StackPanel DockPanel.Dock="Bottom" Height="50">
+                    
+                </StackPanel>
+                <ScrollViewer>
+                    <ItemsControl Name="IngredientsContainer" ItemsSource="{Binding}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <PizzaNetControls:IngredientsRow/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+            <Separator DockPanel.Dock="Right">
+                <Separator.Style>
+                    <Style TargetType="{x:Type Separator}"
+                           BasedOn="{StaticResource {x:Type Separator}}">
+                        <Setter Property="Margin" Value="6,-3,6,-3"/>
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <TransformGroup>
+                                    <TransformGroup.Children>
+                                        <TransformCollection>
+                                            <RotateTransform Angle="90"/>
+                                        </TransformCollection>
+                                    </TransformGroup.Children>
+                                </TransformGroup>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Separator.Style>
+            </Separator> 
+            <ListView Name="RecipiesControl" BorderThickness="0"/>
+        </DockPanel>
+    </DockPanel>
+</Window>
