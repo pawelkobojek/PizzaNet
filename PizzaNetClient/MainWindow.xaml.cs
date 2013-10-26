@@ -23,15 +23,38 @@ namespace PizzaNetClient
         public PizzaNetWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
             this.IngredientsCollection = new ObservableCollection<PizzaNetControls.IngredientsRow>();
+            this.RecipesCollection = new ObservableCollection<PizzaNetControls.RecipeControl>();
+
+            #region ExampleData
             var c = new PizzaNetControls.IngredientsRow();
-            var tb = new TextBlock();
-            tb.Text="lololol";
-            c.Children.Add(tb);
+            c.IngredientName = "Ingredient1";
+            c.Background = new SolidColorBrush(Colors.LightSalmon);
             this.IngredientsCollection.Add(c);
-            this.DataContext = IngredientsCollection;
+            for (int i = 0; i < 10; i++)
+            {
+                c = new PizzaNetControls.IngredientsRow();
+                c.IngredientName = "Mozzarella Cheese";
+                c.IngredientQuantity = 100;
+                c.Background = new SolidColorBrush(Colors.LightGreen);
+                this.IngredientsCollection.Add(c);
+            }
+
+            PizzaNetControls.RecipeControl d;
+            for (int i = 0; i < 10; i++)
+            {
+                d = new PizzaNetControls.RecipeControl();
+                d.RecipeName = "MyRecipeName";
+                d.Prices = new PizzaNetControls.PriceData() { PriceLow = 10, PriceMed = 20, PriceHigh = 30 };
+                d.Ingredients = new List<string>() { "Mozarella Cheese", "Mushrooms", "Ingredient3" };
+                d.Width = 300;
+                this.RecipesCollection.Add(d);
+            }
+            #endregion
         }
 
-        public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection;
+        public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection { get; set; }
+        public ObservableCollection<PizzaNetControls.RecipeControl> RecipesCollection { get; set; }
     }
 }

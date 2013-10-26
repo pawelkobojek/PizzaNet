@@ -24,19 +24,29 @@ namespace PizzaNetControls
         public IngredientsRow()
         {
             InitializeComponent();
-            Children = PART_Host.Children;
         }
 
-        public static readonly DependencyPropertyKey ChildrenProperty = DependencyProperty.RegisterReadOnly(
-            "Children",
-            typeof(UIElementCollection),
-            typeof(IngredientsRow),
-            new PropertyMetadata());
-
-        public UIElementCollection Children
+        public string IngredientName
         {
-            get { return (UIElementCollection)GetValue(ChildrenProperty.DependencyProperty); }
-            private set { SetValue(ChildrenProperty, value); }
+            get { return (string)GetValue(IngredientNameProperty); }
+            set { SetValue(IngredientNameProperty, value); }
         }
+
+        public static readonly DependencyProperty IngredientNameProperty =
+            DependencyProperty.Register("IngredientName", typeof(string), typeof(IngredientsRow), new UIPropertyMetadata("Ingredient"));
+
+
+
+        public int IngredientQuantity
+        {
+            get { return (int)GetValue(IngredientQuantityProperty); }
+            set { SetValue(IngredientQuantityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IngredientQuantity.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IngredientQuantityProperty =
+            DependencyProperty.Register("IngredientQuantity", typeof(int), typeof(IngredientsRow), new UIPropertyMetadata(0));
+
+
     }
 }

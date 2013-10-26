@@ -1,4 +1,5 @@
 ﻿<Window x:Class="PizzaNetClient.PizzaNetWindow"
+        x:Name="PizzaNetWindowClass"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
@@ -25,15 +26,33 @@
         </StackPanel>
         <Separator DockPanel.Dock="Bottom"/>
         <DockPanel LastChildFill="True">
-            <DockPanel DockPanel.Dock="Right" Name="PanelControl" Width="200" LastChildFill="True">
-                <TextBlock DockPanel.Dock="Top" FontSize="18">
+            <DockPanel DockPanel.Dock="Right" Name="PanelControl" Width="250" LastChildFill="True">
+                <TextBlock DockPanel.Dock="Top" FontSize="18" Margin="10">
                     Ingredients
                 </TextBlock>
-                <StackPanel DockPanel.Dock="Bottom" Height="50">
-                    
+                <StackPanel DockPanel.Dock="Bottom" Height="75">
+                    <TextBlock FontSize="18" Text="Size" Margin="10, 5, 0, 0"/>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Height" Value="30" />
+                                <Setter Property="Width" Value="60" />
+                                <Setter Property="Margin" Value="10" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <Button>
+                            Small
+                        </Button>
+                        <Button>
+                            Medium
+                        </Button>
+                        <Button>
+                            Great
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
                 <ScrollViewer>
-                    <ItemsControl Name="IngredientsContainer" ItemsSource="{Binding}">
+                    <ItemsControl Name="IngredientsContainer" ItemsSource="{Binding Path=IngredientsCollection}" HorizontalAlignment="Center">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <PizzaNetControls:IngredientsRow/>
@@ -65,8 +84,21 @@
                         </Setter>
                     </Style>
                 </Separator.Style>
-            </Separator> 
-            <ListView Name="RecipiesControl" BorderThickness="0"/>
+            </Separator>
+            <ScrollViewer>
+                <ItemsControl Name="RecipiesContainer" ItemsSource="{Binding Path=RecipesCollection}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <PizzaNetControls:RecipeControl/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
         </DockPanel>
     </DockPanel>
 </Window>
