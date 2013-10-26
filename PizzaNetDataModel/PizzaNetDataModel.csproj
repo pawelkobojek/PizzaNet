@@ -51,10 +51,10 @@
     <Compile Include="Model\OrderDetail.cs" />
     <Compile Include="Model\OrderIngredient.cs" />
     <Compile Include="PizzaContext.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Model\Recipe.cs" />
     <Compile Include="Model\Size.cs" />
     <Compile Include="Model\State.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
