@@ -45,7 +45,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Model\Ingredient.cs" />
     <Compile Include="Model\Order.cs" />
@@ -55,6 +54,7 @@
     <Compile Include="Model\Size.cs" />
     <Compile Include="Model\State.cs" />
     <Compile Include="PizzaContext.cs" />
+    <Compile Include="PizzaContextInitializer.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

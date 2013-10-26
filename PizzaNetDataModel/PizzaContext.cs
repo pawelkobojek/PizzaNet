@@ -8,7 +8,7 @@ using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel
 {
-    class PizzaContext : DbContext
+    public class PizzaContext : DbContext
     {
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Order> Orders { get; set; }
