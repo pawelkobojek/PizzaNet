@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="PizzaNetControls.StockItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:pizzaNetControls="clr-namespace:PizzaNetControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="500">
+    <ListBoxItem>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Path=StockItemName}"/>
+            <TextBlock Text="{Binding Path=StockQuantity}"/>
+            <TextBlock Text="{Binding Path=NormalWeight}"/>
+            <TextBlock Text="{Binding Path=ExtraWeight}"/>
+            <TextBlock Text="{Binding Path=PricePerUnit}"/>
+        </StackPanel>
+    </ListBoxItem>
+</UserControl>

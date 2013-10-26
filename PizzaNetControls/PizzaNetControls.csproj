@@ -55,6 +55,9 @@
     <Compile Include="RecipeControl.xaml.cs">
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StockItem.xaml.cs">
+      <DependentUpon>StockItem.xaml</DependentUpon>
+    </Compile>
     <Page Include="IngredientsRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -64,6 +67,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="RecipeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StockItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

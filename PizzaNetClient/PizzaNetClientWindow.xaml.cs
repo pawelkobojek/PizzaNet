@@ -18,9 +18,9 @@ namespace PizzaNetClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class PizzaNetWindow : Window
+    public partial class PizzaNetClientWindow : Window
     {
-        public PizzaNetWindow()
+        public PizzaNetClientWindow()
         {
             InitializeComponent();
             this.DataContext = this;

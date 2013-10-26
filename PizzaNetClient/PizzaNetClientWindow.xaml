@@ -1,10 +1,10 @@
-﻿<Window x:Class="PizzaNetClient.PizzaNetWindow"
+﻿<Window x:Class="PizzaNetClient.PizzaNetClientWindow"
         x:Name="PizzaNetWindowClass"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         xmlns:local="clr-namespace:PizzaNetClient"
-        Title="PizzaNet" Height="600" Width="800" Icon="res/PizzaSliceIcon.png">
+        Title="PizzaNet" Height="600" Width="900" Icon="res/PizzaSliceIcon.png">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top"
     		Orientation="Horizontal" 

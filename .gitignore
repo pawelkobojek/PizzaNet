@@ -2,4 +2,6 @@
 */bin
 */obj
 packages
-*/package.config
+*/packages.config
+*.sln
+*.v11.suo
