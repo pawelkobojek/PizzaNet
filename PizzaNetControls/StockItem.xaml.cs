@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetDataModel.Model;
 
 namespace PizzaNetControls
 {
@@ -24,6 +25,15 @@ namespace PizzaNetControls
         {
             InitializeComponent();
             this.DataContext = this;
+        }
+
+        public StockItem(Ingredient t)
+        {
+            StockItemName = t.Name;
+            StockQuantity = t.StockQuantity;
+            NormalWeight = t.NormalWeight;
+            ExtraWeight = t.ExtraWeight;
+            PricePerUnit = t.PricePerUnit;
         }
 
         private string _stockItemName = "";
@@ -54,8 +64,8 @@ namespace PizzaNetControls
             set { _extraWeight = value; NotifyPropertyChanged("ExtraWeight"); }
         }
 
-        private double _pricePerUnit = 0;
-        public double PricePerUnit
+        private decimal _pricePerUnit = 0;
+        public decimal PricePerUnit
         {
             get { return _pricePerUnit; }
             set { _pricePerUnit = value; NotifyPropertyChanged("PricePerUnit"); }

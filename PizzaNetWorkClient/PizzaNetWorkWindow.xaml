@@ -18,7 +18,7 @@
             </TextBlock>
         </StackPanel>
         <Separator Name="c" DockPanel.Dock="Top"/>
-        <TabControl>
+        <TabControl SelectionChanged="TabControl_SelectionChanged">
             <TabItem Header="Stock" >
                 <Grid>
                     <Grid.ColumnDefinitions>
