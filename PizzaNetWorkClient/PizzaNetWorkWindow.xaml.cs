@@ -28,6 +28,8 @@ namespace PizzaNetWorkClient
             this.DataContext = this;
             this.StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
             this.OrdersCollection = new ObservableCollection<PizzaNetControls.OrdersRow>();
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
+            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue",System.ComponentModel.ListSortDirection.Descending));
 
             #region example data
             PizzaNetControls.StockItem st;
@@ -45,7 +47,7 @@ namespace PizzaNetWorkClient
             PizzaNetControls.OrdersRow o;
             for (int i = 0; i < 10; i++)
             {
-                o = new PizzaNetControls.OrdersRow(new Order() { OrderID = 12*i, StateID=i%3 });
+                o = new PizzaNetControls.OrdersRow(new Order() { OrderID = 12*i, State = new State() {StateValue = i%3}});
                 OrdersCollection.Add(o);
             }
             #endregion

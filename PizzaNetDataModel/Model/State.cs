@@ -14,5 +14,16 @@ namespace PizzaNetDataModel.Model
         [Key]
         public int StateID { get; set; }
         public int StateValue { get; set; }
+
+        public override string ToString()
+        {
+            switch (StateValue)
+            {
+                case 0: return "New";
+                case 1: return "In realization";
+                case 2: return "Done";
+                default: return "Unknown";
+            }
+        }
     }
 }
