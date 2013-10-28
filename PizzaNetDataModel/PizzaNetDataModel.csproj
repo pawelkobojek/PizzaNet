@@ -64,6 +64,9 @@
     <Compile Include="Model\State.cs" />
     <Compile Include="PizzaContext.cs" />
     <Compile Include="PizzaContextInitializer.cs" />
+    <Compile Include="Repository\IIngredientRepository.cs" />
+    <Compile Include="Repository\IngredientRepository.cs" />
+    <Compile Include="Repository\IRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
