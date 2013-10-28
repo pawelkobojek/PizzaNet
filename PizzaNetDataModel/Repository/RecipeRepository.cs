@@ -44,7 +44,13 @@ namespace PizzaNetDataModel.Repository
 
         public void Delete(Recipe entity)
         {
-            throw new NotImplementedException();
+            db.Recipies.Remove(entity);
+        }
+
+
+        public void Insert(Recipe entity)
+        {
+            db.Recipies.Add(entity);
         }
     }
 }

@@ -39,12 +39,17 @@ namespace PizzaNetDataModel.Repository
 
         public void Update(Model.Ingredient entity)
         {
-            db.Ingredients.Add(entity);
+            db.Ingredients.Attach(entity);
         }
 
         public void Delete(Model.Ingredient entity)
         {
             db.Ingredients.Remove(entity);
+        }
+
+        public void Insert(Ingredient entity)
+        {
+            db.Ingredients.Add(entity);
         }
     }
 }
