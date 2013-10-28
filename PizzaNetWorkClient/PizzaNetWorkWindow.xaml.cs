@@ -28,17 +28,17 @@ namespace PizzaNetWorkClient
             this.StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
 
             #region example data
-            //PizzaNetControls.StockItem st;
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    st = new PizzaNetControls.StockItem();
-            //    st.StockItemName = "ItemName";
-            //    st.StockQuantity = 100;
-            //    st.NormalWeight = 10;
-            //    st.ExtraWeight = 20;
-            //    st.PricePerUnit = 1.2;
-            //    StockItemsCollection.Add(st);
-            //}
+            PizzaNetControls.StockItem st;
+            for (int i = 0; i < 20; i++)
+            {
+                st = new PizzaNetControls.StockItem();
+                st.StockItemName = "ItemName";
+                st.StockQuantity = 100;
+                st.NormalWeight = 10;
+                st.ExtraWeight = 20;
+                st.PricePerUnit = 1.2M;
+                StockItemsCollection.Add(st);
+            }
             #endregion
         }
 
@@ -46,7 +46,7 @@ namespace PizzaNetWorkClient
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
+            /*StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
             using (PizzaContext db = new PizzaContext())
             {
                 var query = from p in db.Ingredients
@@ -56,7 +56,7 @@ namespace PizzaNetWorkClient
                 {
                     StockItemsCollection.Add(new PizzaNetControls.StockItem(item));
                 }
-            };
+            };*/
         }
     }
 }
