@@ -44,6 +44,57 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Panel" Margin="10" FontSize="16"/>
+                        <StackPanel Margin="20, 20, 20, 5">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type DockPanel}">
+                                    <Setter Property="Margin" Value="0, 0, 0, 5"/>
+                                </Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="DockPanel.Dock" Value="Right"/>
+                                </Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Width" Value="100"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <DockPanel>
+                                <TextBlock Text="Id:"/>
+                                <TextBox IsEnabled="False" />
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Name:"/>
+                                <TextBox/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Quantity:"/>
+                                <TextBox IsEnabled="False"/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Normal weight:"/>
+                                <TextBox/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Extra weight:"/>
+                                <TextBox/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Price per unit:"/>
+                                <TextBox/>
+                            </DockPanel>
+                        </StackPanel>
+                        <StackPanel Margin="0, 20, 0, 0">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Width" Value="150"/>
+                                    <Setter Property="Margin" Value="0, 5, 0, 0"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <Button>Order supplies</Button>
+                            <Button>Add new ingredient</Button>
+                            <Button>Remove ingredient</Button>
+                        </StackPanel>
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>
