@@ -32,7 +32,7 @@
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
                         <TextBlock Text="Orders" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
-                        <ListBox Margin="10, 0, 10, 20" 
+                        <ListView Margin="10, 0, 10, 20" 
                                  ItemsSource="{Binding OrdersCollection}" 
                                  HorizontalContentAlignment="Stretch"/>
                     </DockPanel>
