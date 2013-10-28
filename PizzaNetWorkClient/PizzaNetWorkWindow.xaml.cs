@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PizzaNetDataModel;
+using PizzaNetDataModel.Model;
 
 namespace PizzaNetWorkClient
 {
@@ -26,6 +27,7 @@ namespace PizzaNetWorkClient
             InitializeComponent();
             this.DataContext = this;
             this.StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
+            this.OrdersCollection = new ObservableCollection<PizzaNetControls.OrdersRow>();
 
             #region example data
             PizzaNetControls.StockItem st;
@@ -39,10 +41,19 @@ namespace PizzaNetWorkClient
                 st.PricePerUnit = 1.2M;
                 StockItemsCollection.Add(st);
             }
+
+            PizzaNetControls.OrdersRow o;
+            for (int i = 0; i < 10; i++)
+            {
+                o = new PizzaNetControls.OrdersRow(new Order() { OrderID = 12*i, StateID=i%3 });
+                OrdersCollection.Add(o);
+            }
             #endregion
         }
 
         public ObservableCollection<PizzaNetControls.StockItem> StockItemsCollection { get; set; }
+
+        public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

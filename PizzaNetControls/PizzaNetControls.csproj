@@ -53,6 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IngredientsConverter.cs" />
+    <Compile Include="OrderIdConverter.cs" />
+    <Compile Include="OrdersRow.xaml.cs">
+      <DependentUpon>OrdersRow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PriceData.cs" />
     <Compile Include="PriceDataConverter.cs" />
     <Compile Include="RecipeControl.xaml.cs">
@@ -69,6 +73,10 @@
       <DependentUpon>IngredientsRow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OrdersRow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RecipeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
