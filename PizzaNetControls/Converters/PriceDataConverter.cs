@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Converters
 {
     [ValueConversion(typeof(PriceData), typeof(String))]
     public class PriceDataConverter : IValueConverter

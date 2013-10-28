@@ -4,29 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:pizzaNetControls="clr-namespace:PizzaNetControls"
+             xmlns:pizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
              mc:Ignorable="d"
              d:DesignHeight="30" d:DesignWidth="300">
     <DockPanel LastChildFill="True">
         <DockPanel.Style>
             <Style TargetType="DockPanel">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding Path=OrderState}" Value="0">
+                    <DataTrigger Binding="{Binding Path=Order.State.StateValue}" Value="0">
                         <Setter Property="Background" Value="#aaff6026"/>
                     </DataTrigger>
 
-                    <DataTrigger Binding="{Binding Path=OrderState}" Value="1">
+                    <DataTrigger Binding="{Binding Path=Order.State.StateValue}" Value="1">
                         <Setter Property="Background" Value="#aaffea4c"/>
                     </DataTrigger>
 
-                    <DataTrigger Binding="{Binding Path=OrderState}" Value="2">
+                    <DataTrigger Binding="{Binding Path=Order.State.StateValue}" Value="2">
                         <Setter Property="Background" Value="#aabdff4c"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </DockPanel.Style>
         <DockPanel.Resources>
-            <pizzaNetControls:OrderIdConverter x:Key="idConverter"/>
+            <pizzaNetConverters:OrderIdConverter x:Key="idConverter"/>
         </DockPanel.Resources>
-        <TextBlock Text="{Binding Path=OrderId, Converter={StaticResource ResourceKey=idConverter}}"/>
+        <TextBlock Text="{Binding Path=Order.OrderID, Converter={StaticResource ResourceKey=idConverter}}"/>
     </DockPanel>
 </UserControl>

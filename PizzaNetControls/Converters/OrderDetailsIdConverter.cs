@@ -2,26 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace PizzaNetControls.Converters
 {
-    [ValueConversion(typeof(ICollection<string>), typeof(String))]
-    public class IngredientsConverter : IValueConverter
+    [ValueConversion(typeof(int), typeof(String))]
+    public class OrderDetailsIdConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var list = value as ICollection<string>;
-            if (list == null) return null;
-            StringBuilder sb = new StringBuilder();
-            bool first=true;
-            foreach (var e in list)
-            {
-                if (!first) sb.Append(" / ");
-                sb.Append(e);
-                first = false;
-            }
-            return sb.ToString();
+            int? obj = value as int?;
+            if (obj == null) return null;
+            return "Pizza #" + obj.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

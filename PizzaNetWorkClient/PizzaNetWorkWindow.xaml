@@ -6,6 +6,9 @@
         Title="PizzaNet Work" Height="600" Width="900" Icon="res/PizzaSliceIcon.png">
     <Window.Resources>
         <PizzaNetControls:StateConverter x:Key="stateConverter"/>
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="SelectionMode" Value="Single"/>
+        </Style>
     </Window.Resources>
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top"
@@ -37,7 +40,8 @@
                         <TextBlock Text="Orders" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
                         <ListView Margin="10, 0, 10, 20" x:Name="ordersListView"
                                  ItemsSource="{Binding OrdersCollection}" 
-                                 HorizontalContentAlignment="Stretch"/>
+                                 HorizontalContentAlignment="Stretch"
+                                 SelectionChanged="ordersListView_SelectionChanged"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" LastChildFill="True" Margin="10, 0, 5, 10">
                         <TextBlock Text="Details" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
@@ -77,7 +81,20 @@
                             </DockPanel>
                         </StackPanel>
                         <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
-                        <ListView Margin="20, 5, 20, 20" />
+                        <ListView x:Name="pizzasListView" Margin="20, 5, 20, 20" ItemsSource="{Binding PizzasCollection}" SelectionChanged="pizzasListView_SelectionChanged"/>
+                    </DockPanel>
+                    <DockPanel Grid.Column="2" LastChildFill="True">
+                        <TextBlock Text="Ingredients" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+                        <ListView Margin="10, 0, 10, 20" x:Name="ingredientsListView"
+                                 ItemsSource="{Binding IngredientsCollection}" 
+                                 HorizontalContentAlignment="Stretch">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Ingredient.Name}"/>
+                                    <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </DockPanel>
                 </Grid>
             </TabItem>

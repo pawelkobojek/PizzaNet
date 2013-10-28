@@ -1,5 +1,4 @@
-﻿using PizzaNetDataModel.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,35 +13,36 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetDataModel.Model;
 
 namespace PizzaNetControls
 {
     /// <summary>
-    /// Interaction logic for OrdersRow.xaml
+    /// Interaction logic for PizzaRow.xaml
     /// </summary>
-    public partial class OrdersRow : UserControl, INotifyPropertyChanged
+    public partial class PizzaRow : UserControl, INotifyPropertyChanged
     {
-        public OrdersRow()
+        public PizzaRow()
         {
             InitializeComponent();
             this.DataContext = this;
         }
 
-        public OrdersRow(Order order) : this()
+        public PizzaRow(OrderDetail orderDetail) : this()
         {
-            this._order = order;
+            this._orderDetail = orderDetail;
         }
 
-        private Order _order = new Order() { State = new State() };
-        public Order Order
+        private OrderDetail _orderDetail = new OrderDetail();
+        public OrderDetail OrderDetail
         {
-            get { return _order; }
-            set { _order = value; NotifyPropertyChanged("Order"); }
+            get { return _orderDetail; }
+            set { _orderDetail = value; NotifyPropertyChanged("OrderDetail"); }
         }
 
         public void NotifyAll()
         {
-            NotifyPropertyChanged("Order");
+            NotifyPropertyChanged("OrderDetail");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

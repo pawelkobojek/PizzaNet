@@ -5,14 +5,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:pizzaNetControls="clr-namespace:PizzaNetControls"
+             xmlns:pizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
              mc:Ignorable="d"
              Height="100" Width="250"
              d:DesignHeight="100" d:DesignWidth="300" Focusable="True" >
     <ListBoxItem>
         <StackPanel>
             <StackPanel.Resources>
-                <pizzaNetControls:PriceDataConverter x:Key="priceConverter"/>
-                <pizzaNetControls:IngredientsConverter x:Key="ingredientsConverter"/>
+                <pizzaNetConverters:PriceDataConverter x:Key="priceConverter"/>
+                <pizzaNetConverters:IngredientsConverter x:Key="ingredientsConverter"/>
             </StackPanel.Resources>
             <TextBlock FontSize="18" 
                        Margin="10, 10, 10, 5" 

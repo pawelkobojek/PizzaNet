@@ -33,6 +33,8 @@ namespace PizzaNetWorkClient
             this.DataContext = this;
             this.StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
             this.OrdersCollection = new ObservableCollection<PizzaNetControls.OrdersRow>();
+            this.PizzasCollection = new ObservableCollection<PizzaNetControls.PizzaRow>();
+            this.IngredientsCollection = new ObservableCollection<OrderIngredient>();
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
             view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue",System.ComponentModel.ListSortDirection.Descending));
 
@@ -49,18 +51,42 @@ namespace PizzaNetWorkClient
             //    StockItemsCollection.Add(st);
             //}
 
-            //PizzaNetControls.OrdersRow o;
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    o = new PizzaNetControls.OrdersRow(new Order() { OrderID = 12*i, StateID=i%3 });
-            //    OrdersCollection.Add(o);
-            //}
+            PizzaNetControls.OrdersRow o;
+            for (int i = 0; i < 10; i++)
+            {
+                o = new PizzaNetControls.OrdersRow(new Order() 
+                { 
+                    OrderID = 12 * i, 
+                    State = new State() { StateValue = i % 3 },
+                    OrderDetails = new List<OrderDetail>() { new OrderDetail() 
+                                                                { 
+                                                                    OrderDetailID = 2*i,
+                                                                    Ingredients = new List<OrderIngredient>()
+                                                                    {
+                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i)}, Quantity=20*(i%2+1)},
+                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+1)}, Quantity=30*(i%2+1)}
+                                                                    }
+                                                                },
+                                                             new OrderDetail() { OrderDetailID = 2*i+1,
+                                                                    Ingredients = new List<OrderIngredient>()
+                                                                    {
+                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+2)}, Quantity=40*(i%2+1)},
+                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+3)}, Quantity=50*(i%2+1)}
+                                                                    }
+                                                             }}
+                });
+                OrdersCollection.Add(o);
+            }
             #endregion
         }
 
         public ObservableCollection<PizzaNetControls.StockItem> StockItemsCollection { get; set; }
 
         public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
+
+        public ObservableCollection<PizzaNetControls.PizzaRow> PizzasCollection { get; set; }
+
+        public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -104,6 +130,40 @@ namespace PizzaNetWorkClient
             }
             isLoading = false;
             Console.WriteLine("PostData end");
+        }
+
+        private void ordersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PizzasCollection.Clear();
+            IList selected = e.AddedItems;
+            if (selected.Count>0)
+            {
+                OrdersRow or = selected[0] as OrdersRow;
+                if (or != null)
+                {
+                    foreach(var od in or.Order.OrderDetails)
+                    {
+                        PizzasCollection.Add(new PizzaRow(od));
+                    }
+                }
+            }
+        }
+
+        private void pizzasListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IngredientsCollection.Clear();
+            IList selected = e.AddedItems;
+            if (selected.Count > 0)
+            {
+                PizzaRow pr = selected[0] as PizzaRow;
+                if (pr != null)
+                {
+                    foreach (var ingr in pr.OrderDetail.Ingredients)
+                    {
+                        IngredientsCollection.Add(ingr);
+                    }
+                }
+            }
         }
         
     }

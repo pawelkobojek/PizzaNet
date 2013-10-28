@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Converters
 {
-
     [ValueConversion(typeof(int), typeof(String))]
     public class OrderIdConverter : IValueConverter
     {
