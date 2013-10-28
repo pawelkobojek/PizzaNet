@@ -30,20 +30,28 @@ namespace PizzaNetControls
 
         public OrdersRow(Order order) : this()
         {
-            OrderId = order.OrderID;
-            OrderState = order.StateID;
+            this._order = order;
         }
 
-        private Order _order = new Order();
+        private Order _order = new Order() { State = new State() };
+        public Order Order
+        {
+            get { return _order; }
+            set { _order = value; NotifyPropertyChanged("Order"); }
+        }
         public int OrderId
         {
             get { return _order.OrderID; }
-            set { _order.OrderID = value; NotifyPropertyChanged("OrderId"); }
         }
         public int OrderState
         {
-            get { return _order.StateID; }
-            set { _order.StateID = value; NotifyPropertyChanged("OrderState"); }
+            get { return _order.State.StateValue; }
+        }
+
+        public void NotifyAll()
+        {
+            NotifyPropertyChanged("OrderState");
+            NotifyPropertyChanged("OrderId");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

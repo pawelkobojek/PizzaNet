@@ -15,6 +15,7 @@ namespace PizzaNetDataModel.Model
         public int OrderID { get; set; }
         public DateTime Date { get; set; }
         public int CustomerPhone { get; set; }
+        public string Address { get; set; }
 
         [ForeignKey("State")]
         public int StateID { get; set; }

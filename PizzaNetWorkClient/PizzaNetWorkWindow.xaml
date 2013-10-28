@@ -4,6 +4,9 @@
         xmlns:local="clr-namespace:PizzaNetWorkClient"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         Title="PizzaNet Work" Height="600" Width="900" Icon="res/PizzaSliceIcon.png">
+    <Window.Resources>
+        <PizzaNetControls:StateConverter x:Key="stateConverter"/>
+    </Window.Resources>
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top"
     		Orientation="Horizontal" 
@@ -32,9 +35,49 @@
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
                         <TextBlock Text="Orders" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
-                        <ListBox Margin="10, 0, 10, 20" 
+                        <ListView Margin="10, 0, 10, 20" x:Name="ordersListView"
                                  ItemsSource="{Binding OrdersCollection}" 
                                  HorizontalContentAlignment="Stretch"/>
+                    </DockPanel>
+                    <DockPanel Grid.Column="1" LastChildFill="True" Margin="10, 0, 5, 10">
+                        <TextBlock Text="Details" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+                        <StackPanel Margin="20, 20, 20, 5" DockPanel.Dock="Top">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type DockPanel}">
+                                    <Setter Property="Margin" Value="0, 0, 0, 5"/>
+                                </Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="DockPanel.Dock" Value="Right"/>
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Width" Value="100"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <DockPanel>
+                                <TextBlock Text="Id:"/>
+                                <TextBox Text="{Binding SelectedItem.Order.OrderID, ElementName=ordersListView}"/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Adress:"/>
+                                <TextBox Text="{Binding SelectedItem.Order.Address, ElementName=ordersListView}"/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Date:"/>
+                                <TextBox Text="{Binding SelectedItem.Order.Date, ElementName=ordersListView}"/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="State:"/>
+                                <TextBox Text="{Binding SelectedItem.Order.State, ElementName=ordersListView, Converter={StaticResource ResourceKey=stateConverter}}"/>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Customer Phone:"/>
+                                <TextBox Text="{Binding SelectedItem.Order.CustomerPhone, ElementName=ordersListView}"/>
+                            </DockPanel>
+                        </StackPanel>
+                        <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+                        <ListView Margin="20, 5, 20, 20" />
                     </DockPanel>
                 </Grid>
             </TabItem>

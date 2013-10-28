@@ -52,13 +52,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IngredientsConverter.cs" />
-    <Compile Include="OrderIdConverter.cs" />
+    <Compile Include="Converters\IngredientsConverter.cs" />
+    <Compile Include="Converters\OrderIdConverter.cs" />
+    <Compile Include="Converters\StateConverter.cs" />
     <Compile Include="OrdersRow.xaml.cs">
       <DependentUpon>OrdersRow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PriceData.cs" />
-    <Compile Include="PriceDataConverter.cs" />
+    <Compile Include="Converters\PriceDataConverter.cs" />
     <Compile Include="RecipeControl.xaml.cs">
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>

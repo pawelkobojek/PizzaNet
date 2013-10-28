@@ -33,6 +33,8 @@ namespace PizzaNetWorkClient
             this.DataContext = this;
             this.StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
             this.OrdersCollection = new ObservableCollection<PizzaNetControls.OrdersRow>();
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
+            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue",System.ComponentModel.ListSortDirection.Descending));
 
             #region example data
             //PizzaNetControls.StockItem st;

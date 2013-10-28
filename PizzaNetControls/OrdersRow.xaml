@@ -6,9 +6,9 @@
              xmlns:pizzaNetControls="clr-namespace:PizzaNetControls"
              mc:Ignorable="d"
              d:DesignHeight="30" d:DesignWidth="300">
-    <ListBoxItem>
-        <ListBoxItem.Style>
-            <Style TargetType="ListBoxItem">
+    <DockPanel LastChildFill="True">
+        <DockPanel.Style>
+            <Style TargetType="DockPanel">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=OrderState}" Value="0">
                         <Setter Property="Background" Value="#aaff6026"/>
@@ -23,12 +23,10 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-        </ListBoxItem.Style>
-        <DockPanel LastChildFill="True">
-            <DockPanel.Resources>
-                <pizzaNetControls:OrderIdConverter x:Key="idConverter"/>
-            </DockPanel.Resources>
-            <TextBlock Text="{Binding Path=OrderId, Converter={StaticResource ResourceKey=idConverter}}"/>
-        </DockPanel>
-    </ListBoxItem>
+        </DockPanel.Style>
+        <DockPanel.Resources>
+            <pizzaNetControls:OrderIdConverter x:Key="idConverter"/>
+        </DockPanel.Resources>
+        <TextBlock Text="{Binding Path=OrderId, Converter={StaticResource ResourceKey=idConverter}}"/>
+    </DockPanel>
 </UserControl>
