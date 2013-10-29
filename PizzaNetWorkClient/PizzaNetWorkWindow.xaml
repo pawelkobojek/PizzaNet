@@ -226,41 +226,35 @@
                         <TextBlock DockPanel.Dock="Top" FontSize="18" Margin="10, 0, 10, 10">
                             Ingredients
                         </TextBlock>
-                            <StackPanel Margin="0, 20, 0, 10" 
+                        <StackPanel Margin="0, 20, 0, 10" 
                                         DockPanel.Dock="Bottom" 
                                         HorizontalAlignment="Center" 
                                         VerticalAlignment="Center" 
                                         Orientation="Horizontal">
-                                <StackPanel.Resources>
-                                    <Style TargetType="{x:Type Button}">
-                                        <Setter Property="Height" Value="30" />
-                                        <Setter Property="Margin" Value="10" />
-                                        <Setter Property="Padding" Value="20, 0, 20, 0" />
-                                    </Style>
-                                </StackPanel.Resources>
-                                <Button>
-                                    Add new
-                                </Button>
-                                <Button>
-                                    Remove
-                                </Button>
-                            </StackPanel>
-                        <ScrollViewer>
-                            <ItemsControl Name="IngredientsContainer" 
-                                          HorizontalAlignment="Center" 
-                                          ItemsSource="{Binding IngredientsRowsCollection}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <PizzaNetControls:IngredientsRow/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Vertical" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </ScrollViewer>
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Height" Value="30" />
+                                    <Setter Property="Margin" Value="10" />
+                                    <Setter Property="Padding" Value="20, 0, 20, 0" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <Button>
+                                Add new
+                            </Button>
+                            <Button>
+                                Remove
+                            </Button>
+                        </StackPanel>
+                        <ListView Name="IngredientsContainer" 
+                                  BorderThickness="0"
+                                  HorizontalAlignment="Center" 
+                                  ItemsSource="{Binding IngredientsRowsCollection}">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                        </ListView>
                     </DockPanel>
                     <ListView ItemsSource="{Binding RecipesCollection}"
                               Name="RecipiesContainer"

@@ -51,20 +51,16 @@
                         </Button>
                     </StackPanel>
                 </StackPanel>
-                <ScrollViewer>
-                    <ItemsControl Name="IngredientsContainer" ItemsSource="{Binding Path=IngredientsCollection}" HorizontalAlignment="Center">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <PizzaNetControls:IngredientsRow/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
+                <ListView Name="IngredientsContainer" 
+                          ItemsSource="{Binding Path=IngredientsCollection}" 
+                          BorderThickness="0"
+                          HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ListView>
             </DockPanel>
             <Separator DockPanel.Dock="Right">
                 <Separator.Style>
