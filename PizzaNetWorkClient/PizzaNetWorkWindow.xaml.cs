@@ -35,22 +35,53 @@ namespace PizzaNetWorkClient
             this.OrdersCollection = new ObservableCollection<PizzaNetControls.OrdersRow>();
             this.PizzasCollection = new ObservableCollection<PizzaNetControls.PizzaRow>();
             this.IngredientsCollection = new ObservableCollection<OrderIngredient>();
+            this.IngredientsRowsCollection = new ObservableCollection<IngredientsRow>();
+            this.RecipesCollection = new ObservableCollection<RecipeControl>();
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
             view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue",System.ComponentModel.ListSortDirection.Descending));
 
             #region example data
-            //PizzaNetControls.StockItem st;
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    st = new PizzaNetControls.StockItem();
-            //    st.StockItemName = "ItemName";
-            //    st.StockQuantity = 100;
-            //    st.NormalWeight = 10;
-            //    st.ExtraWeight = 20;
-            //    st.PricePerUnit = 1.2M;
-            //    StockItemsCollection.Add(st);
-            //}
+            #region recipes
+            var c = new PizzaNetControls.IngredientsRow();
+            c.IngredientName = "Ingredient1";
+            c.Background = new SolidColorBrush(Colors.LightSalmon);
+            this.IngredientsRowsCollection.Add(c);
+            for (int i = 0; i < 10; i++)
+            {
+                c = new PizzaNetControls.IngredientsRow();
+                c.IngredientName = "Mozzarella Cheese";
+                c.IngredientQuantity = 100;
+                c.Background = new SolidColorBrush(Colors.LightGreen);
+                this.IngredientsRowsCollection.Add(c);
+            }
 
+            PizzaNetControls.RecipeControl d;
+            for (int i = 0; i < 10; i++)
+            {
+                d = new PizzaNetControls.RecipeControl();
+                d.RecipeName = "MyRecipeName";
+                d.Prices = new PizzaNetControls.PriceData() { PriceLow = 10, PriceMed = 20, PriceHigh = 30 };
+                d.Ingredients = new List<string>() { "Mozarella Cheese", "Mushrooms", "Ingredient3" };
+                d.Width = 300;
+                this.RecipesCollection.Add(d);
+            }
+            #endregion
+
+            #region stock items
+            PizzaNetControls.StockItem st;
+            for (int i = 0; i < 20; i++)
+            {
+                st = new PizzaNetControls.StockItem();
+                st.StockItemName = "ItemName";
+                st.StockQuantity = 100;
+                st.NormalWeight = 10;
+                st.ExtraWeight = 20;
+                st.PricePerUnit = 1.2M;
+                StockItemsCollection.Add(st);
+            }
+            #endregion
+
+            #region orders
             PizzaNetControls.OrdersRow o;
             for (int i = 0; i < 10; i++)
             {
@@ -78,6 +109,7 @@ namespace PizzaNetWorkClient
                 OrdersCollection.Add(o);
             }
             #endregion
+            #endregion
         }
 
         public ObservableCollection<PizzaNetControls.StockItem> StockItemsCollection { get; set; }
@@ -87,6 +119,10 @@ namespace PizzaNetWorkClient
         public ObservableCollection<PizzaNetControls.PizzaRow> PizzasCollection { get; set; }
 
         public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
+
+        public ObservableCollection<IngredientsRow> IngredientsRowsCollection { get; set; }
+
+        public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

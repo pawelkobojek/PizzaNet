@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         xmlns:local="clr-namespace:PizzaNetClient"
-        Title="PizzaNet" Height="600" Width="900" Icon="res/PizzaSliceIcon.png">
+        Title="PizzaNet" Height="600" Width="950" Icon="res/PizzaSliceIcon.png">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top"
     		Orientation="Horizontal" 
@@ -85,20 +85,16 @@
                     </Style>
                 </Separator.Style>
             </Separator>
-            <ScrollViewer>
-                <ItemsControl Name="RecipiesContainer" ItemsSource="{Binding Path=RecipesCollection}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <PizzaNetControls:RecipeControl/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
+            <ListView Name="RecipiesContainer" 
+                      ItemsSource="{Binding Path=RecipesCollection}" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      BorderThickness="0">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
         </DockPanel>
     </DockPanel>
 </Window>

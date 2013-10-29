@@ -1,5 +1,4 @@
-﻿<UserControl x:Name="RecipeControlClass"
-             x:Class="PizzaNetControls.RecipeControl"
+﻿<UserControl x:Class="PizzaNetControls.RecipeControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,7 +8,6 @@
              mc:Ignorable="d"
              Height="100" Width="250"
              d:DesignHeight="100" d:DesignWidth="300" Focusable="True" >
-    <ListBoxItem>
         <StackPanel>
             <StackPanel.Resources>
                 <pizzaNetConverters:PriceDataConverter x:Key="priceConverter"/>
@@ -17,14 +15,13 @@
             </StackPanel.Resources>
             <TextBlock FontSize="18" 
                        Margin="10, 10, 10, 5" 
-                       Text="{Binding ElementName=RecipeControlClass, Path=RecipeName}"/>
+                       Text="{Binding Path=RecipeName}"/>
             <TextBlock FontSize="10" 
                        Margin="10, 0, 0, 0" 
                        FontStyle="Italic" 
-                       Text="{Binding ElementName=RecipeControlClass, Path=Ingredients, Converter={StaticResource ResourceKey=ingredientsConverter}}"/>
+                       Text="{Binding Path=Ingredients, Converter={StaticResource ResourceKey=ingredientsConverter}}"/>
             <TextBlock FontSize="18" 
                        Margin="10, 5, 10, 10" 
-                       Text="{Binding ElementName=RecipeControlClass, Path=Prices, Converter={StaticResource ResourceKey=priceConverter}}"/>
+                       Text="{Binding Path=Prices, Converter={StaticResource ResourceKey=priceConverter}}"/>
         </StackPanel>
-    </ListBoxItem>
 </UserControl>

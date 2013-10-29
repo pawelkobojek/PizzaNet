@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -17,43 +18,46 @@ namespace PizzaNetControls
     /// <summary>
     /// Interaction logic for RecipeControl.xaml
     /// </summary>
-    public partial class RecipeControl : UserControl
+    public partial class RecipeControl : UserControl, INotifyPropertyChanged
     {
         public RecipeControl()
         {
             InitializeComponent();
+            this.DataContext = this;
+            RecipeName = "Unknown";
+            Ingredients = new List<string>() { "Ingredient" };
+            Prices = new PriceData() { PriceLow = 0, PriceMed = 0, PriceHigh = 0 };
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private string _recipeName = "";
         public string RecipeName
         {
-            get { return (string)GetValue(RecipeNameProperty); }
-            set { SetValue(RecipeNameProperty, value); }
+            get { return _recipeName; }
+            set { _recipeName = value; NotifyPropertyChanged("RecipeName"); }
         }
 
-        // Using a DependencyProperty as the backing store for RecipeName.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RecipeNameProperty =
-            DependencyProperty.Register("RecipeName", typeof(string), typeof(RecipeControl), new UIPropertyMetadata("RecipeName"));
-
-
-
+        private ICollection<string> _ingredients;
         public ICollection<string> Ingredients
         {
-            get { return (ICollection<string>)GetValue(IngredientsProperty); }
-            set { SetValue(IngredientsProperty, value); }
+            get { return _ingredients; }
+            set { _ingredients = value; NotifyPropertyChanged("Ingredients"); }
         }
 
-        // Using a DependencyProperty as the backing store for Ingredients.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IngredientsProperty =
-            DependencyProperty.Register("Ingredients", typeof(ICollection<string>), typeof(RecipeControl), new UIPropertyMetadata(new List<string>()));
-
+        private PriceData _prices;
         public PriceData Prices
         {
-            get { return (PriceData)GetValue(PricesProperty); }
-            set { SetValue(PricesProperty, value); }
+            get { return _prices; }
+            set { _prices = value; NotifyPropertyChanged("Prices"); }
         }
-
-        // Using a DependencyProperty as the backing store for Prices.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty PricesProperty =
-            DependencyProperty.Register("Prices", typeof(PriceData), typeof(RecipeControl), new UIPropertyMetadata(PriceData.Empty));
     }
 }

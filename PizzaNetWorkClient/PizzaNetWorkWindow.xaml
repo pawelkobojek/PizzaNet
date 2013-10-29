@@ -220,6 +220,60 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
+            <TabItem Header="Recipies">
+                <DockPanel LastChildFill="True">
+                    <DockPanel DockPanel.Dock="Right" Name="PanelControl" Width="250" LastChildFill="True" Margin="0, 20, 20, 20">
+                        <TextBlock DockPanel.Dock="Top" FontSize="18" Margin="10, 0, 10, 10">
+                            Ingredients
+                        </TextBlock>
+                            <StackPanel Margin="0, 20, 0, 10" 
+                                        DockPanel.Dock="Bottom" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        Orientation="Horizontal">
+                                <StackPanel.Resources>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Height" Value="30" />
+                                        <Setter Property="Margin" Value="10" />
+                                        <Setter Property="Padding" Value="20, 0, 20, 0" />
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Button>
+                                    Add new
+                                </Button>
+                                <Button>
+                                    Remove
+                                </Button>
+                            </StackPanel>
+                        <ScrollViewer>
+                            <ItemsControl Name="IngredientsContainer" 
+                                          HorizontalAlignment="Center" 
+                                          ItemsSource="{Binding IngredientsRowsCollection}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <PizzaNetControls:IngredientsRow/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DockPanel>
+                    <ListView ItemsSource="{Binding RecipesCollection}"
+                              Name="RecipiesContainer"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              Margin="20">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                </DockPanel>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>
