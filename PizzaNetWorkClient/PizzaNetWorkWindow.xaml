@@ -34,16 +34,17 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
                         <TextBlock Text="Orders" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
                         <ListView Margin="10, 0, 10, 20" x:Name="ordersListView"
                                  ItemsSource="{Binding OrdersCollection}" 
                                  HorizontalContentAlignment="Stretch"
-                                 SelectionChanged="ordersListView_SelectionChanged"/>
+                                 SelectionChanged="ordersListView_SelectionChanged"
+                                 />
                     </DockPanel>
-                    <DockPanel Grid.Column="1" LastChildFill="True" Margin="10, 0, 5, 10">
+                    <DockPanel Grid.Column="1" LastChildFill="True" Margin="10, 0, 5, 0">
                         <TextBlock Text="Details" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
                         <StackPanel Margin="20, 20, 20, 5" DockPanel.Dock="Top">
                             <StackPanel.Resources>
@@ -96,6 +97,48 @@
                             </ListView.View>
                         </ListView>
                     </DockPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="20,0,0,10" Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style x:Key="btnStyle" TargetType="{x:Type Button}">
+                                <Setter Property="Margin" Value="10, 0, 0, 10"/>
+                                <Setter Property="Padding" Value="10, 0, 10, 0"/>
+                                <Setter Property="Height" Value="30"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Button>
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=btnStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedItem.Order.State.StateValue, ElementName=ordersListView}"
+                                                 Value="1">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedItem.Order.State.StateValue, ElementName=ordersListView}"
+                                                 Value="2">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            Set in realization
+                        </Button>
+                        <Button>
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=btnStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedItem.Order.State.StateValue, ElementName=ordersListView}"
+                                                 Value="2">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            Set done
+                        </Button>
+                        <Button Style="{StaticResource ResourceKey=btnStyle}">
+                            Remove
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="Stock" >

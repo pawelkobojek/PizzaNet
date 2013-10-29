@@ -90,13 +90,13 @@ namespace PizzaNetWorkClient
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!(e.OriginalSource is TabControl))
+            /*if (!(e.OriginalSource is TabControl))
                 return;
 
 
             StockItemsCollection.Clear();
 
-            Task.Factory.StartNew(LoadData);
+            Task.Factory.StartNew(LoadData);*/
         }
 
         private delegate void OneArgDelegate(IEnumerable<Ingredient> e);
