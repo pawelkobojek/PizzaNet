@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         xmlns:local="clr-namespace:PizzaNetClient"
-        Title="PizzaNet" Height="600" Width="950" Icon="res/PizzaSliceIcon.png">
+        Title="PizzaNet" Height="600" Width="950" Icon="res/PizzaSliceIcon.png" Loaded="PizzaNetWindowClass_Loaded">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Top"
     		Orientation="Horizontal" 

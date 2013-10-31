@@ -69,6 +69,10 @@
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="StockItem.cs" />
+    <Compile Include="Worker\WorkerWindow.xaml.cs">
+      <DependentUpon>WorkerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Worker\WorkFinishedEventArgs.cs" />
     <Page Include="IngredientsRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -86,6 +90,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RecipeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Worker\WorkerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
