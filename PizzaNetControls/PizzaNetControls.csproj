@@ -55,6 +55,7 @@
     <Compile Include="Converters\IngredientsConverter.cs" />
     <Compile Include="Converters\OrderDetailsIdConverter.cs" />
     <Compile Include="Converters\OrderIdConverter.cs" />
+    <Compile Include="Converters\QuantityToBackgroundConverter.cs" />
     <Compile Include="Converters\StateConverter.cs" />
     <Compile Include="OrdersRow.xaml.cs">
       <DependentUpon>OrdersRow.xaml</DependentUpon>
@@ -67,9 +68,7 @@
     <Compile Include="RecipeControl.xaml.cs">
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StockItem.xaml.cs">
-      <DependentUpon>StockItem.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="StockItem.cs" />
     <Page Include="IngredientsRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,10 +86,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RecipeControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StockItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

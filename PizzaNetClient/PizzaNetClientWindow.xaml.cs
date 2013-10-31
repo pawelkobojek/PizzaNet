@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PizzaNetDataModel.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -28,16 +29,22 @@ namespace PizzaNetClient
             this.RecipesCollection = new ObservableCollection<PizzaNetControls.RecipeControl>();
 
             #region ExampleData
-            var c = new PizzaNetControls.IngredientsRow();
-            c.IngredientName = "Ingredient1";
-            c.Background = new SolidColorBrush(Colors.LightSalmon);
+            var c = new PizzaNetControls.IngredientsRow(new Ingredient()
+            {
+                Name = "Ingredient1",
+                NormalWeight = 200,
+                ExtraWeight = 300
+            });
             this.IngredientsCollection.Add(c);
             for (int i = 0; i < 10; i++)
             {
-                c = new PizzaNetControls.IngredientsRow();
-                c.IngredientName = "Mozzarella Cheese";
-                c.IngredientQuantity = 100;
-                c.Background = new SolidColorBrush(Colors.LightGreen);
+                c = new PizzaNetControls.IngredientsRow(new Ingredient()
+                {
+                    Name = "Mozzarella Cheese",
+                    NormalWeight = 100,
+                    ExtraWeight = 200
+                });
+                c.CurrentQuantity = c.Ingredient.NormalWeight;
                 this.IngredientsCollection.Add(c);
             }
 

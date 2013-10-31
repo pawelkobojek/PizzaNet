@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PizzaNetDataModel.Model;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -19,34 +21,83 @@ namespace PizzaNetControls
     /// Interaction logic for UserControl1.xaml
     /// </summary>
     [ContentProperty("Children")]
-    public partial class IngredientsRow : UserControl
+    public partial class IngredientsRow : UserControl, INotifyPropertyChanged
     {
         public IngredientsRow()
         {
             InitializeComponent();
+            this.DataContext = this;
+            this.PropertyChanged += IngredientsRow_PropertyChanged;
         }
 
-        public string IngredientName
+        void IngredientsRow_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            get { return (string)GetValue(IngredientNameProperty); }
-            set { SetValue(IngredientNameProperty, value); }
+            if (e.PropertyName == "Ingredient" || e.PropertyName == "CurrentQuantity")
+                updateButtons();
         }
 
-        public static readonly DependencyProperty IngredientNameProperty =
-            DependencyProperty.Register("IngredientName", typeof(string), typeof(IngredientsRow), new UIPropertyMetadata("Ingredient"));
-
-
-
-        public int IngredientQuantity
+        public IngredientsRow(Ingredient ingredient) : this()
         {
-            get { return (int)GetValue(IngredientQuantityProperty); }
-            set { SetValue(IngredientQuantityProperty, value); }
+            Ingredient = ingredient;
+            CurrentQuantity = 0;
         }
 
-        // Using a DependencyProperty as the backing store for IngredientQuantity.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IngredientQuantityProperty =
-            DependencyProperty.Register("IngredientQuantity", typeof(int), typeof(IngredientsRow), new UIPropertyMetadata(0));
+        private Ingredient _ingredient;
+        public Ingredient Ingredient
+        {
+            get { return _ingredient; }
+            set { _ingredient = value; NotifyPropertyChanged("Ingredient"); }
+        }
 
+        private decimal _currentQuantity;
+        public decimal CurrentQuantity
+        {
+            get { return _currentQuantity; }
+            set { _currentQuantity = value; NotifyPropertyChanged("CurrentQuantity"); }
+        }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        private void updateButtons()
+        {
+            buttonLT.IsEnabled = (CurrentQuantity != 0);
+            buttonGT.IsEnabled = (CurrentQuantity != Ingredient.ExtraWeight);
+        }
+
+        private void decQuantity()
+        {
+            if (CurrentQuantity == Ingredient.NormalWeight) CurrentQuantity = 0;
+            else if (CurrentQuantity == Ingredient.ExtraWeight) CurrentQuantity = Ingredient.NormalWeight;
+            else if (CurrentQuantity == 0) return;
+            else throw new NotSupportedException(String.Format("Not supported decrase of value {0}", CurrentQuantity));
+        }
+
+        private void incQuantity()
+        {
+            if (CurrentQuantity == Ingredient.NormalWeight) CurrentQuantity = Ingredient.ExtraWeight;
+            else if (CurrentQuantity == Ingredient.ExtraWeight) return;
+            else if (CurrentQuantity == 0) CurrentQuantity = Ingredient.NormalWeight;
+            else throw new NotSupportedException(String.Format("Not supported decrase of value {0}", CurrentQuantity));
+        }
+
+        private void Button_LT_Click(object sender, RoutedEventArgs e)
+        {
+            decQuantity();
+            updateButtons();
+        }
+
+        private void Button_GT_Click(object sender, RoutedEventArgs e)
+        {
+            incQuantity();
+            updateButtons();
+        }
     }
 }

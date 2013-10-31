@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PizzaNetWorkClient"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
+        xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters;assembly=PizzaNetControls"
         Title="PizzaNet Work" Height="600" Width="900" Icon="res/PizzaSliceIcon.png">
     <Window.Resources>
-        <PizzaNetControls:StateConverter x:Key="stateConverter"/>
+        <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
         <Style TargetType="{x:Type ListView}">
             <Setter Property="SelectionMode" Value="Single"/>
         </Style>
@@ -54,10 +55,10 @@
                                 <Style TargetType="{x:Type TextBox}">
                                     <Setter Property="DockPanel.Dock" Value="Right"/>
                                     <Setter Property="TextAlignment" Value="Right"/>
+                                    <Setter Property="IsReadOnly" Value="True"/>
                                 </Style>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Width" Value="100"/>
-                                    <Setter Property="IsEnabled" Value="False"/>
                                 </Style>
                             </StackPanel.Resources>
                             <DockPanel>
@@ -155,14 +156,14 @@
                                   ShowsPreview="True"
                                   Width="1"/>
 
-                    <ListView ItemsSource="{Binding StockItemsCollection}">
+                    <ListView x:Name="listStock" ItemsSource="{Binding StockItemsCollection}">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Width="200" Header="Item name" DisplayMemberBinding="{Binding StockItemName}" />
-                                <GridViewColumn Width="100" Header="Quantity" DisplayMemberBinding="{Binding StockQuantity}" />
-                                <GridViewColumn Width="80" Header="Normal" DisplayMemberBinding="{Binding NormalWeight}" />
-                                <GridViewColumn Width="80" Header="Extra" DisplayMemberBinding="{Binding ExtraWeight}" />
-                                <GridViewColumn Width="80" Header="Price (pU)" DisplayMemberBinding="{Binding PricePerUnit}" />
+                                <GridViewColumn Width="200" Header="Item name" DisplayMemberBinding="{Binding Ingredient.Name}" />
+                                <GridViewColumn Width="100" Header="Quantity" DisplayMemberBinding="{Binding Ingredient.StockQuantity}" />
+                                <GridViewColumn Width="80" Header="Normal" DisplayMemberBinding="{Binding Ingredient.NormalWeight}" />
+                                <GridViewColumn Width="80" Header="Extra" DisplayMemberBinding="{Binding Ingredient.ExtraWeight}" />
+                                <GridViewColumn Width="80" Header="Price (pU)" DisplayMemberBinding="{Binding Ingredient.PricePerUnit}" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -183,27 +184,27 @@
                             </StackPanel.Resources>
                             <DockPanel>
                                 <TextBlock Text="Id:"/>
-                                <TextBox IsEnabled="False" />
+                                <TextBox IsReadOnly="True" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.IngredientID}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Name:"/>
-                                <TextBox/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.Name}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Quantity:"/>
-                                <TextBox IsEnabled="False"/>
+                                <TextBox IsReadOnly="True" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.StockQuantity}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Normal weight:"/>
-                                <TextBox/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.NormalWeight}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Extra weight:"/>
-                                <TextBox/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.ExtraWeight}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Price per unit:"/>
-                                <TextBox/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.PricePerUnit}"/>
                             </DockPanel>
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">

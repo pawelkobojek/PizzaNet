@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Converters
 {
     [ValueConversion(typeof(State), typeof(String))]
     public class StateConverter : IValueConverter

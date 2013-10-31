@@ -42,16 +42,22 @@ namespace PizzaNetWorkClient
 
             #region example data
             #region recipes
-            var c = new PizzaNetControls.IngredientsRow();
-            c.IngredientName = "Ingredient1";
-            c.Background = new SolidColorBrush(Colors.LightSalmon);
+            var c = new PizzaNetControls.IngredientsRow(new Ingredient() 
+            { 
+                Name = "Ingredient1",
+                NormalWeight = 200,
+                ExtraWeight = 300
+            });
             this.IngredientsRowsCollection.Add(c);
             for (int i = 0; i < 10; i++)
             {
-                c = new PizzaNetControls.IngredientsRow();
-                c.IngredientName = "Mozzarella Cheese";
-                c.IngredientQuantity = 100;
-                c.Background = new SolidColorBrush(Colors.LightGreen);
+                c = new PizzaNetControls.IngredientsRow(new Ingredient() 
+                { 
+                    Name = "Mozzarella Cheese",
+                    NormalWeight = 100,
+                    ExtraWeight = 200
+                });
+                c.CurrentQuantity = c.Ingredient.NormalWeight;
                 this.IngredientsRowsCollection.Add(c);
             }
 
@@ -71,12 +77,15 @@ namespace PizzaNetWorkClient
             PizzaNetControls.StockItem st;
             for (int i = 0; i < 20; i++)
             {
-                st = new PizzaNetControls.StockItem();
-                st.StockItemName = "ItemName";
-                st.StockQuantity = 100;
-                st.NormalWeight = 10;
-                st.ExtraWeight = 20;
-                st.PricePerUnit = 1.2M;
+                st = new PizzaNetControls.StockItem(new Ingredient()
+                    {
+                        IngredientID = 13,
+                        Name = "ItemName",
+                        StockQuantity = 100,
+                        NormalWeight = 10,
+                        ExtraWeight = 20,
+                        PricePerUnit = 1.2M
+                   });
                 StockItemsCollection.Add(st);
             }
             #endregion
