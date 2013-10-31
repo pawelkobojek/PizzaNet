@@ -17,5 +17,11 @@ namespace PizzaNetDataModel
         public DbSet<Recipe> Recipies { get; set; }
         public DbSet<Size> Sizes { get; set; }
         public DbSet<State> States { get; set; }
+
+        public PizzaContext()
+        {
+            Database.SetInitializer<PizzaContext>(new PizzaContextInitializer());
+            Database.Initialize(false);
+        }
     }
 }

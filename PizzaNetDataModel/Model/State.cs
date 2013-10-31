@@ -11,6 +11,13 @@ namespace PizzaNetDataModel.Model
     [Table("States")]
     public class State
     {
+        [NotMapped]
+        public const int NEW = 0;
+        [NotMapped]
+        public const int IN_REALISATION = 1;
+        [NotMapped]
+        public const int DONE = 2;
+
         [Key]
         public int StateID { get; set; }
         public int StateValue { get; set; }
@@ -19,9 +26,9 @@ namespace PizzaNetDataModel.Model
         {
             switch (StateValue)
             {
-                case 0: return "New";
-                case 1: return "In realization";
-                case 2: return "Done";
+                case NEW: return "New";
+                case IN_REALISATION: return "In realization";
+                case DONE: return "Done";
                 default: return "Unknown";
             }
         }

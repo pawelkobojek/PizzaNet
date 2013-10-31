@@ -135,34 +135,35 @@ namespace PizzaNetWorkClient
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*if (!(e.OriginalSource is TabControl))
+            if (!(e.OriginalSource is TabControl))
                 return;
+            string header = (string)((TabItem)(e.OriginalSource as TabControl).SelectedItem).Header;
 
+            if (header == "Stock")
+            {
+                StockItemsCollection.Clear();
 
-            StockItemsCollection.Clear();
-
-            Task.Factory.StartNew(LoadData);*/
+                Task.Factory.StartNew(LoadData);
+            }
         }
 
         private delegate void OneArgDelegate(IEnumerable<Ingredient> e);
-        private bool isLoading = false;
 
         private void LoadData()
         {
             using (var db = new PizzaUnitOfWork())
             {
                 Console.WriteLine("LoadDataStart");
-                isLoading = true;
 
                 var result = db.Ingredients.FindAll();
                 Console.WriteLine("after query");
 
-
-                Dispatcher.BeginInvoke(
+                DispatcherOperation dop = Dispatcher.BeginInvoke(
                         System.Windows.Threading.DispatcherPriority.Normal,
                         new OneArgDelegate(PostData),
                         result);
-                while (isLoading) ;
+
+                dop.Wait();
             }
         }
 
@@ -173,7 +174,6 @@ namespace PizzaNetWorkClient
             {
                 StockItemsCollection.Add(new StockItem(ingredient));
             }
-            isLoading = false;
             Console.WriteLine("PostData end");
         }
 
