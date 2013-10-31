@@ -8,7 +8,7 @@ using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel
 {
-    public class PizzaContextInitializer : DropCreateDatabaseAlways<PizzaContext>
+    public class PizzaContextInitializer : DropCreateDatabaseIfModelChanges<PizzaContext>
     {
         protected override void Seed(PizzaContext context)
         {

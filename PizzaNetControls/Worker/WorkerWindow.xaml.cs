@@ -41,6 +41,24 @@ namespace PizzaNetControls.Worker
             this.worker.RunWorkerCompleted += worker_RunWorkerCompleted;
             this.WorkFinished += WorkerWindow_WorkFinished;
         }
+
+        public WorkerWindow(RunnableTask task, WorkFinishedHandler workFinishedHandler, params object[] args)
+        {
+            InitializeComponent();
+            this.args = args;
+            this.task = task;
+
+            this.worker = new BackgroundWorker();
+            this.worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            this.WorkFinished = workFinishedHandler;
+        }
+
+        public WorkerWindow(Window owner, RunnableTask task, WorkFinishedHandler workFinishedHandler, params object[] args) : this(task, workFinishedHandler, args)
+        {
+            if (owner != this)
+                this.Owner = owner;
+        }
+
         public WorkerWindow(Window owner, RunnableTask task, params object[] args) : this(task, args)
         {
             if (owner != this)
@@ -49,8 +67,8 @@ namespace PizzaNetControls.Worker
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.Result = e.Result;
-            WorkFinished(sender, new WorkFinishedEventArgs(e.Result, args));
+            if (WorkFinished != null)
+                WorkFinished(sender, new WorkFinishedEventArgs(this.Result, args));
         }
 
         private void WorkerWindow_WorkFinished(object sender, WorkFinishedEventArgs e)
@@ -63,9 +81,9 @@ namespace PizzaNetControls.Worker
             if (task != null)
             {
                 worker.DoWork += (obj, a) =>
-                    {
-                        this.task(this.args);
-                    };
+                {
+                    this.Result = this.task(this.args);
+                };
                 worker.RunWorkerAsync();
             }
             else this.Close();

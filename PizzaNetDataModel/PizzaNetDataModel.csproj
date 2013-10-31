@@ -55,11 +55,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201310311736489_Initial.cs" />
-    <Compile Include="Migrations\201310311736489_Initial.Designer.cs">
-      <DependentUpon>201310311736489_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Ingredient.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\OrderDetail.cs" />
@@ -73,11 +68,6 @@
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\PizzaUnitOfWork.cs" />
     <Compile Include="Repository\RecipeRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201310311736489_Initial.resx">
-      <DependentUpon>201310311736489_Initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

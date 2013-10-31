@@ -143,7 +143,46 @@ namespace PizzaNetWorkClient
             {
                 StockItemsCollection.Clear();
 
-                Task.Factory.StartNew(LoadData);
+                var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+                    {
+                        try
+                        {
+                            using (var db = new PizzaUnitOfWork())
+                            {
+                                Console.WriteLine("LoadDataStart");
+
+                                var result = db.Ingredients.FindAll();
+                                Console.WriteLine("after query");
+
+                                Console.WriteLine("Result is null: {0}", result == null);
+
+                                return result;
+                            }
+                        }
+                        catch(Exception exc)
+                        {
+                            Console.WriteLine(exc.Message);
+                            return null;
+                        }
+                    });
+                worker.WorkFinished += PostData;
+                worker.ShowDialog();
+
+                //Task.Factory.StartNew(LoadData);
+            }
+        }
+
+        private void PostData(object sender, PizzaNetControls.Worker.WorkFinishedEventArgs e)
+        {
+            if (e.Result == null)
+            {
+                Console.WriteLine("Result is null");
+                return;
+            }
+            foreach (var item in (IEnumerable<Ingredient>)e.Result)
+            {
+                Console.WriteLine(item.Name);
+                StockItemsCollection.Add(new StockItem(item));
             }
         }
 

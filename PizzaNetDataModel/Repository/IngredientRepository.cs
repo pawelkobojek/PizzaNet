@@ -11,6 +11,7 @@ namespace PizzaNetDataModel.Repository
     {
         IEnumerable<Ingredient> FindAll();
         IEnumerable<Ingredient> Find(int id);
+        Ingredient Get(string name);
     }
 
     public class IngredientRepository : IIngredientRepository
@@ -50,6 +51,12 @@ namespace PizzaNetDataModel.Repository
         public void Insert(Ingredient entity)
         {
             db.Ingredients.Add(entity);
+        }
+
+
+        public Ingredient Get(string name)
+        {
+            return db.Ingredients.Where(ing => ing.Name == name).First();
         }
     }
 }
