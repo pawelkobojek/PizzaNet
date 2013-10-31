@@ -137,9 +137,7 @@ namespace PizzaNetWorkClient
         {
             if (!(e.OriginalSource is TabControl))
                 return;
-            string header = (string)((TabItem)(e.OriginalSource as TabControl).SelectedItem).Header;
-
-            if (header == "Stock")
+            if (StockTab.IsSelected)
             {
                 StockItemsCollection.Clear();
 

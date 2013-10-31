@@ -8,7 +8,22 @@
         Title="WorkerWindow" Height="200" Width="300" Loaded="Window_Loaded">
     <Border BorderBrush="Black" BorderThickness="2">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox Text="Loading..." FontSize="20" BorderThickness="0"/>
+            <TextBlock Name="tb" Text="Loading" FontSize="20" Width="85">
+                <TextBlock.Triggers>
+                    <EventTrigger RoutedEvent="TextBox.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <StringAnimationUsingKeyFrames Storyboard.TargetName="tb" Storyboard.TargetProperty="Text" RepeatBehavior="Forever">
+                                    <DiscreteStringKeyFrame Value="Loading."   KeyTime="0:0:1" />
+                                    <DiscreteStringKeyFrame Value="Loading.."  KeyTime="0:0:2" />
+                                    <DiscreteStringKeyFrame Value="Loading..." KeyTime="0:0:3" />
+                                    <DiscreteStringKeyFrame Value="Loading"    KeyTime="0:0:4" />
+                                </StringAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </TextBlock.Triggers>
+            </TextBlock>
         </StackPanel>
     </Border>
 </Window>
