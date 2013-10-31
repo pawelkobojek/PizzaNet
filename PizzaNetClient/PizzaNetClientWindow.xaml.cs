@@ -63,5 +63,15 @@ namespace PizzaNetClient
 
         public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection { get; set; }
         public ObservableCollection<PizzaNetControls.RecipeControl> RecipesCollection { get; set; }
+
+        private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
+        {
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this,(args) =>
+                {
+                    System.Threading.Thread.Sleep((int)args[0]);
+                    return null;
+                }, 2000);
+            worker.ShowDialog();
+        }
     }
 }
