@@ -247,6 +247,11 @@ namespace PizzaNetWorkClient
                 }
             }
         }
+
+        private void listStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show("Zaznaczono " + listStock.SelectedIndex);
+        }
         
     }
 }

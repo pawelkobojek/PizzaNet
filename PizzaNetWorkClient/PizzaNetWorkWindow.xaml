@@ -156,7 +156,7 @@
                                   ShowsPreview="True"
                                   Width="1"/>
 
-                    <ListView x:Name="listStock" ItemsSource="{Binding StockItemsCollection}">
+                    <ListView x:Name="listStock" ItemsSource="{Binding StockItemsCollection}" SelectionChanged="listStock_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Width="200" Header="Item name" DisplayMemberBinding="{Binding Ingredient.Name}" />
