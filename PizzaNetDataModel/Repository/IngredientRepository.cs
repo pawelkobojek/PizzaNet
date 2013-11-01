@@ -38,13 +38,21 @@ namespace PizzaNetDataModel.Repository
             return db.Ingredients.Find(id);
         }
 
-        public void Update(Model.Ingredient entity)
+        public void Update(Model.Ingredient entity, Ingredient newEntity)
         {
-            db.Ingredients.Attach(entity);
+            var ing = db.Ingredients.Find(entity.IngredientID);
+            ing.Name = newEntity.Name;
+            ing.NormalWeight = newEntity.NormalWeight;
+            ing.ExtraWeight = newEntity.ExtraWeight;
+            ing.PricePerUnit = newEntity.PricePerUnit;
+            //ing.Recipies = newEntity.Recipies;
+            ing.StockQuantity = newEntity.StockQuantity;
+            //db.Ingredients.Attach(ing);
         }
 
         public void Delete(Model.Ingredient entity)
         {
+            db.Ingredients.Attach(entity);
             db.Ingredients.Remove(entity);
         }
 

@@ -37,7 +37,7 @@ namespace PizzaNetDataModel.Repository
             return db.Recipies.Find(id);
         }
 
-        public void Update(Recipe entity)
+        public void Update(Recipe entity, Recipe newEntity)
         {
             db.Recipies.Attach(entity);
         }

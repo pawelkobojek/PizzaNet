@@ -10,7 +10,7 @@ namespace PizzaNetDataModel.Repository
     {
         TEntity Get(TKey id);
         void Insert(TEntity entity);
-        void Update(TEntity entity);
+        void Update(TEntity entity, TEntity newEntity);
         void Delete(TEntity entity);
     }
 }

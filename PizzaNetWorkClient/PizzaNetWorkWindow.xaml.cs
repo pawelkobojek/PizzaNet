@@ -248,10 +248,56 @@ namespace PizzaNetWorkClient
             }
         }
 
+        IngredientMonitor im = new IngredientMonitor();
         private void listStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MessageBox.Show("Zaznaczono " + listStock.SelectedIndex);
+            if (!(e.OriginalSource is ListView) || listStock.SelectedIndex < 0)
+                return;
+
+            Console.WriteLine("Zaznaczono " + listStock.SelectedIndex);
+            Console.WriteLine("CollectionCount: " + StockItemsCollection.Count);
+            im.StartMonitor(StockItemsCollection[listStock.SelectedIndex].Ingredient);
         }
+
+        private void ButtonAddIngredient_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("AddIngredient click");
+            using (var db = new PizzaUnitOfWork())
+            {
+                Ingredient ing = new Ingredient { Name = "Test", StockQuantity = 1, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 1 };
+                db.Ingredients.Insert(ing);
+                db.Commit();
+
+                StockItemsCollection.Add(new StockItem(ing));
+
+                Console.WriteLine("Added " + ing.Name);
+            }
+        }
+
+        private void ButtonRemove_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Remove clicked");
+            using (var db = new PizzaUnitOfWork())
+            {
+                StockItem toRemove = StockItemsCollection[listStock.SelectedIndex];
+                db.Ingredients.Delete(toRemove.Ingredient);
+                db.Commit();
+                StockItemsCollection.Remove(toRemove);
+
+                Console.WriteLine("Removed " + toRemove.Ingredient.Name);
+            }
+        }
+
+        private void listStock_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // TODO: chyba trzeba zmienić Monitor żeby monitorował obiekty StockItem. Wtedy będzie można łatwiej
+            //  wyciągać modyfikowany row.
+            Console.WriteLine("Focus lost");
+            im.Update(StockItemsCollection[listStock.SelectedIndex].Ingredient);
+            Console.WriteLine("Updated " + StockItemsCollection[listStock.SelectedIndex].Ingredient.Name);
+        }
+
+
         
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PizzaNetDataModel.Repository;
 
 namespace PizzaNetDataModel
 {
@@ -38,7 +39,11 @@ namespace PizzaNetDataModel
         public bool Update(Ingredient ingredient)
         {
             bool res = HasStateChanged(ingredient);
-
+            using (var db = new PizzaUnitOfWork())
+            {
+                db.Ingredients.Update(_prevState, ingredient);
+                db.Commit();
+            }
             return res;
         }
         public bool HasStateChanged(Ingredient ingredient)

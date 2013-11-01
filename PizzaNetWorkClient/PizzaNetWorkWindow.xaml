@@ -156,7 +156,7 @@
                                   ShowsPreview="True"
                                   Width="1"/>
 
-                    <ListView x:Name="listStock" ItemsSource="{Binding StockItemsCollection}" SelectionChanged="listStock_SelectionChanged">
+                    <ListView x:Name="listStock" ItemsSource="{Binding StockItemsCollection}" SelectionChanged="listStock_SelectionChanged" LostFocus="listStock_LostFocus">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Width="200" Header="Item name" DisplayMemberBinding="{Binding Ingredient.Name}" />
@@ -215,8 +215,8 @@
                                 </Style>
                             </StackPanel.Resources>
                             <Button>Order supplies</Button>
-                            <Button>Add new ingredient</Button>
-                            <Button>Remove ingredient</Button>
+                            <Button Click="ButtonAddIngredient_Click">Add new ingredient</Button>
+                            <Button Click="ButtonRemove_Click">Remove ingredient</Button>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
