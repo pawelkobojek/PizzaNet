@@ -4,7 +4,8 @@
         xmlns:local="clr-namespace:PizzaNetWorkClient"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters;assembly=PizzaNetControls"
-        Title="PizzaNet Work" Height="600" Width="900" Icon="res/PizzaSliceIcon.png">
+        Title="PizzaNet Work" Height="600" Width="900" Icon="res/PizzaSliceIcon.png"
+        Loaded="Window_Loaded">
     <Window.Resources>
         <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
         <Style TargetType="{x:Type ListView}">

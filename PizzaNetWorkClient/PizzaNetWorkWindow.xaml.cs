@@ -20,6 +20,7 @@ using PizzaNetDataModel;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using PizzaNetDataModel.Monitors;
+using System.Threading;
 
 namespace PizzaNetWorkClient
 {
@@ -39,12 +40,12 @@ namespace PizzaNetWorkClient
             this.IngredientsRowsCollection = new ObservableCollection<IngredientsRow>();
             this.RecipesCollection = new ObservableCollection<RecipeControl>();
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
-            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue",System.ComponentModel.ListSortDirection.Descending));
+            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
 
             #region example data
             #region recipes
-            var c = new PizzaNetControls.IngredientsRow(new Ingredient() 
-            { 
+            var c = new PizzaNetControls.IngredientsRow(new Ingredient()
+            {
                 Name = "Ingredient1",
                 NormalWeight = 200,
                 ExtraWeight = 300
@@ -52,8 +53,8 @@ namespace PizzaNetWorkClient
             this.IngredientsRowsCollection.Add(c);
             for (int i = 0; i < 10; i++)
             {
-                c = new PizzaNetControls.IngredientsRow(new Ingredient() 
-                { 
+                c = new PizzaNetControls.IngredientsRow(new Ingredient()
+                {
                     Name = "Mozzarella Cheese",
                     NormalWeight = 100,
                     ExtraWeight = 200
@@ -86,7 +87,7 @@ namespace PizzaNetWorkClient
                         NormalWeight = 10,
                         ExtraWeight = 20,
                         PricePerUnit = 1.2M
-                   });
+                    });
                 StockItemsCollection.Add(st);
             }
             #endregion
@@ -95,9 +96,9 @@ namespace PizzaNetWorkClient
             PizzaNetControls.OrdersRow o;
             for (int i = 0; i < 10; i++)
             {
-                o = new PizzaNetControls.OrdersRow(new Order() 
-                { 
-                    OrderID = 12 * i, 
+                o = new PizzaNetControls.OrdersRow(new Order()
+                {
+                    OrderID = 12 * i,
                     State = new State() { StateValue = i % 3 },
                     OrderDetails = new List<OrderDetail>() { new OrderDetail() 
                                                                 { 
@@ -136,22 +137,62 @@ namespace PizzaNetWorkClient
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!(e.OriginalSource is TabControl))
+            if (!(e.OriginalSource is TabControl) || !this.IsLoaded)
                 return;
+
             if (StockTab.IsSelected)
             {
                 RefreshStockItems();
             }
             else
             {
-                if (lastSelectedIngredient!=null)
+                if (lastSelectedIngredient != null)
                     Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
                 lastSelectedIngredient = null;
             }
+
+            if (OrdersTab.IsSelected)
+            {
+                RefreshOrders();
+            }
+        }
+
+        private void RefreshOrders()
+        {
+            OrdersCollection.Clear();
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            {
+                try
+                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        Console.WriteLine("Load Orders Start");
+                        var result = db.Orders.FindAll();
+                        Console.WriteLine("After query");
+                        return result;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc);
+                    return null;
+                }
+            }, (s, a) =>
+            {
+                IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
+
+                foreach (var order in orders)
+                {
+                    OrdersCollection.Add(new OrdersRow(order));
+                }
+            });
+
+            worker.ShowDialog();
         }
 
         private void RefreshStockItems()
         {
+            lastSelectedIngredient = null;
             StockItemsCollection.Clear();
 
             var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
@@ -226,12 +267,12 @@ namespace PizzaNetWorkClient
         {
             PizzasCollection.Clear();
             IList selected = e.AddedItems;
-            if (selected.Count>0)
+            if (selected.Count > 0)
             {
                 OrdersRow or = selected[0] as OrdersRow;
                 if (or != null)
                 {
-                    foreach(var od in or.Order.OrderDetails)
+                    foreach (var od in or.Order.OrderDetails)
                     {
                         PizzasCollection.Add(new PizzaRow(od));
                     }
@@ -255,7 +296,7 @@ namespace PizzaNetWorkClient
                 }
             }
         }
-        
+
         private void listStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.OriginalSource is ListView) || listStock.SelectedIndex < 0)
@@ -295,8 +336,8 @@ namespace PizzaNetWorkClient
         private void ButtonRemove_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Remove clicked");
-            if (listStock.SelectedIndex<0) return;
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this,(args) =>
+            if (listStock.SelectedIndex < 0) return;
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
@@ -312,7 +353,7 @@ namespace PizzaNetWorkClient
                     if (toRemove == null)
                     {
                         Console.WriteLine("WARNING: Trying to remove null stock item!");
-                        return; 
+                        return;
                     }
                     StockItemsCollection.Remove(toRemove);
                     Console.WriteLine("Removed " + toRemove.Ingredient.Name);
@@ -333,7 +374,7 @@ namespace PizzaNetWorkClient
 
         private void TextBox_StockItemDetails_FocusChanged(object sender, RoutedEventArgs e)
         {
-            if (lastSelectedIngredient!=null)
+            if (lastSelectedIngredient != null)
                 Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
         }
 
@@ -347,6 +388,11 @@ namespace PizzaNetWorkClient
             OrderIngredientForm form = new OrderIngredientForm(ings);
             form.ShowDialog();
             RefreshStockItems();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            RefreshOrders();
         }
     }
 }

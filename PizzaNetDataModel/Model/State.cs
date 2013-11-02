@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace PizzaNetDataModel.Model
 {
+    /// <summary>
+    /// Class representing state of the order.
+    /// </summary>
     [Table("States")]
     public class State : Entity
     {
@@ -18,8 +21,17 @@ namespace PizzaNetDataModel.Model
         [NotMapped]
         public const int DONE = 2;
 
+        /// <summary>
+        /// Primary key
+        /// </summary>
         [Key]
         public int StateID { get; set; }
+        /// <summary>
+        /// Value of the state. It maps as follows:
+        /// New - 0
+        /// In Realisation - 1
+        /// Done - 2
+        /// </summary>
         public int StateValue { get; set; }
 
         public override string ToString()

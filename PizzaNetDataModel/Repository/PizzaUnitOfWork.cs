@@ -17,6 +17,7 @@ namespace PizzaNetDataModel.Repository
 
         public IngredientRepository Ingredients { get; set; }
         public RecipeRepository Recipies { get; set; }
+        public OrderRepository Orders { get; set; }
 
 
         public PizzaUnitOfWork()
@@ -24,6 +25,7 @@ namespace PizzaNetDataModel.Repository
             db = new PizzaContext();
             Ingredients = new IngredientRepository(db);
             Recipies = new RecipeRepository(db);
+            Orders = new OrderRepository(db);
         }
 
         public void Commit()
