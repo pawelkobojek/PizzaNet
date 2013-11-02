@@ -19,6 +19,7 @@ using PizzaNetControls;
 using PizzaNetDataModel;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
+using PizzaNetDataModel.Monitors;
 
 namespace PizzaNetWorkClient
 {
@@ -121,17 +122,17 @@ namespace PizzaNetWorkClient
             #endregion
         }
 
+        #region fields and properties
         public ObservableCollection<PizzaNetControls.StockItem> StockItemsCollection { get; set; }
-
         public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
-
         public ObservableCollection<PizzaNetControls.PizzaRow> PizzasCollection { get; set; }
-
         public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
-
         public ObservableCollection<IngredientsRow> IngredientsRowsCollection { get; set; }
-
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
+
+        IngredientMonitor im = new IngredientMonitor();
+        Ingredient lastSelectedIngredient = null;
+        #endregion
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -162,11 +163,15 @@ namespace PizzaNetWorkClient
                             Console.WriteLine(exc.Message);
                             return null;
                         }
-                    });
-                worker.WorkFinished += PostData;
+                    },PostData, null);
                 worker.ShowDialog();
-
                 //Task.Factory.StartNew(LoadData);
+            }
+            else
+            {
+                if (lastSelectedIngredient!=null)
+                    Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
+                lastSelectedIngredient = null;
             }
         }
 
@@ -199,7 +204,6 @@ namespace PizzaNetWorkClient
                         System.Windows.Threading.DispatcherPriority.Normal,
                         new OneArgDelegate(PostData),
                         result);
-
                 dop.Wait();
             }
         }
@@ -247,13 +251,11 @@ namespace PizzaNetWorkClient
                 }
             }
         }
-
-        IngredientMonitor im = new IngredientMonitor();
+        
         private void listStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.OriginalSource is ListView) || listStock.SelectedIndex < 0)
                 return;
-
             Console.WriteLine("Zaznaczono " + listStock.SelectedIndex);
             Console.WriteLine("CollectionCount: " + StockItemsCollection.Count);
             im.StartMonitor(StockItemsCollection[listStock.SelectedIndex].Ingredient);
@@ -262,30 +264,56 @@ namespace PizzaNetWorkClient
         private void ButtonAddIngredient_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("AddIngredient click");
-            using (var db = new PizzaUnitOfWork())
-            {
-                Ingredient ing = new Ingredient { Name = "Test", StockQuantity = 1, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 1 };
-                db.Ingredients.Insert(ing);
-                db.Commit();
-
-                StockItemsCollection.Add(new StockItem(ing));
-
-                Console.WriteLine("Added " + ing.Name);
-            }
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2 };
+                        db.Ingredients.Insert(ing);
+                        db.Commit();
+                        Console.WriteLine("Commited " + ing.Name);
+                        return ing;
+                    }
+                }, (s, a) =>
+                {
+                    Ingredient ing = a.Result as Ingredient;
+                    if (ing == null)
+                    {
+                        Console.WriteLine("WARNING: Trying to add null ingredient!");
+                        return;
+                    }
+                    StockItemsCollection.Add(new StockItem(ing));
+                    Console.WriteLine("Added " + ing.Name);
+                }, null);
+            worker.ShowDialog();
         }
 
         private void ButtonRemove_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Remove clicked");
-            using (var db = new PizzaUnitOfWork())
-            {
-                StockItem toRemove = StockItemsCollection[listStock.SelectedIndex];
-                db.Ingredients.Delete(toRemove.Ingredient);
-                db.Commit();
-                StockItemsCollection.Remove(toRemove);
-
-                Console.WriteLine("Removed " + toRemove.Ingredient.Name);
-            }
+            if (listStock.SelectedIndex<0) return;
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this,(args) =>
+                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        StockItem toRemove = args[0] as StockItem;
+                        if (toRemove == null) return null;
+                        db.Ingredients.Delete(toRemove.Ingredient);
+                        db.Commit();
+                        return toRemove;
+                    }
+                }, (s, args) =>
+                {
+                    StockItem toRemove = args.Result as StockItem;
+                    if (toRemove == null)
+                    {
+                        Console.WriteLine("WARNING: Trying to remove null stock item!");
+                        return; 
+                    }
+                    StockItemsCollection.Remove(toRemove);
+                    Console.WriteLine("Removed " + toRemove.Ingredient.Name);
+                }, StockItemsCollection[listStock.SelectedIndex]);
+            worker.ShowDialog();
         }
 
         private void listStock_LostFocus(object sender, RoutedEventArgs e)
@@ -293,8 +321,16 @@ namespace PizzaNetWorkClient
             // TODO: chyba trzeba zmienić Monitor żeby monitorował obiekty StockItem. Wtedy będzie można łatwiej
             //  wyciągać modyfikowany row.
             Console.WriteLine("Focus lost");
-            im.Update(StockItemsCollection[listStock.SelectedIndex].Ingredient);
+            if (listStock.SelectedIndex < 0) return;
+            lastSelectedIngredient = StockItemsCollection[listStock.SelectedIndex].Ingredient;
+            Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
             Console.WriteLine("Updated " + StockItemsCollection[listStock.SelectedIndex].Ingredient.Name);
+        }
+
+        private void TextBox_StockItemDetails_FocusChanged(object sender, RoutedEventArgs e)
+        {
+            if (lastSelectedIngredient!=null)
+                Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
         }
 
 

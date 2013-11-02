@@ -184,27 +184,27 @@
                             </StackPanel.Resources>
                             <DockPanel>
                                 <TextBlock Text="Id:"/>
-                                <TextBox IsReadOnly="True" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.IngredientID}"/>
+                                <TextBox IsReadOnly="True" GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.IngredientID}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Name:"/>
-                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.Name}"/>
+                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.Name}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Quantity:"/>
-                                <TextBox IsReadOnly="True" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.StockQuantity}"/>
+                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" IsReadOnly="True" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.StockQuantity}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Normal weight:"/>
-                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.NormalWeight}"/>
+                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.NormalWeight}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Extra weight:"/>
-                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.ExtraWeight}"/>
+                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.ExtraWeight}"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Price per unit:"/>
-                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.PricePerUnit}"/>
+                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.PricePerUnit}"/>
                             </DockPanel>
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">

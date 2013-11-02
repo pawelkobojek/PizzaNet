@@ -69,6 +69,7 @@
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="StockItem.cs" />
+    <Compile Include="Updater.cs" />
     <Compile Include="Worker\WorkerWindow.xaml.cs">
       <DependentUpon>WorkerWindow.xaml</DependentUpon>
     </Compile>

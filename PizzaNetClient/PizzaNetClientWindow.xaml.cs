@@ -70,7 +70,7 @@ namespace PizzaNetClient
                 {
                     System.Threading.Thread.Sleep((int)args[0]);
                     return null;
-                }, 2000);
+                }, null, 2000);
             worker.ShowDialog();
         }
     }

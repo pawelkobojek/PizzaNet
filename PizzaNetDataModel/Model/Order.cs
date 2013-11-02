@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace PizzaNetDataModel.Model
 {
     [Table("Orders")]
-    public class Order
+    public class Order : Entity
     {
         [Key]
         public int OrderID { get; set; }

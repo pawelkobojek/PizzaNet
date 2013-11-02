@@ -9,16 +9,16 @@ namespace PizzaNetControls.Worker
     public class WorkFinishedEventArgs : EventArgs
     {
         public object Result { get; set; }
-        public object Parameter { get; set; }
+        public object[] Arguments { get; set; }
 
         public WorkFinishedEventArgs()
         {
         }
 
-        public WorkFinishedEventArgs(object result, object param)
+        public WorkFinishedEventArgs(object result, object[] arguments)
         {
             Result = result;
-            Parameter = param;
+            Arguments = arguments;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace PizzaNetControls.Worker
     /// </summary>
     public partial class WorkerWindow : Window
     {
-        public delegate object RunnableTask(params object[] args);
+        public delegate object RunnableTask(object[] args);
         public delegate void WorkFinishedHandler(object sender, WorkFinishedEventArgs e);
 
         public event WorkFinishedHandler WorkFinished;
@@ -31,35 +31,25 @@ namespace PizzaNetControls.Worker
 
         private BackgroundWorker worker;
 
-        public WorkerWindow(RunnableTask task, params object[] args)
+        private WorkerWindow(RunnableTask task, params object[] args)
         {
             InitializeComponent();
-            this.args = args;
             this.task = task;
+            this.args = args;
 
             this.worker = new BackgroundWorker();
             this.worker.RunWorkerCompleted += worker_RunWorkerCompleted;
             this.WorkFinished += WorkerWindow_WorkFinished;
         }
 
-        public WorkerWindow(RunnableTask task, WorkFinishedHandler workFinishedHandler, params object[] args)
+        public WorkerWindow(RunnableTask task, WorkFinishedHandler workFinishedHandler, params object[] args) : this(task, args)
         {
-            InitializeComponent();
-            this.args = args;
-            this.task = task;
-
-            this.worker = new BackgroundWorker();
-            this.worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            this.WorkFinished = workFinishedHandler;
+            if (workFinishedHandler!=null)
+                this.WorkFinished += workFinishedHandler;
         }
 
-        public WorkerWindow(Window owner, RunnableTask task, WorkFinishedHandler workFinishedHandler, params object[] args) : this(task, workFinishedHandler, args)
-        {
-            if (owner != this)
-                this.Owner = owner;
-        }
-
-        public WorkerWindow(Window owner, RunnableTask task, params object[] args) : this(task, args)
+        public WorkerWindow(Window owner, RunnableTask task, WorkFinishedHandler workFinishedHandler, params object[] args)
+            : this(task, workFinishedHandler, args)
         {
             if (owner != this)
                 this.Owner = owner;
@@ -82,7 +72,7 @@ namespace PizzaNetControls.Worker
             {
                 worker.DoWork += (obj, a) =>
                 {
-                    this.Result = this.task(this.args);
+                    this.Result = this.task(args);
                 };
                 worker.RunWorkerAsync();
             }

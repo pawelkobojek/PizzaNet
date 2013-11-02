@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using PizzaNetDataModel.Repository;
 
-namespace PizzaNetDataModel
+namespace PizzaNetDataModel.Monitors
 {
-    public class IngredientMonitor
+    public class IngredientMonitor : IMonitor<Ingredient>
     {
         private Ingredient _prevState;
         private static Ingredient clone(Ingredient ingr)
@@ -19,7 +19,8 @@ namespace PizzaNetDataModel
                 Name = ingr.Name,
                 NormalWeight = ingr.NormalWeight,
                 ExtraWeight = ingr.ExtraWeight,
-                PricePerUnit = ingr.PricePerUnit
+                PricePerUnit = ingr.PricePerUnit,
+                StockQuantity = ingr.StockQuantity
             };
         }
         private static bool isEqual(Ingredient first, Ingredient second)
@@ -29,7 +30,8 @@ namespace PizzaNetDataModel
                 first.Name == second.Name &&
                 first.NormalWeight == second.NormalWeight &&
                 first.ExtraWeight == second.ExtraWeight &&
-                first.PricePerUnit == second.PricePerUnit;
+                first.PricePerUnit == second.PricePerUnit &&
+                first.StockQuantity == second.StockQuantity;
         }
 
         public void StartMonitor(Ingredient ingredient)
@@ -39,16 +41,26 @@ namespace PizzaNetDataModel
         public bool Update(Ingredient ingredient)
         {
             bool res = HasStateChanged(ingredient);
-            using (var db = new PizzaUnitOfWork())
+            if (res)
             {
-                db.Ingredients.Update(_prevState, ingredient);
-                db.Commit();
+                using (var db = new PizzaUnitOfWork())
+                {
+                    db.Ingredients.Update(_prevState, ingredient);
+                    db.Commit();
+                }
+                StartMonitor(ingredient);
             }
             return res;
         }
         public bool HasStateChanged(Ingredient ingredient)
         {
-            return isEqual(_prevState, ingredient);
+            return !isEqual(_prevState, ingredient);
+        }
+
+
+        public bool IsMonitoring()
+        {
+            return _prevState != null;
         }
     }
 }

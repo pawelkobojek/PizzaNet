@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace PizzaNetDataModel.Model
 {
     [Table("States")]
-    public class State
+    public class State : Entity
     {
         [NotMapped]
         public const int NEW = 0;

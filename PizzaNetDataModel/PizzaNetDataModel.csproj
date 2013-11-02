@@ -55,7 +55,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IngredientMonitor.cs" />
+    <Compile Include="Monitors\IMonitor.cs" />
+    <Compile Include="Monitors\IngredientMonitor.cs" />
+    <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\Ingredient.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\OrderDetail.cs" />
