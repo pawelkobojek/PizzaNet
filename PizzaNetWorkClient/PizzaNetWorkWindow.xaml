@@ -214,7 +214,7 @@
                                     <Setter Property="Margin" Value="0, 5, 0, 0"/>
                                 </Style>
                             </StackPanel.Resources>
-                            <Button>Order supplies</Button>
+                            <Button Click="ButtonOrderSupplies_Click">Order supplies</Button>
                             <Button Click="ButtonAddIngredient_Click">Add new ingredient</Button>
                             <Button Click="ButtonRemove_Click">Remove ingredient</Button>
                         </StackPanel>

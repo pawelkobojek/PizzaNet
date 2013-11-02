@@ -57,6 +57,9 @@
     <Compile Include="Converters\OrderIdConverter.cs" />
     <Compile Include="Converters\QuantityToBackgroundConverter.cs" />
     <Compile Include="Converters\StateConverter.cs" />
+    <Compile Include="OrderIngredientForm.xaml.cs">
+      <DependentUpon>OrderIngredientForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OrdersRow.xaml.cs">
       <DependentUpon>OrdersRow.xaml</DependentUpon>
     </Compile>
@@ -82,6 +85,10 @@
       <DependentUpon>IngredientsRow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OrderIngredientForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OrdersRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

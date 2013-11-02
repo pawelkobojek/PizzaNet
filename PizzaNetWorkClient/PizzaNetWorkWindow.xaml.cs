@@ -140,32 +140,7 @@ namespace PizzaNetWorkClient
                 return;
             if (StockTab.IsSelected)
             {
-                StockItemsCollection.Clear();
-
-                var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
-                    {
-                        try
-                        {
-                            using (var db = new PizzaUnitOfWork())
-                            {
-                                Console.WriteLine("LoadDataStart");
-
-                                var result = db.Ingredients.FindAll();
-                                Console.WriteLine("after query");
-
-                                Console.WriteLine("Result is null: {0}", result == null);
-
-                                return result;
-                            }
-                        }
-                        catch(Exception exc)
-                        {
-                            Console.WriteLine(exc.Message);
-                            return null;
-                        }
-                    },PostData, null);
-                worker.ShowDialog();
-                //Task.Factory.StartNew(LoadData);
+                RefreshStockItems();
             }
             else
             {
@@ -173,6 +148,35 @@ namespace PizzaNetWorkClient
                     Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
                 lastSelectedIngredient = null;
             }
+        }
+
+        private void RefreshStockItems()
+        {
+            StockItemsCollection.Clear();
+
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            {
+                try
+                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        Console.WriteLine("LoadDataStart");
+
+                        var result = db.Ingredients.FindAll();
+                        Console.WriteLine("after query");
+
+                        Console.WriteLine("Result is null: {0}", result == null);
+
+                        return result;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.Message);
+                    return null;
+                }
+            }, PostData, null);
+            worker.ShowDialog();
         }
 
         private void PostData(object sender, PizzaNetControls.Worker.WorkFinishedEventArgs e)
@@ -333,7 +337,16 @@ namespace PizzaNetWorkClient
                 Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
         }
 
-
-        
+        private void ButtonOrderSupplies_Click(object sender, RoutedEventArgs e)
+        {
+            ObservableCollection<Ingredient> ings = new ObservableCollection<Ingredient>();
+            foreach (var item in StockItemsCollection)
+            {
+                ings.Add(item.Ingredient);
+            }
+            OrderIngredientForm form = new OrderIngredientForm(ings);
+            form.ShowDialog();
+            RefreshStockItems();
+        }
     }
 }

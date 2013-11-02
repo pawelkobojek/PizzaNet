@@ -20,5 +20,10 @@ namespace PizzaNetDataModel.Model
         public decimal PricePerUnit { get; set; }
 
         public virtual ICollection<Recipe> Recipies { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

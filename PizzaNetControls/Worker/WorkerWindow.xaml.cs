@@ -67,7 +67,7 @@ namespace PizzaNetControls.Worker
         }
 
         protected void Window_Loaded(object sender, RoutedEventArgs e)
-        {
+        {   
             if (task != null)
             {
                 worker.DoWork += (obj, a) =>
