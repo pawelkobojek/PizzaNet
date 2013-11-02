@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace PizzaNetDataModel.Model
 {
-    [Table("Ingredients")]
     public class Ingredient : Entity
     {
         [Key]

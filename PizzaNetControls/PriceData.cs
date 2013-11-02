@@ -13,13 +13,13 @@ namespace PizzaNetControls
             get { return _empty; }
         }
 
-        public int PriceLow { get; set; }
-        public int PriceMed { get; set; }
-        public int PriceHigh { get; set; }
+        public double PriceLow { get; set; }
+        public double PriceMed { get; set; }
+        public double PriceHigh { get; set; }
 
         public override string ToString()
         {
-            return PriceLow.ToString() + " / " + PriceMed.ToString() + " / " + PriceHigh.ToString();
+            return String.Format("{0:0.00} / {1:0.00} / {2:0.00}", PriceLow, PriceMed, PriceHigh);
         }
     }
 }

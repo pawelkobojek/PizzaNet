@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace PizzaNetDataModel.Model
 {
-    [Table("States")]
     public class State : Entity
     {
         [NotMapped]

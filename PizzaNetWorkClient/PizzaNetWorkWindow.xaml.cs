@@ -62,7 +62,7 @@ namespace PizzaNetWorkClient
                 this.IngredientsRowsCollection.Add(c);
             }
 
-            PizzaNetControls.RecipeControl d;
+            /*PizzaNetControls.RecipeControl d;
             for (int i = 0; i < 10; i++)
             {
                 d = new PizzaNetControls.RecipeControl();
@@ -71,7 +71,7 @@ namespace PizzaNetWorkClient
                 d.Ingredients = new List<string>() { "Mozarella Cheese", "Mushrooms", "Ingredient3" };
                 d.Width = 300;
                 this.RecipesCollection.Add(d);
-            }
+            }*/
             #endregion
 
             #region stock items
@@ -332,8 +332,5 @@ namespace PizzaNetWorkClient
             if (lastSelectedIngredient!=null)
                 Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
         }
-
-
-        
     }
 }

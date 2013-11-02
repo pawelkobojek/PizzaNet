@@ -1,4 +1,6 @@
-﻿using PizzaNetDataModel.Model;
+﻿using PizzaNetControls;
+using PizzaNetDataModel.Model;
+using PizzaNetDataModel.Repository;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,7 +31,7 @@ namespace PizzaNetClient
             this.RecipesCollection = new ObservableCollection<PizzaNetControls.RecipeControl>();
 
             #region ExampleData
-            var c = new PizzaNetControls.IngredientsRow(new Ingredient()
+           /* var c = new PizzaNetControls.IngredientsRow(new Ingredient()
             {
                 Name = "Ingredient1",
                 NormalWeight = 200,
@@ -46,18 +48,24 @@ namespace PizzaNetClient
                 });
                 c.CurrentQuantity = c.Ingredient.NormalWeight;
                 this.IngredientsCollection.Add(c);
-            }
-
-            PizzaNetControls.RecipeControl d;
+            }*/
+            
+           /* PizzaNetControls.RecipeControl d;
             for (int i = 0; i < 10; i++)
             {
                 d = new PizzaNetControls.RecipeControl();
-                d.RecipeName = "MyRecipeName";
-                d.Prices = new PizzaNetControls.PriceData() { PriceLow = 10, PriceMed = 20, PriceHigh = 30 };
-                d.Ingredients = new List<string>() { "Mozarella Cheese", "Mushrooms", "Ingredient3" };
-                d.Width = 300;
+                d.Recipe = new Recipe()
+                {
+                    Ingredients = new List<Ingredient>() { new Ingredient() { Name="Mozarella Cheese", NormalWeight=100, PricePerUnit=0.2M},
+                                                                new Ingredient() { Name="Mushrooms", NormalWeight=50, PricePerUnit=0.2M},
+                                                                new Ingredient() { Name="Ingredient3", NormalWeight=200, PricePerUnit=0.2M}},
+                    Name = "MyRecipe"
+                };
+                d.RecalculatePrices(new PizzaNetDataModel.Model.Size[] { new PizzaNetDataModel.Model.Size() { SizeValue=1},
+                                                        new PizzaNetDataModel.Model.Size() { SizeValue=1.5},
+                                                        new PizzaNetDataModel.Model.Size() { SizeValue=2}});
                 this.RecipesCollection.Add(d);
-            }
+            }*/
             #endregion
         }
 
@@ -66,11 +74,51 @@ namespace PizzaNetClient
 
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this,(args) =>
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            {
+                try
                 {
-                    System.Threading.Thread.Sleep((int)args[0]);
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        Console.WriteLine("LoadDataStart");
+                        var result = new Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>
+                        {
+                            First = db.Recipies.FindAll(),
+                            Second = db.Sizes.FindAll().ToArray()
+                        };
+                        foreach(var r in result.First)
+                        {
+                            Console.WriteLine(r.Ingredients.IsReadOnly);
+                        }
+                        Console.WriteLine("after query");
+
+                        Console.WriteLine("Result is null: {0}", result == null);
+
+                        return result;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.Message);
                     return null;
-                }, null, 2000);
+                }
+            }, (s,args) =>
+                {
+                    var result = args.Result as Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>;
+                    if (result == null)
+                    {
+                        Console.WriteLine("Result is null");
+                        return;
+                    }
+                    foreach (var item in result.First)
+                    {
+                        var rc = new RecipeControl();
+                        rc.Recipe = item;
+                        rc.RecalculatePrices(result.Second);
+                        RecipesCollection.Add(rc);
+                        Console.WriteLine(item.Name);
+                    }
+                }, null);
             worker.ShowDialog();
         }
     }

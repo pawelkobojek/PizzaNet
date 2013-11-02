@@ -17,13 +17,14 @@ namespace PizzaNetDataModel.Repository
 
         public IngredientRepository Ingredients { get; set; }
         public RecipeRepository Recipies { get; set; }
-
+        public SizeRepository Sizes { get; set; }
 
         public PizzaUnitOfWork()
         {
             db = new PizzaContext();
             Ingredients = new IngredientRepository(db);
             Recipies = new RecipeRepository(db);
+            Sizes = new SizeRepository(db);
         }
 
         public void Commit()
