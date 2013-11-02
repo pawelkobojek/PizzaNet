@@ -14,7 +14,6 @@ namespace PizzaNetDataModel.Model
     /// there will be two istances of this class: one for Margherita and one
     /// for Capriciosa.
     /// </summary>
-    [Table("Order_Details")]
     public class OrderDetail : Entity
     {
         /// <summary>

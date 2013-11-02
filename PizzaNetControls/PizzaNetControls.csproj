@@ -63,9 +63,11 @@
     <Compile Include="OrdersRow.xaml.cs">
       <DependentUpon>OrdersRow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pair.cs" />
     <Compile Include="PizzaRow.xaml.cs">
       <DependentUpon>PizzaRow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PriceCalculator.cs" />
     <Compile Include="PriceData.cs" />
     <Compile Include="Converters\PriceDataConverter.cs" />
     <Compile Include="RecipeControl.xaml.cs">

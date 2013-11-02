@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PizzaNetDataModel.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -24,8 +25,6 @@ namespace PizzaNetControls
         {
             InitializeComponent();
             this.DataContext = this;
-            RecipeName = "Unknown";
-            Ingredients = new List<string>() { "Ingredient" };
             Prices = new PriceData() { PriceLow = 0, PriceMed = 0, PriceHigh = 0 };
         }
 
@@ -39,25 +38,26 @@ namespace PizzaNetControls
             }
         }
 
-        private string _recipeName = "";
-        public string RecipeName
+        private Recipe _recipe;
+        public Recipe Recipe
         {
-            get { return _recipeName; }
-            set { _recipeName = value; NotifyPropertyChanged("RecipeName"); }
-        }
-
-        private ICollection<string> _ingredients;
-        public ICollection<string> Ingredients
-        {
-            get { return _ingredients; }
-            set { _ingredients = value; NotifyPropertyChanged("Ingredients"); }
+            get { return _recipe; }
+            set { 
+                    _recipe = value; 
+                    NotifyPropertyChanged("Recipe"); 
+                }
         }
 
         private PriceData _prices;
         public PriceData Prices
         {
             get { return _prices; }
-            set { _prices = value; NotifyPropertyChanged("Prices"); }
+            private set { _prices = value; NotifyPropertyChanged("Prices"); }
+        }
+
+        public void RecalculatePrices(PizzaNetDataModel.Model.Size[] sizes)
+        {
+            Prices = PriceCalculator.GetPrices(Recipe, sizes);
         }
     }
 }

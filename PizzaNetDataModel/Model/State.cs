@@ -11,7 +11,6 @@ namespace PizzaNetDataModel.Model
     /// <summary>
     /// Class representing state of the order.
     /// </summary>
-    [Table("States")]
     public class State : Entity
     {
         [NotMapped]

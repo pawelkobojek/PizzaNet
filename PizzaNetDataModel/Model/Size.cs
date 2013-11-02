@@ -11,7 +11,6 @@ namespace PizzaNetDataModel.Model
     /// <summary>
     /// Class representing size of the pizza.
     /// </summary>
-    [Table("Sizes")]
     public class Size : Entity
     {
         /// <summary>

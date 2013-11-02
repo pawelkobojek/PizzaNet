@@ -82,7 +82,7 @@
                 </Separator.Style>
             </Separator>
             <ListView Name="RecipiesContainer" 
-                      ItemsSource="{Binding Path=RecipesCollection}" 
+                      ItemsSource="{Binding RecipesCollection}" 
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       BorderThickness="0">
                 <ListView.ItemsPanel>

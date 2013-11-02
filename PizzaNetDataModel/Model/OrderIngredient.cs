@@ -12,13 +12,15 @@ namespace PizzaNetDataModel.Model
     /// Class representing many-to-many relation between ingredients and
     /// particural ordered pizzas.
     /// </summary>
-    [Table("Order_Ingredients")]
     public class OrderIngredient : Entity
     {
         /// <summary>
         /// Foreign key of related ingredient
         /// </summary>
-        [Column(Order = 0), Key, ForeignKey("Ingredient")]
+        [Key]
+        public int OrderIngredientID { get; set; }
+
+        [ForeignKey("Ingredient")]
         public int IngredientID { get; set; }
         /// <summary>
         /// Related ingredient
@@ -28,8 +30,9 @@ namespace PizzaNetDataModel.Model
         /// <summary>
         /// Foreign key of related OrderDetail
         /// </summary>
-        [Column(Order = 1), Key, ForeignKey("OrderDetail")]
+        [ForeignKey("OrderDetail")]
         public int OrderDetailID { get; set; }
+
         /// <summary>
         /// Related OrderDetail
         /// </summary>

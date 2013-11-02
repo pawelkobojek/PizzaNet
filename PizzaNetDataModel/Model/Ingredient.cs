@@ -11,7 +11,6 @@ namespace PizzaNetDataModel.Model
     /// <summary>
     /// Class representing Ingredients.
     /// </summary>
-    [Table("Ingredients")]
     public class Ingredient : Entity
     {
         /// <summary>

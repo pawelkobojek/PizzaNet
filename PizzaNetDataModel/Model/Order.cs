@@ -11,7 +11,6 @@ namespace PizzaNetDataModel.Model
     /// <summary>
     /// Class representing Order.
     /// </summary>
-    [Table("Orders")]
     public class Order : Entity
     {
         /// <summary>

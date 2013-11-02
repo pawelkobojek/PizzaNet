@@ -6,7 +6,7 @@
              xmlns:pizzaNetControls="clr-namespace:PizzaNetControls"
              xmlns:pizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
              mc:Ignorable="d"
-             Height="100" Width="250"
+             Height="100" Width="300"
              d:DesignHeight="100" d:DesignWidth="300" Focusable="True" >
         <StackPanel>
             <StackPanel.Resources>
@@ -15,11 +15,11 @@
             </StackPanel.Resources>
             <TextBlock FontSize="18" 
                        Margin="10, 10, 10, 5" 
-                       Text="{Binding Path=RecipeName}"/>
+                       Text="{Binding Path=Recipe.Name}"/>
             <TextBlock FontSize="10" 
                        Margin="10, 0, 0, 0" 
                        FontStyle="Italic" 
-                       Text="{Binding Path=Ingredients, Converter={StaticResource ResourceKey=ingredientsConverter}}"/>
+                       Text="{Binding Path=Recipe.Ingredients, Converter={StaticResource ResourceKey=ingredientsConverter}}"/>
             <TextBlock FontSize="18" 
                        Margin="10, 5, 10, 10" 
                        Text="{Binding Path=Prices, Converter={StaticResource ResourceKey=priceConverter}}"/>
