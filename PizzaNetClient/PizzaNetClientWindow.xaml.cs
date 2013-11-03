@@ -30,6 +30,7 @@ namespace PizzaNetClient
             this.DataContext = this;
             this.IngredientsCollection = new ObservableCollection<PizzaNetControls.IngredientsRow>();
             this.RecipesCollection = new ObservableCollection<PizzaNetControls.RecipeControl>();
+            this.Ingredients = new List<Ingredient>();
 
             #region ExampleData
            /* var c = new PizzaNetControls.IngredientsRow(new Ingredient()
@@ -71,6 +72,7 @@ namespace PizzaNetClient
         }
 
         public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection { get; set; }
+        public List<Ingredient> Ingredients { get; set; }
         public ObservableCollection<PizzaNetControls.RecipeControl> RecipesCollection { get; set; }
 
         private string _sizeSelectedText = "Small";
@@ -96,10 +98,11 @@ namespace PizzaNetClient
                     using (var db = new PizzaUnitOfWork())
                     {
                         Console.WriteLine("LoadDataStart");
-                        var result = new Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>
+                        var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
                         {
                             First = db.Recipies.FindAll(),
-                            Second = db.Sizes.FindAll().ToArray()
+                            Second = db.Sizes.FindAll().ToArray(),
+                            Third = db.Ingredients.FindAll()
                         };
                         foreach(var r in result.First)
                         {
@@ -119,7 +122,7 @@ namespace PizzaNetClient
                 }
             }, (s,args) =>
                 {
-                    var result = args.Result as Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>;
+                    var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
                     if (result == null)
                     {
                         Console.WriteLine("Result is null");
@@ -132,6 +135,11 @@ namespace PizzaNetClient
                         rc.RecalculatePrices(result.Second);
                         RecipesCollection.Add(rc);
                         Console.WriteLine(item.Name);
+                    }
+                    foreach (var item in result.Third)
+                    {
+                        IngredientsCollection.Add(new IngredientsRow(item));
+                        Ingredients.Add(item);
                     }
                 }, null);
             worker.ShowDialog();
@@ -153,18 +161,25 @@ namespace PizzaNetClient
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        private void SetCurrentQuantities(bool[] quantities)
+        {
+            int i=0;
+            foreach (var item in IngredientsCollection)
+                item.CurrentQuantity = (quantities[i++]) ? item.Ingredient.NormalWeight : 0M;
+        }
 
         private void RecipesContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.OriginalSource!=RecipesContainer) return;
             if (RecipesContainer.SelectedIndex < 0) return;
-            IngredientsCollection.Clear();
+            bool[] quantities = new bool[Ingredients.Count];
             foreach (var i in RecipesCollection[RecipesContainer.SelectedIndex].Recipe.Ingredients)
             {
-                var row = new IngredientsRow(i);
-                row.CurrentQuantity = i.NormalWeight;
-                IngredientsCollection.Add(row);
-            }    
+                int ind = Ingredients.FindIndex((ing) => { return ing.IngredientID == i.IngredientID; });
+                if (ind > 0)
+                    quantities[ind] = true;
+            }
+            SetCurrentQuantities(quantities);
         }
     }
 }

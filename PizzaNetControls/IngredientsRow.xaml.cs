@@ -42,6 +42,12 @@ namespace PizzaNetControls
             CurrentQuantity = 0;
         }
 
+        public IngredientsRow(Ingredient ingredient, decimal currentQuantity)
+            : this(ingredient)
+        {
+            CurrentQuantity = currentQuantity;
+        }
+
         private Ingredient _ingredient;
         public Ingredient Ingredient
         {
