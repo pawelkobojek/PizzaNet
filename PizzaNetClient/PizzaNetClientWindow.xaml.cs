@@ -153,5 +153,18 @@ namespace PizzaNetClient
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        private void RecipesContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.OriginalSource!=RecipesContainer) return;
+            if (RecipesContainer.SelectedIndex < 0) return;
+            IngredientsCollection.Clear();
+            foreach (var i in RecipesCollection[RecipesContainer.SelectedIndex].Recipe.Ingredients)
+            {
+                var row = new IngredientsRow(i);
+                row.CurrentQuantity = i.NormalWeight;
+                IngredientsCollection.Add(row);
+            }    
+        }
     }
 }
