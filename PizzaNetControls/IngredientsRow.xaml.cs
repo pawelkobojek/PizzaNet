@@ -36,7 +36,8 @@ namespace PizzaNetControls
                 updateButtons();
         }
 
-        public IngredientsRow(Ingredient ingredient) : this()
+        public IngredientsRow(Ingredient ingredient)
+            : this()
         {
             Ingredient = ingredient;
             CurrentQuantity = 0;
@@ -52,14 +53,31 @@ namespace PizzaNetControls
         public Ingredient Ingredient
         {
             get { return _ingredient; }
-            set { _ingredient = value; NotifyPropertyChanged("Ingredient"); }
+            set
+            {
+                _ingredient = value;
+                BackgroundParameter = new Pair<decimal, decimal>() { First = _currentQuantity, Second = Ingredient.ExtraWeight }; 
+                NotifyPropertyChanged("Ingredient");
+            }
         }
 
         private decimal _currentQuantity;
         public decimal CurrentQuantity
         {
             get { return _currentQuantity; }
-            set { _currentQuantity = value; NotifyPropertyChanged("CurrentQuantity"); }
+            set
+            {
+                _currentQuantity = value;
+                BackgroundParameter = new Pair<decimal, decimal>() { First=_currentQuantity, Second=Ingredient.ExtraWeight};
+                NotifyPropertyChanged("CurrentQuantity");
+            }
+        }
+
+        private Pair<decimal, decimal> _backgroundParameter = new Pair<decimal, decimal>();
+        public Pair<decimal, decimal> BackgroundParameter
+        {
+            get { return _backgroundParameter; }
+            set { _backgroundParameter = value; NotifyPropertyChanged("BackgroundParameter"); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

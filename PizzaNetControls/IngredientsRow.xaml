@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <pizzaNetConverters:QuantityToBackgroundConverter x:Key="backgroundConverter"/>
     </UserControl.Resources>
-    <StackPanel Orientation="Horizontal" Background="{Binding CurrentQuantity, Converter={StaticResource ResourceKey=backgroundConverter}}">
+    <StackPanel Orientation="Horizontal" Background="{Binding BackgroundParameter, Converter={StaticResource ResourceKey=backgroundConverter}}">
         <Button Name="buttonLT" Width="40" Margin="15, 15, 5, 15" Click="Button_LT_Click">
             &lt;
         </Button>

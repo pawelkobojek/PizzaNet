@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace PizzaNetControls.Converters
 {
-    [ValueConversion(typeof(decimal), typeof(Brush))]
+    [ValueConversion(typeof(Pair<decimal,decimal>), typeof(Brush))]
     public class QuantityToBackgroundConverter : IValueConverter
     {
         private static System.Windows.Media.Color convertColor(System.Drawing.Color c)
@@ -18,9 +18,9 @@ namespace PizzaNetControls.Converters
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            decimal? obj = value as decimal?;
+            var obj = value as Pair<decimal, decimal>;
             if (obj == null) return null;
-            System.Windows.Media.Brush b = new SolidColorBrush(((obj ?? decimal.MaxValue) == 0) ? convertColor(System.Drawing.Color.LightSalmon) : convertColor(System.Drawing.Color.LightGreen));
+            System.Windows.Media.Brush b = new SolidColorBrush((obj.First == 0) ? convertColor(System.Drawing.Color.LightSalmon) : ((obj.First != obj.Second) ? convertColor(System.Drawing.Color.LightGreen) : convertColor(System.Drawing.Color.Green)));
             return (Brush)b;
         }
 

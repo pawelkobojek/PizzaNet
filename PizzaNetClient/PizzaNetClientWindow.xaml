@@ -77,9 +77,10 @@
                 <TextBlock Grid.Row="2" DockPanel.Dock="Top" FontSize="18" Margin="10">
                     Your order
                 </TextBlock>
-                <StackPanel Grid.Row="3">
-
-                </StackPanel>
+                <DockPanel Grid.Row="3" LastChildFill="True">
+                    <ListView Name="orderedPizzaContainer" 
+                              Margin="15, 0, 15, 0"/>
+                </DockPanel>
             </Grid>
             <Separator DockPanel.Dock="Right"/>
             <DockPanel DockPanel.Dock="Right" Name="PanelControl" Width="250" LastChildFill="True">
@@ -96,9 +97,9 @@
                                 <Setter Property="Margin" Value="10" />
                             </Style>
                         </StackPanel.Resources>
-                        <RadioButton Style="{StaticResource ResourceKey=toggleStyle}" Content="Small" Click="RadioButton_Click" IsChecked="True"/>
-                        <RadioButton Style="{StaticResource ResourceKey=toggleStyle}" Content="Medium" Click="RadioButton_Click"/>
-                        <RadioButton Style="{StaticResource ResourceKey=toggleStyle}" Content="Great" Click="RadioButton_Click"/>
+                        <RadioButton Name="smallButton" Style="{StaticResource ResourceKey=toggleStyle}" Content="Small" Click="RadioButton_Click" IsChecked="True"/>
+                        <RadioButton Name="mediumButton" Style="{StaticResource ResourceKey=toggleStyle}" Content="Medium" Click="RadioButton_Click"/>
+                        <RadioButton Name="greatButton" Style="{StaticResource ResourceKey=toggleStyle}" Content="Great" Click="RadioButton_Click"/>
                     </StackPanel>
                 </StackPanel>
                 <ListView Name="IngredientsContainer" 

@@ -75,6 +75,8 @@ namespace PizzaNetClient
         public List<Ingredient> Ingredients { get; set; }
         public ObservableCollection<PizzaNetControls.RecipeControl> RecipesCollection { get; set; }
 
+        private double currentSizeValue = 0;
+
         private string _sizeSelectedText = "Small";
         public string SizeSelectedText
         {
@@ -138,11 +140,29 @@ namespace PizzaNetClient
                     }
                     foreach (var item in result.Third)
                     {
-                        IngredientsCollection.Add(new IngredientsRow(item));
+                        var row = new IngredientsRow(item);
+                        row.PropertyChanged += row_PropertyChanged;
+                        IngredientsCollection.Add(row);
                         Ingredients.Add(item);
                     }
+                    if (result.Second.Length != 3) throw new Exception("Invalid number of sizes");
+                    smallButton.Tag = result.Second[0].SizeValue;
+                    mediumButton.Tag = result.Second[1].SizeValue;
+                    greatButton.Tag = result.Second[2].SizeValue;
+                    currentSizeValue = result.Second[0].SizeValue;
                 }, null);
             worker.ShowDialog();
+        }
+
+        void row_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Ingredient" || e.PropertyName == "CurrentQuantity")
+                RecalculatePrice();
+        }
+
+        private void RecalculatePrice()
+        {
+            PizzaInfoPrice = PriceCalculator.Calculate(IngredientsCollection, currentSizeValue);
         }
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
@@ -150,6 +170,10 @@ namespace PizzaNetClient
             RadioButton rb = sender as RadioButton;
             if (rb == null) return;
             SizeSelectedText = rb.Content.ToString();
+            var value = rb.Tag as double?;
+            if (value != null)
+                currentSizeValue = value ?? 0;
+            RecalculatePrice();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

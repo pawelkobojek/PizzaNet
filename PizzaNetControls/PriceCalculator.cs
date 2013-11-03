@@ -21,5 +21,15 @@ namespace PizzaNetControls
             }
             return result;
         }
+
+        public static double Calculate(IEnumerable<IngredientsRow> ingredients, double sizeValue)
+        {
+            double result = 0;
+            foreach (var i in ingredients)
+            {
+                result += (double)i.CurrentQuantity * (double)i.Ingredient.PricePerUnit * sizeValue;
+            }
+            return result;
+        }
     }
 }
