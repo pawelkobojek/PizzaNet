@@ -30,6 +30,7 @@ namespace PizzaNetClient
             this.DataContext = this;
             this.IngredientsCollection = new ObservableCollection<PizzaNetControls.IngredientsRow>();
             this.RecipesCollection = new ObservableCollection<PizzaNetControls.RecipeControl>();
+            this.OrderedPizzasCollection = new ObservableCollection<IngredientsList>();
             this.Ingredients = new List<Ingredient>();
 
             #region ExampleData
@@ -74,14 +75,13 @@ namespace PizzaNetClient
         public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection { get; set; }
         public List<Ingredient> Ingredients { get; set; }
         public ObservableCollection<PizzaNetControls.RecipeControl> RecipesCollection { get; set; }
+        public ObservableCollection<PizzaNetControls.IngredientsList> OrderedPizzasCollection { get; set; }
 
-        private double currentSizeValue = 0;
-
-        private string _sizeSelectedText = "Small";
-        public string SizeSelectedText
+        private PizzaNetDataModel.Model.Size _currentSizeValue;
+        public PizzaNetDataModel.Model.Size CurrentSizeValue
         {
-            get { return _sizeSelectedText; }
-            set { _sizeSelectedText = value; NotifyPropertyChanged("SizeSelectedText"); }
+            get { return _currentSizeValue; }
+            set { _currentSizeValue = value; NotifyPropertyChanged("CurrentSizeValue"); }
         }
 
         private double _pizzaInfoPrice = 0;
@@ -102,7 +102,7 @@ namespace PizzaNetClient
                         Console.WriteLine("LoadDataStart");
                         var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
                         {
-                            First = db.Recipies.FindAll(),
+                            First = db.Recipies.FindAllEagerly(),
                             Second = db.Sizes.FindAll().ToArray(),
                             Third = db.Ingredients.FindAll()
                         };
@@ -127,6 +127,7 @@ namespace PizzaNetClient
                         Console.WriteLine("Result is null");
                         return;
                     }
+                    if (result.Second.Length != 3) throw new Exception("Invalid number of sizes");
                     foreach (var item in result.First)
                     {
                         var rc = new RecipeControl();
@@ -137,16 +138,15 @@ namespace PizzaNetClient
                     }
                     foreach (var item in result.Third)
                     {
-                        var row = new IngredientsRow(item);
+                        var row = new IngredientsRow(item,0,result.Second[0]);
                         row.PropertyChanged += row_PropertyChanged;
                         IngredientsCollection.Add(row);
                         Ingredients.Add(item);
                     }
-                    if (result.Second.Length != 3) throw new Exception("Invalid number of sizes");
-                    smallButton.Tag = result.Second[0].SizeValue;
-                    mediumButton.Tag = result.Second[1].SizeValue;
-                    greatButton.Tag = result.Second[2].SizeValue;
-                    currentSizeValue = result.Second[0].SizeValue;
+                    smallButton.Tag = result.Second[0];
+                    mediumButton.Tag = result.Second[1];
+                    greatButton.Tag = result.Second[2];
+                    CurrentSizeValue = result.Second[0];
                 }, null);
             worker.ShowDialog();
         }
@@ -159,17 +159,20 @@ namespace PizzaNetClient
 
         private void RecalculatePrice()
         {
-            PizzaInfoPrice = PriceCalculator.Calculate(IngredientsCollection, currentSizeValue);
+            PizzaInfoPrice = PriceCalculator.Calculate(IngredientsCollection, _currentSizeValue.SizeValue);
         }
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
             RadioButton rb = sender as RadioButton;
             if (rb == null) return;
-            SizeSelectedText = rb.Content.ToString();
-            var value = rb.Tag as double?;
+            var value = rb.Tag as PizzaNetDataModel.Model.Size;
             if (value != null)
-                currentSizeValue = value ?? 0;
+            {
+                CurrentSizeValue = value;
+                foreach (var item in IngredientsCollection)
+                    item.CurrentSize = value;
+            }
             RecalculatePrice();
         }
 
@@ -186,7 +189,7 @@ namespace PizzaNetClient
         {
             int i=0;
             foreach (var item in IngredientsCollection)
-                item.CurrentQuantity = (quantities[i++]) ? item.Ingredient.NormalWeight : 0M;
+                item.CurrentQuantity = (quantities[i++]) ? item.Ingredient.NormalWeight : 0;
         }
 
         private void RecipesContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -201,6 +204,22 @@ namespace PizzaNetClient
                     quantities[ind] = true;
             }
             SetCurrentQuantities(quantities);
+        }
+
+        private void AddOrder_Click(object sender, RoutedEventArgs e)
+        {
+            var ingr = new List<OrderIngredient>();
+            foreach(var item in IngredientsCollection)
+            {
+                if (item.CurrentQuantity > 0)
+                    ingr.Add(new OrderIngredient() { Ingredient = item.Ingredient, Quantity = item.CurrentQuantity });
+            }
+            var orderDetail = new OrderDetail()
+            {
+                Ingredients = ingr,
+                Size = CurrentSizeValue
+            };
+            OrderedPizzasCollection.Add(new IngredientsList(orderDetail));
         }
     }
 }

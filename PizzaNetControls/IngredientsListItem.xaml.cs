@@ -27,19 +27,21 @@ namespace PizzaNetControls
             InitializeComponent();
             this.DataContext = this;
         }
-
-        private Ingredient _ingr;
-        public Ingredient Ingredient
+        public IngredientsListItem(PizzaNetDataModel.Model.Size size)
         {
-            get { return _ingr; }
-            set { _ingr = value; NotifyPropertyChanged("Ingredient"); }
+            this.Size = size;
         }
 
-        private decimal _quantity;
-        public decimal Quantity
+        private OrderIngredient _ingr;
+        public OrderIngredient OrderIngredient
         {
-            get { return _quantity; }
-            set { _quantity = value; NotifyPropertyChanged("Quantity"); }
+            get { return _ingr; }
+            set { _ingr = value; NotifyPropertyChanged("OrderIngredient"); NotifyPropertyChanged("Weight"); }
+        }
+
+        public int Weight
+        {
+            get { return (int)(_ingr.Quantity*((_size!=null) ? _size.SizeValue : 0)); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -50,6 +52,13 @@ namespace PizzaNetControls
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private PizzaNetDataModel.Model.Size _size;
+        public PizzaNetDataModel.Model.Size Size 
+        {
+            get { return _size; }
+            set { _size = value; NotifyPropertyChanged("Size"); NotifyPropertyChanged("Weight"); }
         }
     }
 }

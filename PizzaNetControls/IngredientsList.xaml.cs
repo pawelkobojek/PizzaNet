@@ -1,6 +1,8 @@
-﻿using System;
+﻿using PizzaNetDataModel.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +21,7 @@ namespace PizzaNetControls
     /// <summary>
     /// Interaction logic for IngredientsListRow.xaml
     /// </summary>
-    public partial class IngredientsList : UserControl
+    public partial class IngredientsList : UserControl, INotifyPropertyChanged
     {
         public IngredientsList()
         {
@@ -28,14 +30,32 @@ namespace PizzaNetControls
             this.IngredientsCollection = new ObservableCollection<IngredientsListItem>();
         }
 
-        public IngredientsList(ObservableCollection<IngredientsRow> ingredients) : this()
+        public IngredientsList(OrderDetail od) : this()
         {
-            foreach(var item in ingredients)
+            OrderDetail = od;
+            foreach(var item in od.Ingredients)
             {
-                IngredientsCollection.Add(new IngredientsListItem() { Ingredient = item.Ingredient, Quantity = item.CurrentQuantity });
+                IngredientsCollection.Add(new IngredientsListItem() { OrderIngredient = item, Size = od.Size });
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
         public ObservableCollection<IngredientsListItem> IngredientsCollection { get; set; }
+
+        private OrderDetail _od;
+        public OrderDetail OrderDetail
+        {
+            get { return _od; }
+            set { _od = value; NotifyPropertyChanged("OrderDetail"); }
+        }
     }
 }

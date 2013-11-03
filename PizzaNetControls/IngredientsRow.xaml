@@ -21,7 +21,7 @@
             </Viewbox>
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="10" Text="Quantity: "/>
-                <TextBlock FontSize="10" Text="{Binding CurrentQuantity}"/>
+                <TextBlock FontSize="10" Text="{Binding CurrentWeight}"/>
                 <TextBlock FontSize="10" Text="g"/>
             </StackPanel>
         </StackPanel>

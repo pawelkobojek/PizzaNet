@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="20" d:DesignWidth="150">
+             d:DesignHeight="20" d:DesignWidth="150" Width="150">
     <DockPanel>
         <TextBlock DockPanel.Dock="Right" Text="g"/>
-        <TextBlock Text="{Binding Quantity}" DockPanel.Dock="Right"/>
-        <TextBlock Text="{Binding Ingredient.Name}" DockPanel.Dock="Left"/>
+        <TextBlock Text="{Binding Weight}" DockPanel.Dock="Right"/>
+        <TextBlock Text="{Binding OrderIngredient.Ingredient.Name}" DockPanel.Dock="Left"/>
     </DockPanel>
 </UserControl>

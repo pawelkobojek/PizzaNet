@@ -63,13 +63,13 @@
                         </StackPanel.Resources>
                         <DockPanel>
                             <TextBlock Text="Size" DockPanel.Dock="Left"/>
-                            <TextBlock Text="{Binding SizeSelectedText}" TextAlignment="Right" DockPanel.Dock="Right"/>
+                            <TextBlock Text="{Binding CurrentSizeValue}" TextAlignment="Right" DockPanel.Dock="Right"/>
                         </DockPanel>
                         <DockPanel>
                             <TextBlock Text="Price" DockPanel.Dock="Left"/>
                             <TextBlock Text="{Binding PizzaInfoPrice, StringFormat=\{0:0.00\}}" TextAlignment="Right" DockPanel.Dock="Right"/>
                         </DockPanel>
-                        <Button Margin="10, 5, 10, 10">
+                        <Button Margin="10, 5, 10, 10" Click="AddOrder_Click">
                             Add to order
                         </Button>
                     </StackPanel>
@@ -78,8 +78,9 @@
                     Your order
                 </TextBlock>
                 <DockPanel Grid.Row="3" LastChildFill="True">
-                    <ListView Name="orderedPizzaContainer" 
-                              Margin="15, 0, 15, 0"/>
+                    <ListView Name="orderedPizzasContainer" 
+                              Margin="15, 0, 15, 0"
+                              ItemsSource="{Binding OrderedPizzasCollection}"/>
                 </DockPanel>
             </Grid>
             <Separator DockPanel.Dock="Right"/>

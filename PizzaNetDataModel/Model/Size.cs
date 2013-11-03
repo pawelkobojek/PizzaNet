@@ -13,6 +13,13 @@ namespace PizzaNetDataModel.Model
     /// </summary>
     public class Size : Entity
     {
+        [NotMapped]
+        public const double SMALL = 1;
+        [NotMapped]
+        public const double MEDIUM = 1.5;
+        [NotMapped]
+        public const double GREAT = 2;
+
         /// <summary>
         /// Primary key
         /// </summary>
@@ -26,5 +33,16 @@ namespace PizzaNetDataModel.Model
         /// Big - 2.0
         /// </summary>
         public double SizeValue { get; set; }
+
+        public override string ToString()
+        {
+            if (SizeValue == SMALL)
+                return "Small";
+            else if (SizeValue == MEDIUM)
+                return "Medium";
+            else if (SizeValue == GREAT)
+                return "Great";
+            return "";
+        }
     }
 }

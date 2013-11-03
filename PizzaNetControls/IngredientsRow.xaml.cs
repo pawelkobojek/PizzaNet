@@ -43,10 +43,15 @@ namespace PizzaNetControls
             CurrentQuantity = 0;
         }
 
-        public IngredientsRow(Ingredient ingredient, decimal currentQuantity)
+        public IngredientsRow(Ingredient ingredient, int currentQuantity)
             : this(ingredient)
         {
             CurrentQuantity = currentQuantity;
+        }
+
+        public IngredientsRow(Ingredient ingredient, int currentQuantity, PizzaNetDataModel.Model.Size size) : this(ingredient, currentQuantity)
+        {
+            this.CurrentSize = size;
         }
 
         private Ingredient _ingredient;
@@ -56,31 +61,56 @@ namespace PizzaNetControls
             set
             {
                 _ingredient = value;
-                BackgroundParameter = new Pair<decimal, decimal>() { First = _currentQuantity, Second = Ingredient.ExtraWeight }; 
+                BackgroundParameter = new Pair<int, int>() { First = _currentQuantity, Second = Ingredient.ExtraWeight }; 
                 NotifyPropertyChanged("Ingredient");
             }
         }
 
-        private decimal _currentQuantity;
-        public decimal CurrentQuantity
+        private int _currentQuantity;
+        public int CurrentQuantity
         {
             get { return _currentQuantity; }
             set
             {
                 _currentQuantity = value;
-                BackgroundParameter = new Pair<decimal, decimal>() { First=_currentQuantity, Second=Ingredient.ExtraWeight};
+                BackgroundParameter = new Pair<int, int>() { First=_currentQuantity, Second=Ingredient.ExtraWeight};
                 NotifyPropertyChanged("CurrentQuantity");
+                NotifyPropertyChanged("CurrentWeight");
             }
         }
 
-        private Pair<decimal, decimal> _backgroundParameter = new Pair<decimal, decimal>();
-        public Pair<decimal, decimal> BackgroundParameter
+        public int CurrentWeight
+        {
+            get
+            {
+                return (int)(CurrentQuantity * ((CurrentSize != null) ? CurrentSize.SizeValue : 0));
+            }
+        }
+
+        private PizzaNetDataModel.Model.Size _currentSize;
+        public PizzaNetDataModel.Model.Size CurrentSize
+        {
+            get { return _currentSize; }
+            set
+            {
+                _currentSize = value;
+                BackgroundParameter = new Pair<int, int>() { First = _currentQuantity, Second = Ingredient.ExtraWeight };
+                NotifyPropertyChanged("CurrentSize");
+                NotifyPropertyChanged("CurrentWeight");
+            }
+        }
+
+        private Pair<int, int> _backgroundParameter = new Pair<int, int>();
+        public Pair<int, int> BackgroundParameter
         {
             get { return _backgroundParameter; }
             set { _backgroundParameter = value; NotifyPropertyChanged("BackgroundParameter"); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private Ingredient item;
+        private int p;
+        private PizzaNetDataModel.Model.Size size;
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
