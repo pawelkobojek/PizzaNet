@@ -4,6 +4,7 @@ using PizzaNetDataModel.Repository;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -21,7 +22,7 @@ namespace PizzaNetClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class PizzaNetClientWindow : Window
+    public partial class PizzaNetClientWindow : Window, INotifyPropertyChanged
     {
         public PizzaNetClientWindow()
         {
@@ -72,6 +73,20 @@ namespace PizzaNetClient
         public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection { get; set; }
         public ObservableCollection<PizzaNetControls.RecipeControl> RecipesCollection { get; set; }
 
+        private string _sizeSelectedText = "Small";
+        public string SizeSelectedText
+        {
+            get { return _sizeSelectedText; }
+            set { _sizeSelectedText = value; NotifyPropertyChanged("SizeSelectedText"); }
+        }
+
+        private double _pizzaInfoPrice = 0;
+        public double PizzaInfoPrice
+        {
+            get { return _pizzaInfoPrice; }
+            set { _pizzaInfoPrice = value; NotifyPropertyChanged("PizzaInfoPrice"); }
+        }
+
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
             var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
@@ -120,6 +135,23 @@ namespace PizzaNetClient
                     }
                 }, null);
             worker.ShowDialog();
+        }
+
+        private void RadioButton_Click(object sender, RoutedEventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            if (rb == null) return;
+            SizeSelectedText = rb.Content.ToString();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }
