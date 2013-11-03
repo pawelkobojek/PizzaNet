@@ -65,8 +65,8 @@
     <Compile Include="Model\Recipe.cs" />
     <Compile Include="Model\Size.cs" />
     <Compile Include="Model\State.cs" />
-    <Compile Include="PizzaContext.cs" />
-    <Compile Include="PizzaContextInitializer.cs" />
+    <Compile Include="EntityInfrastructure\PizzaContext.cs" />
+    <Compile Include="EntityInfrastructure\PizzaContextInitializer.cs" />
     <Compile Include="Repository\IngredientRepository.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\OrderRepository.cs" />

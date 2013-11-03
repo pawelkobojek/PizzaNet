@@ -106,10 +106,7 @@ namespace PizzaNetClient
                             Second = db.Sizes.FindAll().ToArray(),
                             Third = db.Ingredients.FindAll()
                         };
-                        foreach(var r in result.First)
-                        {
-                            Console.WriteLine(r.Ingredients.IsReadOnly);
-                        }
+
                         Console.WriteLine("after query");
 
                         Console.WriteLine("Result is null: {0}", result == null);

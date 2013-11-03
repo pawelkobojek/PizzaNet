@@ -7,16 +7,30 @@ using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel.Repository
 {
+    /// <summary>
+    /// Interface for SizeRepository.
+    /// </summary>
     public interface ISizeRepository : IRepository<Size, int>
     {
+        /// <summary>
+        /// Retrieves all Sizes from the repository.
+        /// </summary>
+        /// <returns>List of all sizes.</returns>
         IEnumerable<Size> FindAll();
-        IEnumerable<Size> Find(int id);
     }
 
+    /// <summary>
+    /// Repository of Sizes.
+    /// It gives access to sizes hold in a database.
+    /// </summary>
     public class SizeRepository : ISizeRepository
     {
         private readonly PizzaContext db;
 
+        /// <summary>
+        /// Creates repository associated with given PizzaContext.
+        /// </summary>
+        /// <param name="ctx">PizzaContext which should be used for this repository</param>
         public SizeRepository(PizzaContext ctx)
         {
             this.db = ctx;

@@ -3,20 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel.Repository
 {
+    /// <summary>
+    /// Interface for RecipeRepository.
+    /// </summary>
     public interface IRecipeRepository : IRepository<Recipe, int>
     {
+        /// <summary>
+        /// Retrieves all Recipies in database.
+        /// </summary>
+        /// <returns>List of all recipies in database.</returns>
         IEnumerable<Recipe> FindAll();
-        IEnumerable<Recipe> Find(int id);
+
+        IEnumerable<Recipe> FindAllEagerly();
     }
 
+    /// <summary>
+    /// Repository of Recipies.
+    /// It gives access to the recipies hold in a database.
+    /// </summary>
     public class RecipeRepository : IRecipeRepository
     {
         private readonly PizzaContext db;
 
+        /// <summary>
+        /// Creates repository associated with given PizzaContext.
+        /// </summary>
+        /// <param name="ctx">PizzaContext which should be used for this repository</param>
         public RecipeRepository(PizzaContext ctx)
         {
             db = ctx;
@@ -51,6 +68,12 @@ namespace PizzaNetDataModel.Repository
         public void Insert(Recipe entity)
         {
             db.Recipies.Add(entity);
+        }
+
+
+        public IEnumerable<Recipe> FindAllEagerly()
+        {
+            return db.Recipies.Include(r => r.Ingredients).ToList();
         }
     }
 }
