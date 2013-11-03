@@ -1,10 +1,12 @@
 ﻿using PizzaNetControls;
+using PizzaNetControls.Configuration;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -240,7 +242,27 @@ namespace PizzaNetClient
 
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Settings");
+            new SettingsWindow(this) { Config = getConfig() }.ShowDialog();
+        }
+
+        public ClientConfig getConfig()
+        {
+            ClientConfig cfg;
+            try
+            {
+                cfg = (ClientConfig)AbstractConfig.Read(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+            }
+            catch (InvalidOperationException)
+            {
+                cfg = new ClientConfig("lololo", "123456789");
+                cfg.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+            }
+            catch (System.IO.IOException)
+            {
+                cfg = new ClientConfig("lololo", "123456789");
+                cfg.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+            }
+            return cfg;
         }
     }
 }

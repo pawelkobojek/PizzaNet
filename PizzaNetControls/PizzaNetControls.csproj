@@ -52,6 +52,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ClientConfig.cs" />
+    <Compile Include="Configuration\AbstractConfig.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
     <Compile Include="Converters\IngredientsConverter.cs" />
     <Compile Include="Converters\OrderDetailsIdConverter.cs" />
@@ -71,6 +73,9 @@
       <DependentUpon>OrdersRow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pair.cs" />
+    <Compile Include="SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Trio.cs" />
     <Compile Include="PizzaRow.xaml.cs">
       <DependentUpon>PizzaRow.xaml</DependentUpon>
@@ -116,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RecipeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
