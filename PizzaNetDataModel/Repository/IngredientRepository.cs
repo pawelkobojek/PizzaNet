@@ -7,17 +7,38 @@ using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel.Repository
 {
+    /// <summary>
+    /// Interface for IngredientRepository
+    /// </summary>
     public interface IIngredientRepository : IRepository<Ingredient, int>
     {
+        /// <summary>
+        /// Retrieves all Ingredients from the repository.
+        /// </summary>
+        /// <returns>List of all ingredients</returns>
         IEnumerable<Ingredient> FindAll();
-        IEnumerable<Ingredient> Find(int id);
+
+        /// <summary>
+        /// Gets ingredient with a given name.
+        /// If there is more than one ingredient with this name this method will take first.
+        /// </summary>
+        /// <param name="name">Name which will be searched.</param>
+        /// <returns>First found in database ingredient object with a given name.</returns>
         Ingredient Get(string name);
     }
 
+    /// <summary>
+    /// Repository of Ingredients.
+    /// It gives access to ingredients in a database.
+    /// </summary>
     public class IngredientRepository : IIngredientRepository
     {
         private readonly PizzaContext db;
 
+        /// <summary>
+        /// Creates repository associated with given PizzaContext.
+        /// </summary>
+        /// <param name="ctx">PizzaContext which should be used for this repository</param>
         public IngredientRepository(PizzaContext ctx)
         {
             this.db = ctx;

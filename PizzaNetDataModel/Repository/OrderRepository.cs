@@ -20,12 +20,6 @@ namespace PizzaNetDataModel.Repository
         /// <returns>List of all orders.</returns>
         IEnumerable<Order> FindAll();
         /// <summary>
-        /// Retrieves the order for the given id.
-        /// </summary>
-        /// <param name="id">Id of the order to be retrieved.</param>
-        /// <returns>Order object with a given id</returns>
-        IEnumerable<Order> Find(int id);
-        /// <summary>
         /// Retrieves all Orders in the database in a eager manner.
         /// In order to use lazy loading call FindAll() method.
         /// </summary>
@@ -35,7 +29,7 @@ namespace PizzaNetDataModel.Repository
     
     /// <summary>
     /// Repository of Orders.
-    /// It keeps the data of Orders.
+    /// It gives access to orders in database.
     /// </summary>
     public class OrderRepository : IOrderRepository
     {
