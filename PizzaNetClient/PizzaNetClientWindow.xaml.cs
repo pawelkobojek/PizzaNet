@@ -221,5 +221,11 @@ namespace PizzaNetClient
             };
             OrderedPizzasCollection.Add(new IngredientsList(orderDetail));
         }
+
+        private void ButtonRemoveFromOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (orderedPizzasContainer.SelectedIndex < 0) return;
+            OrderedPizzasCollection.RemoveAt(orderedPizzasContainer.SelectedIndex);
+        }
     }
 }

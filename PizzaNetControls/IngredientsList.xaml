@@ -3,15 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:pizzaNetControls="clr-namespace:PizzaNetControls"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="200">
     <StackPanel Focusable="False">
-        <TextBlock Text="{Binding OrderDetail.Size}"/>
-        <ListView Name="ingredientsContainer"
+        <DockPanel>
+            <TextBlock DockPanel.Dock="Left" Text="Size: "/>
+            <TextBlock DockPanel.Dock="Right" TextAlignment="Right" Text="{Binding OrderDetail.Size}"/>
+        </DockPanel>
+        <ItemsControl Name="ingredientsContainer"
                       ItemsSource="{Binding IngredientsCollection}" 
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       BorderThickness="0"
-                      Background="Transparent">
-        </ListView>
+                      Background="Transparent"
+                      Margin="5, 5, 0, 0"/>
     </StackPanel>
 </UserControl>
