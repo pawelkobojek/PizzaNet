@@ -107,7 +107,7 @@
                                 <Setter Property="Height" Value="30"/>
                             </Style>
                         </StackPanel.Resources>
-                        <Button>
+                        <Button Click="ButtonSetInRealisation_Click">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=btnStyle}">
                                     <Style.Triggers>
@@ -124,7 +124,7 @@
                             </Button.Style>
                             Set in realization
                         </Button>
-                        <Button>
+                        <Button Click="ButtonSetDone_Click">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=btnStyle}">
                                     <Style.Triggers>
@@ -137,7 +137,7 @@
                             </Button.Style>
                             Set done
                         </Button>
-                        <Button Style="{StaticResource ResourceKey=btnStyle}">
+                        <Button Style="{StaticResource ResourceKey=btnStyle}" Click="ButtonRemoveOrder_Click">
                             Remove
                         </Button>
                     </StackPanel>

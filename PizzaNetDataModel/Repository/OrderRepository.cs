@@ -3,16 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel.Repository
 {
+    /// <summary>
+    /// Interface for OrderRepository.
+    /// </summary>
     public interface IOrderRepository : IRepository<Order, int>
     {
+        /// <summary>
+        /// Retrieves all Orders in the database.
+        /// It uses lazy loading. In order to get eagerly loaded data use FindAllEagearly() method.
+        /// </summary>
+        /// <returns>List of all orders.</returns>
         IEnumerable<Order> FindAll();
+        /// <summary>
+        /// Retrieves the order for the given id.
+        /// </summary>
+        /// <param name="id">Id of the order to be retrieved.</param>
+        /// <returns>Order object with a given id</returns>
         IEnumerable<Order> Find(int id);
+        /// <summary>
+        /// Retrieves all Orders in the database in a eager manner.
+        /// In order to use lazy loading call FindAll() method.
+        /// </summary>
+        /// <returns>List of all orders.</returns>
+        IEnumerable<Order> FindAllEagerly();
     }
-
+    
+    /// <summary>
+    /// Repository of Orders.
+    /// It keeps the data of Orders.
+    /// </summary>
     public class OrderRepository : IOrderRepository
     {
         private PizzaContext db;
@@ -56,6 +80,17 @@ namespace PizzaNetDataModel.Repository
         public void Delete(Order entity)
         {
             db.Orders.Remove(entity);
+        }
+
+
+        public IEnumerable<Order> FindAllEagerly()
+        {
+            return db.Orders
+                .Include(o => o.OrderDetails.Select(od => od.Ingredients))
+                .Include(o => o.OrderDetails.Select(od => od.Ingredients.Select(ing => ing.Ingredient)))
+                .Include(o=>o.OrderDetails.Select(od=>od.Size))
+                .Include(o => o.State)
+                .ToList();
         }
     }
 }

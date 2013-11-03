@@ -20,6 +20,7 @@ using PizzaNetDataModel;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using PizzaNetDataModel.Monitors;
+using PizzaNetControls.Worker;
 using System.Threading;
 
 namespace PizzaNetWorkClient
@@ -167,7 +168,7 @@ namespace PizzaNetWorkClient
                     using (var db = new PizzaUnitOfWork())
                     {
                         Console.WriteLine("Load Orders Start");
-                        var result = db.Orders.FindAll();
+                        var result = db.Orders.FindAllEagerly();
                         Console.WriteLine("After query");
                         return result;
                     }
@@ -234,37 +235,17 @@ namespace PizzaNetWorkClient
             }
         }
 
-        private delegate void OneArgDelegate(IEnumerable<Ingredient> e);
-
-        private void LoadData()
-        {
-            using (var db = new PizzaUnitOfWork())
-            {
-                Console.WriteLine("LoadDataStart");
-
-                var result = db.Ingredients.FindAll();
-                Console.WriteLine("after query");
-
-                DispatcherOperation dop = Dispatcher.BeginInvoke(
-                        System.Windows.Threading.DispatcherPriority.Normal,
-                        new OneArgDelegate(PostData),
-                        result);
-                dop.Wait();
-            }
-        }
-
-        private void PostData(IEnumerable<Ingredient> e)
-        {
-            Console.WriteLine("PostData start");
-            foreach (var ingredient in e)
-            {
-                StockItemsCollection.Add(new StockItem(ingredient));
-            }
-            Console.WriteLine("PostData end");
-        }
-
         private void ordersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            OrdersRow ord = ordersListView.SelectedItem as OrdersRow;
+            if (ord != null)
+            {
+                Console.WriteLine("Order.Address: " + ord.Order.Address);
+                Console.WriteLine("Order.CustomerPhone: " + ord.Order.CustomerPhone.ToString());
+                Console.WriteLine("Order.Date: " + ord.Order.Date.ToString());
+                Console.WriteLine("Order.State: " + ord.Order.State.ToString());
+            }
+
             PizzasCollection.Clear();
             IList selected = e.AddedItems;
             if (selected.Count > 0)
@@ -393,6 +374,63 @@ namespace PizzaNetWorkClient
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshOrders();
+        }
+
+        private void ButtonSetInRealisation_Click(object sender, RoutedEventArgs e)
+        {
+            SetOrderStateInBackground(new State { StateValue = State.IN_REALISATION });
+        }
+
+        private void SetOrderStateInBackground(State state)
+        {
+            OrdersRow or = ordersListView.SelectedItem as OrdersRow;
+            WorkerWindow worker = new WorkerWindow(this, (args) =>
+            {
+                using (var db = new PizzaUnitOfWork())
+                {
+                    Console.WriteLine("Set in realisation");
+
+                    Order o = db.Orders.Get(or.Order.OrderID);
+                    o.State.StateValue = state.StateValue;
+                    db.Commit();
+
+                    Console.WriteLine("Order " + or.Order.OrderID + " state set to IN REALISATION");
+                    return null;
+                }
+            },
+                (s, a) =>
+                {
+                    RefreshOrders();
+                });
+            worker.ShowDialog();
+        }
+
+        private void ButtonSetDone_Click(object sender, RoutedEventArgs e)
+        {
+            SetOrderStateInBackground(new State { StateValue = State.DONE });
+        }
+
+        private void ButtonRemoveOrder_Click(object sender, RoutedEventArgs e)
+        {
+            OrdersRow or = ordersListView.SelectedItem as OrdersRow;
+            WorkerWindow worker = new WorkerWindow(this, (args) =>
+            {
+                using (var db = new PizzaUnitOfWork())
+                {
+                    Console.WriteLine("Remove order");
+
+                    Order o = db.Orders.Get(or.Order.OrderID);
+                    db.Orders.Delete(o);
+                    db.Commit();
+                    Console.WriteLine("Order " + or.Order.OrderID + " removed.");
+                    return null;
+                }
+            },
+                (s, a) =>
+                {
+                    RefreshOrders();
+                });
+            worker.ShowDialog();
         }
     }
 }

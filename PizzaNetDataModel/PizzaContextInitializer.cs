@@ -8,8 +8,16 @@ using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel
 {
-    public class PizzaContextInitializer : DropCreateDatabaseIfModelChanges<PizzaContext>
+    /// <summary>
+    /// Initializer for the appliaction's database.
+    /// It prefills the database.
+    /// </summary>
+    public class PizzaContextInitializer : DropCreateDatabaseAlways<PizzaContext>
     {
+        /// <summary>
+        /// Populates the database with default data.
+        /// </summary>
+        /// <param name="context">Context of the database to prefill.</param>
         protected override void Seed(PizzaContext context)
         {
             const String TOMATOS = "Pomidory";
@@ -83,26 +91,7 @@ namespace PizzaNetDataModel
                 ingredients.FindAll( ing=>ing.Name == TOMATOS || ing.Name == ONION || ing.Name == GARLIC
                 || ing.Name == MOZARELLA || ing.Name == PEPERONI_PEPPER || ing.Name == PEPERONI_SAUSAGE));
 
-            //#region ingredients
-            //ingredients.Find(ing => ing.Name == TOMATOS).Recipies = new List<Recipe>(
-            //    recipies.FindAll(r=>r.Name == MARGHERITA || r.Name == CAPRI));
-
-            //ingredients.Find(ing => ing.Name == MOZARELLA).Recipies = new List<Recipe>(
-            //    recipies.FindAll(r=>r.Name == MARGHERITA || r.Name == CAPRI));
-
-            //ingredients.Find(ing => ing.Name == MUSHROOMS).Recipies = new List<Recipe>(
-            //    );
-
-            //ingredients.Find(ing => ing.Name == HAM).Recipies = new List<Recipe>(
-            //    );
-
-            //ingredients.Find(ing => ing.Name == GARLIC).Recipies = new List<Recipe>(
-            //    );
-
-            //ingredients.Find(ing => ing.Name == PARMESAN).Recipies = new List<Recipe>(
-            //    );
-            //#endregion
-
+            
             List<Size> sizes = new List<Size>
             {
                 new Size{ SizeValue = 1},
@@ -114,6 +103,23 @@ namespace PizzaNetDataModel
             {
                 new State{ StateValue = 0},
                 new State{ StateValue = 1}
+            };
+
+            List<OrderIngredient> orderIng = new List<OrderIngredient>
+            {
+                new OrderIngredient{ Ingredient = ingredients.Where(ing => ing.Name==PEPERONI).First(),
+                    Quantity= ingredients.Where(ing => ing.Name==PEPERONI).First().NormalWeight }
+            };
+
+            List<OrderDetail> od = new List<OrderDetail>
+            {
+                new OrderDetail{ Ingredients = orderIng, Size=sizes[0]}
+            };
+
+            List<Order> orders = new List<Order>
+            {
+                new Order { Address="asd", CustomerPhone=123, Date=DateTime.Now, State = states[0],
+                     OrderDetails = od}
             };
 
             foreach (var item in sizes)
@@ -132,6 +138,10 @@ namespace PizzaNetDataModel
             foreach (var item in recipies)
             {
                 context.Recipies.Add(item);
+            }
+            foreach (var item in orders)
+            {
+                context.Orders.Add(item);
             }
             context.SaveChanges();
         }
