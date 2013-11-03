@@ -227,5 +227,20 @@ namespace PizzaNetClient
             if (orderedPizzasContainer.SelectedIndex < 0) return;
             OrderedPizzasCollection.RemoveAt(orderedPizzasContainer.SelectedIndex);
         }
+
+        private void ButtonClearOrder_Click(object sender, RoutedEventArgs e)
+        {
+            OrderedPizzasCollection.Clear();
+        }
+
+        private void ButtonOrder_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Ordered");
+        }
+
+        private void settingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Settings");
+        }
     }
 }

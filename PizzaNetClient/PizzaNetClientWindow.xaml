@@ -9,27 +9,38 @@
     <Window.Resources>
         <PizzaNetConverters:IntToBoolConverter x:Key="intToBoolConverter"/>
     </Window.Resources>
-    <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Top"
-    		Orientation="Horizontal" 
-    		HorizontalAlignment="Left"
-            Margin="5"
-            Height="auto">
-            <Image Height="50" Width="50" Source="res/PizzaSliceIcon.png"/>
-            <TextBlock VerticalAlignment="Center"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0"
+                   Margin="5"
+                   HorizontalAlignment="Stretch">
+            <Image DockPanel.Dock="Left" Height="50" Width="50" Source="res/PizzaSliceIcon.png"/>
+            <TextBlock DockPanel.Dock="Left"
+                       VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="30" Margin="10,0,0,0">
                 PizzaNet
             </TextBlock>
-        </StackPanel>
-        <Separator DockPanel.Dock="Top"/>
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="5">
-            <Button FontSize="18" Padding="20, 5, 20, 5" IsEnabled="{Binding ElementName=orderedPizzasContainer, Path=Items.Count, Converter={StaticResource ResourceKey=intToBoolConverter}, ConverterParameter=1}">
+            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
+            <Button Background="Transparent" Height="50" Width="50" Click="settingsButton_Click">
+                <Image Source="res/SettingsIcon.png"/>
+            </Button>
+            </StackPanel>
+        </DockPanel>
+        <Separator Grid.Row="1"/>
+        <StackPanel Orientation="Horizontal"  Grid.Row="4" HorizontalAlignment="Center" Margin="5">
+            <Button Click="ButtonOrder_Click" FontSize="18" Padding="20, 5, 20, 5" IsEnabled="{Binding ElementName=orderedPizzasContainer, Path=Items.Count, Converter={StaticResource ResourceKey=intToBoolConverter}, ConverterParameter=1}">
                 Order
             </Button>
         </StackPanel>
-        <Separator DockPanel.Dock="Bottom"/>
-        <DockPanel LastChildFill="True">
+        <Separator  Grid.Row="3"/>
+        <DockPanel Grid.Row="2" LastChildFill="True">
             <DockPanel.Resources>
                 <Style TargetType="{x:Type Separator}"
                            BasedOn="{StaticResource {x:Type Separator}}">
@@ -84,11 +95,22 @@
                     Your order
                 </TextBlock>
                 <DockPanel Grid.Row="3" LastChildFill="True">
-                    <Button Margin="10, 5, 10, 10" IsEnabled="{Binding ElementName=orderedPizzasContainer, Path=SelectedIndex, Converter={StaticResource ResourceKey=intToBoolConverter}}" 
-                            DockPanel.Dock="Bottom"
-                            Click="ButtonRemoveFromOrder_Click">
-                        Remove from order
-                    </Button>
+                    <Grid DockPanel.Dock="Bottom" Margin="10, 5, 10, 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" IsEnabled="{Binding ElementName=orderedPizzasContainer, Path=SelectedIndex, Converter={StaticResource ResourceKey=intToBoolConverter}}" 
+                                Click="ButtonRemoveFromOrder_Click"
+                                Margin="0, 0, 5, 0">
+                            Remove from order
+                        </Button>
+                        <Button Grid.Column="1" IsEnabled="{Binding ElementName=orderedPizzasContainer, Path=Items.Count, Converter={StaticResource ResourceKey=intToBoolConverter}, ConverterParameter=1}" 
+                                Click="ButtonClearOrder_Click"
+                                Margin="5, 0, 0, 0">
+                            Clear order
+                        </Button>
+                    </Grid>
                     <ListView Name="orderedPizzasContainer" 
                               Margin="10, 0, 10, 10"
                               ItemsSource="{Binding OrderedPizzasCollection}"/>
@@ -138,5 +160,5 @@
                 </ListView.ItemsPanel>
             </ListView>
         </DockPanel>
-    </DockPanel>
+    </Grid>
 </Window>
