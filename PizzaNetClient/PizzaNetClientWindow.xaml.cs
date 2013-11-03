@@ -98,13 +98,10 @@ namespace PizzaNetClient
                         Console.WriteLine("LoadDataStart");
                         var result = new Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>
                         {
-                            First = db.Recipies.FindAll(),
+                            First = db.Recipies.FindAllEagerly(),
                             Second = db.Sizes.FindAll().ToArray()
                         };
-                        foreach(var r in result.First)
-                        {
-                            Console.WriteLine(r.Ingredients.IsReadOnly);
-                        }
+
                         Console.WriteLine("after query");
 
                         Console.WriteLine("Result is null: {0}", result == null);

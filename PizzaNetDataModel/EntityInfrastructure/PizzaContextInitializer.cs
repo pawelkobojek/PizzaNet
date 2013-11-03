@@ -12,7 +12,7 @@ namespace PizzaNetDataModel
     /// Initializer for the appliaction's database.
     /// It prefills the database.
     /// </summary>
-    public class PizzaContextInitializer : DropCreateDatabaseIfModelChanges<PizzaContext>
+    internal class PizzaContextInitializer : DropCreateDatabaseIfModelChanges<PizzaContext>
     {
         /// <summary>
         /// Populates the database with default data.

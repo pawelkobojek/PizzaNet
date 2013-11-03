@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel.Repository
@@ -17,6 +18,8 @@ namespace PizzaNetDataModel.Repository
         /// </summary>
         /// <returns>List of all recipies in database.</returns>
         IEnumerable<Recipe> FindAll();
+
+        IEnumerable<Recipe> FindAllEagerly();
     }
 
     /// <summary>
@@ -65,6 +68,12 @@ namespace PizzaNetDataModel.Repository
         public void Insert(Recipe entity)
         {
             db.Recipies.Add(entity);
+        }
+
+
+        public IEnumerable<Recipe> FindAllEagerly()
+        {
+            return db.Recipies.Include(r => r.Ingredients).ToList();
         }
     }
 }

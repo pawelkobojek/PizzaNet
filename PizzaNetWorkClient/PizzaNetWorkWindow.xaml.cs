@@ -156,6 +156,11 @@ namespace PizzaNetWorkClient
             {
                 RefreshOrders();
             }
+
+            if (RecipiesTab.IsSelected)
+            {
+                RefreshRecipies();
+            }
         }
 
         private void RefreshOrders()
@@ -430,6 +435,54 @@ namespace PizzaNetWorkClient
                 {
                     RefreshOrders();
                 });
+            worker.ShowDialog();
+        }
+
+        private void RefreshRecipies()
+        {
+            RecipesCollection.Clear();
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            {
+                try
+                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        Console.WriteLine("LoadDataStart");
+                        var result = new Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>
+                        {
+                            First = db.Recipies.FindAllEagerly(),
+                            Second = db.Sizes.FindAll().ToArray()
+                        };
+
+                        Console.WriteLine("after query");
+
+                        Console.WriteLine("Result is null: {0}", result == null);
+
+                        return result;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.Message);
+                    return null;
+                }
+            }, (s, args) =>
+            {
+                var result = args.Result as Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>;
+                if (result == null)
+                {
+                    Console.WriteLine("Result is null");
+                    return;
+                }
+                foreach (var item in result.First)
+                {
+                    var rc = new RecipeControl();
+                    rc.Recipe = item;
+                    rc.RecalculatePrices(result.Second);
+                    RecipesCollection.Add(rc);
+                    Console.WriteLine(item.Name);
+                }
+            }, null);
             worker.ShowDialog();
         }
     }
