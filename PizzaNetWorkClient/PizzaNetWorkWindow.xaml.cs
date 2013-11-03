@@ -134,6 +134,7 @@ namespace PizzaNetWorkClient
 
         IngredientMonitor im = new IngredientMonitor();
         Ingredient lastSelectedIngredient = null;
+        private const string ORDER_IMPOSSIBLE = "Akcja niemożliwa! Za mało składnika w magazynie!";
         #endregion
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -383,7 +384,40 @@ namespace PizzaNetWorkClient
 
         private void ButtonSetInRealisation_Click(object sender, RoutedEventArgs e)
         {
-            SetOrderStateInBackground(new State { StateValue = State.IN_REALISATION });
+            Order o = ((OrdersRow)ordersListView.SelectedItem).Order;
+            WorkerWindow worker = new WorkerWindow(this, (args) =>
+                {
+                    List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
+                    foreach (var od in o.OrderDetails)
+                    {
+                        foreach (var odIng in od.Ingredients)
+                        {
+                            orderIngredients.Add(odIng);
+                        }
+                    }
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        foreach (var odIng in orderIngredients)
+                        {
+                            Ingredient i = db.Ingredients.Get(odIng.Ingredient.IngredientID);
+
+                            if (i.StockQuantity - odIng.Quantity < 0)
+                            {
+                                MessageBox.Show(ORDER_IMPOSSIBLE);
+                                return false;
+                            }
+
+                            i.StockQuantity -= odIng.Quantity;
+                        }
+                        db.Commit();
+                    }
+                    return true;
+                }, (a, s) =>
+            {
+                if((bool)s.Result)
+                    SetOrderStateInBackground(new State { StateValue = State.IN_REALISATION });
+            }, null);
+            worker.ShowDialog();
         }
 
         private void SetOrderStateInBackground(State state)
