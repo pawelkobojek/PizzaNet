@@ -8,20 +8,21 @@
              mc:Ignorable="d"
              Height="100" Width="300"
              d:DesignHeight="100" d:DesignWidth="300" Focusable="True" >
-        <StackPanel>
-            <StackPanel.Resources>
-                <pizzaNetConverters:PriceDataConverter x:Key="priceConverter"/>
-                <pizzaNetConverters:IngredientsConverter x:Key="ingredientsConverter"/>
-            </StackPanel.Resources>
-            <TextBlock FontSize="18" 
+    <StackPanel>
+        <StackPanel.Resources>
+            <pizzaNetConverters:PriceDataConverter x:Key="priceConverter"/>
+            <pizzaNetConverters:IngredientsConverter x:Key="ingredientsConverter"/>
+        </StackPanel.Resources>
+        <TextBlock FontSize="18" 
                        Margin="10, 10, 10, 5" 
                        Text="{Binding Path=Recipe.Name}"/>
-            <TextBlock FontSize="10" 
-                       Margin="10, 0, 0, 0" 
+        <Viewbox Stretch="Uniform" MaxHeight="20" HorizontalAlignment="Left">
+            <TextBlock Margin="10, 0, 0, 0" 
                        FontStyle="Italic" 
                        Text="{Binding Path=Recipe.Ingredients, Converter={StaticResource ResourceKey=ingredientsConverter}}"/>
-            <TextBlock FontSize="18" 
+        </Viewbox>
+        <TextBlock FontSize="18" 
                        Margin="10, 5, 10, 10" 
                        Text="{Binding Path=Prices, Converter={StaticResource ResourceKey=priceConverter}}"/>
-        </StackPanel>
+    </StackPanel>
 </UserControl>

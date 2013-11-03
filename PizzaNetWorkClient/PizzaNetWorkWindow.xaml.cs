@@ -448,10 +448,11 @@ namespace PizzaNetWorkClient
                     using (var db = new PizzaUnitOfWork())
                     {
                         Console.WriteLine("LoadDataStart");
-                        var result = new Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>
+                        var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
                         {
                             First = db.Recipies.FindAllEagerly(),
-                            Second = db.Sizes.FindAll().ToArray()
+                            Second = db.Sizes.FindAll().ToArray(),
+                            Third = db.Ingredients.FindAll()
                         };
 
                         Console.WriteLine("after query");
@@ -468,7 +469,7 @@ namespace PizzaNetWorkClient
                 }
             }, (s, args) =>
             {
-                var result = args.Result as Pair<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[]>;
+                var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
                 if (result == null)
                 {
                     Console.WriteLine("Result is null");
@@ -481,6 +482,10 @@ namespace PizzaNetWorkClient
                     rc.RecalculatePrices(result.Second);
                     RecipesCollection.Add(rc);
                     Console.WriteLine(item.Name);
+                }
+                foreach (var item in result.Third)
+                {
+                    IngredientsRowsCollection.Add(new IngredientsRow(item));
                 }
             }, null);
             worker.ShowDialog();

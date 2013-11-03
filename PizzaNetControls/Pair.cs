@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PizzaNetControls
 {
-    public class Pair<F, S>
+    public class Trio<F, S, T>
     {
         public F First;
         public S Second;
+        public T Third;
     }
 }

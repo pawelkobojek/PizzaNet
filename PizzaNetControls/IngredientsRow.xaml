@@ -16,7 +16,7 @@
             &lt;
         </Button>
         <StackPanel Width="75" Margin="5">
-            <Viewbox Stretch="Uniform" MaxHeight="20">
+            <Viewbox Stretch="Uniform" MaxHeight="20" HorizontalAlignment="Left">
                 <TextBlock Text="{Binding Ingredient.Name}"/>
             </Viewbox>
             <StackPanel Orientation="Horizontal">
