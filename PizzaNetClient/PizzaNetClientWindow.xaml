@@ -113,10 +113,11 @@
                 </ListView>
             </DockPanel>
             <Separator DockPanel.Dock="Right"/>
-            <ListView Name="RecipiesContainer" 
+            <ListView Name="RecipesContainer" 
                       ItemsSource="{Binding RecipesCollection}" 
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      BorderThickness="0">
+                      BorderThickness="0"
+                      SelectionChanged="RecipesContainer_SelectionChanged">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
