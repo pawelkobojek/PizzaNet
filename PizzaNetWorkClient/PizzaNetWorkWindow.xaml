@@ -243,7 +243,7 @@
                             <Button>
                                 Add new
                             </Button>
-                            <Button>
+                            <Button Click="ButtonRemoveRecipe_Click">
                                 Remove
                             </Button>
                         </StackPanel>

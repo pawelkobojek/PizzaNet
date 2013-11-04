@@ -23,5 +23,11 @@ namespace PizzaNetDataModel
             Database.SetInitializer<PizzaContext>(new PizzaContextInitializer());
             Database.Initialize(false);
         }
+
+        public PizzaContext(IDatabaseInitializer<PizzaContext> db)
+        {
+            Database.SetInitializer(db);
+            Database.Initialize(false);
+        }
     }
 }

@@ -387,34 +387,42 @@ namespace PizzaNetWorkClient
             Order o = ((OrdersRow)ordersListView.SelectedItem).Order;
             WorkerWindow worker = new WorkerWindow(this, (args) =>
                 {
-                    List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
-                    foreach (var od in o.OrderDetails)
+                    try
                     {
-                        foreach (var odIng in od.Ingredients)
+                        List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
+                        foreach (var od in o.OrderDetails)
                         {
-                            orderIngredients.Add(odIng);
+                            foreach (var odIng in od.Ingredients)
+                            {
+                                orderIngredients.Add(odIng);
+                            }
+                        }
+                        using (var db = new PizzaUnitOfWork())
+                        {
+                            foreach (var odIng in orderIngredients)
+                            {
+                                Ingredient i = db.Ingredients.Get(odIng.Ingredient.IngredientID);
+
+                                if (i.StockQuantity - odIng.Quantity < 0)
+                                {
+                                    MessageBox.Show(ORDER_IMPOSSIBLE);
+                                    return false;
+                                }
+
+                                i.StockQuantity -= odIng.Quantity;
+                            }
+                            db.Commit();
                         }
                     }
-                    using (var db = new PizzaUnitOfWork())
+                    catch (Exception exc)
                     {
-                        foreach (var odIng in orderIngredients)
-                        {
-                            Ingredient i = db.Ingredients.Get(odIng.Ingredient.IngredientID);
-
-                            if (i.StockQuantity - odIng.Quantity < 0)
-                            {
-                                MessageBox.Show(ORDER_IMPOSSIBLE);
-                                return false;
-                            }
-
-                            i.StockQuantity -= odIng.Quantity;
-                        }
-                        db.Commit();
+                        Console.WriteLine(exc);
+                        return false;
                     }
                     return true;
                 }, (a, s) =>
             {
-                if((bool)s.Result)
+                if ((bool)s.Result)
                     SetOrderStateInBackground(new State { StateValue = State.IN_REALISATION });
             }, null);
             worker.ShowDialog();
@@ -563,9 +571,9 @@ namespace PizzaNetWorkClient
                         sizes = ctx.Sizes.FindAll().ToArray();
                         ctx.Commit();
                     }
-                    return new Pair<RecipeControl, PizzaNetDataModel.Model.Size[]> {First=rec, Second=sizes};
+                    return new Pair<RecipeControl, PizzaNetDataModel.Model.Size[]> { First = rec, Second = sizes };
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     return exc;
                 }
@@ -581,7 +589,7 @@ namespace PizzaNetWorkClient
                     res.First.Update(res.Second);
                     return;
                 }
-                else MessageBox.Show(exc.Message,"PizzaNetWork",MessageBoxButton.OK,MessageBoxImage.Error);
+                else MessageBox.Show(exc.Message, "PizzaNetWork", MessageBoxButton.OK, MessageBoxImage.Error);
             },
             row, rc).ShowDialog();
         }
@@ -597,6 +605,30 @@ namespace PizzaNetWorkClient
                 ingr => ingr.IngredientID == item.Ingredient.IngredientID);
                 IngredientsRowsCollection[i].Included = res;
             }
+        }
+
+        private void ButtonRemoveRecipe_Click(object sender, RoutedEventArgs e)
+        {
+            
+            Recipe r = ((RecipeControl)RecipesContainer.SelectedItem).Recipe;
+            WorkerWindow worker = new WorkerWindow(this, (args) =>
+                {
+                    using(var db = new PizzaUnitOfWork())
+	                {
+                        db.inTransaction(uof =>
+                            {
+                                Recipe rec = db.Recipies.Get(r.RecipeID);
+                                db.Recipies.Delete(rec);
+                                db.Commit();
+                                Console.WriteLine("Recipe " + rec.Name + " removed.");
+                            });
+                        return null;
+	                }
+                }, (s, args) =>
+                {
+                    RefreshRecipies();
+                });
+            worker.ShowDialog();
         }
     }
 }
