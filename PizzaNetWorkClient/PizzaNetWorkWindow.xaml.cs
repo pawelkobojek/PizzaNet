@@ -43,7 +43,7 @@ namespace PizzaNetWorkClient
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
             view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
 
-            #region example data
+            /*#region example data
             #region recipes
             var c = new PizzaNetControls.IngredientsRow(new Ingredient()
             {
@@ -64,7 +64,7 @@ namespace PizzaNetWorkClient
                 this.IngredientsRowsCollection.Add(c);
             }
 
-            /*PizzaNetControls.RecipeControl d;
+            PizzaNetControls.RecipeControl d;
             for (int i = 0; i < 10; i++)
             {
                 d = new PizzaNetControls.RecipeControl();
@@ -73,7 +73,7 @@ namespace PizzaNetWorkClient
                 d.Ingredients = new List<string>() { "Mozarella Cheese", "Mushrooms", "Ingredient3" };
                 d.Width = 300;
                 this.RecipesCollection.Add(d);
-            }*/
+            }
             #endregion
 
             #region stock items
@@ -121,7 +121,7 @@ namespace PizzaNetWorkClient
                 OrdersCollection.Add(o);
             }
             #endregion
-            #endregion
+            #endregion*/
         }
 
         #region fields and properties
@@ -372,7 +372,7 @@ namespace PizzaNetWorkClient
             {
                 ings.Add(item.Ingredient);
             }
-            OrderIngredientForm form = new OrderIngredientForm(ings);
+            OrderIngredientForm form = new OrderIngredientForm(this, ings);
             form.ShowDialog();
             RefreshStockItems();
         }
@@ -523,6 +523,20 @@ namespace PizzaNetWorkClient
                 }
             }, null);
             worker.ShowDialog();
+        }
+
+        private void RecipesContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*if (e.OriginalSource != RecipesContainer) return;
+            if (RecipesContainer.SelectedIndex < 0) return;
+            bool[] quantities = new bool[Ingredients.Count];
+            foreach (var i in RecipesCollection[RecipesContainer.SelectedIndex].Recipe.Ingredients)
+            {
+                int ind = Ingredients.FindIndex((ing) => { return ing.IngredientID == i.IngredientID; });
+                if (ind > 0)
+                    quantities[ind] = true;
+            }
+            SetCurrentQuantities(quantities);*/
         }
     }
 }

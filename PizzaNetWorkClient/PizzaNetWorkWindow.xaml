@@ -259,7 +259,7 @@
                         </ListView>
                     </DockPanel>
                     <ListView ItemsSource="{Binding RecipesCollection}"
-                              Name="RecipiesContainer"
+                              Name="RecipesContainer"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                               Margin="20">
                         <ListView.ItemsPanel>

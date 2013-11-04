@@ -13,16 +13,36 @@ namespace PizzaNetControls.Configuration
         public ClientConfig()
         {
             UserAddress = "";
-            UserPhone = "";
+            UserPhone = 0;
         }
 
-        public ClientConfig(string userAddress, string userPhone)
+        public ClientConfig(string userAddress, int userPhone)
         {
             UserAddress = userAddress;
             UserPhone = userPhone;
         }
 
         public string UserAddress { get; set; }
-        public string UserPhone { get; set; }
+        public int UserPhone { get; set; }
+
+        public static ClientConfig getConfig()
+        {
+            ClientConfig cfg;
+            try
+            {
+                cfg = (ClientConfig)AbstractConfig.Read(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+            }
+            catch (InvalidOperationException)
+            {
+                cfg = new ClientConfig();
+                cfg.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+            }
+            catch (System.IO.IOException)
+            {
+                cfg = new ClientConfig();
+                cfg.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+            }
+            return cfg;
+        }
     }
 }

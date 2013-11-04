@@ -15,30 +15,34 @@ using System.Windows.Shapes;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Monitors;
 using PizzaNetDataModel.Repository;
+using System.ComponentModel;
 
 namespace PizzaNetControls
 {
     /// <summary>
     /// Interaction logic for OrderIngredientForm.xaml
     /// </summary>
-    public partial class OrderIngredientForm : Window
+    public partial class OrderIngredientForm : Window, INotifyPropertyChanged
     {
         private IngredientMonitor im = new IngredientMonitor();
 
-        public ObservableCollection<Ingredient> Ingredients { get; set; }
+        private ObservableCollection<Ingredient> _ingr;
+        public ObservableCollection<Ingredient> Ingredients 
+        {
+            get { return _ingr; }
+            set { _ingr = value; NotifyPropertyChanged("Ingredients"); }
+        }
 
         public OrderIngredientForm()
         {
-            DataContext = this;
             InitializeComponent();
+            DataContext = this;
             Ingredients = new ObservableCollection<Ingredient>();
         }
 
-        public OrderIngredientForm(ObservableCollection<Ingredient> ingredients)
+        public OrderIngredientForm(Window owner, ObservableCollection<Ingredient> ingredients) : this()
         {
-            DataContext = this;
             Ingredients = ingredients;
-            InitializeComponent();
         }
 
         private void ButtonOrder_Click(object sender, RoutedEventArgs e)
@@ -55,6 +59,16 @@ namespace PizzaNetControls
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             im.StartMonitor((Ingredient)listBox.SelectedItem);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

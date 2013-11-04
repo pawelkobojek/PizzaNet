@@ -237,32 +237,73 @@ namespace PizzaNetClient
 
         private void ButtonOrder_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Ordered");
+            List<OrderDetail> details = new List<OrderDetail>(OrderedPizzasCollection.Count);
+            foreach(var item in OrderedPizzasCollection)
+                details.Add(item.OrderDetail);
+
+            new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+                {
+                    var cfg = args[0] as ClientConfig;
+                    var det = args[1] as List<OrderDetail>;
+                    if (cfg == null || det == null) return false;
+                    try
+                    {
+                        using (var ctx = new PizzaUnitOfWork())
+                        {
+                            det = mergeIngredients(det, ctx.Ingredients.FindAll());
+                            det = mergeSizes(det, ctx.Sizes.FindAll());
+
+                            ctx.Orders.Insert(new Order()
+                            {
+                                Address = cfg.UserAddress,
+                                CustomerPhone = cfg.UserPhone,
+                                Date = DateTime.Now,
+                                OrderDetails = det,
+                                State = new State() {StateValue = State.NEW}
+                            });
+                            ctx.Commit();
+                        }
+                    }
+                    catch(Exception)
+                    {
+                        return false;
+                    }
+                    return true;
+                }, (s, args) =>
+                {
+                    bool b = (args.Result as bool?) ?? false;
+                    MessageBox.Show((b) ? "Ordered successfully" : "Error while ordering", "PizzaNet");
+                }, ClientConfig.getConfig(), details).ShowDialog();
         }
+        /// <summary>
+        /// Method needed to merge Ingredients and avoid to duplicate them in Ingredients table
+        /// </summary>
+        /// <param name="det"></param>
+        /// <param name="ing"></param>
+        /// <returns></returns>
+        private List<OrderDetail> mergeIngredients(List<OrderDetail> det, IEnumerable<Ingredient> ing)
+        {
+            foreach(var d in det)
+                foreach (var i in d.Ingredients)
+                {
+                    Ingredient s = ing.First((e) => { return e.IngredientID == i.Ingredient.IngredientID; });
+                    i.Ingredient = s;
+                }
+            return det;
+        }
+        private List<OrderDetail> mergeSizes(List<OrderDetail> det, IEnumerable<PizzaNetDataModel.Model.Size> sizes)
+        {
+            foreach (var d in det)
+            {
+                d.Size = sizes.First((e) => { return e.SizeValue == d.Size.SizeValue; });
+            }
+            return det;
+        }
+
 
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            new SettingsWindow(this) { Config = getConfig() }.ShowDialog();
-        }
-
-        public ClientConfig getConfig()
-        {
-            ClientConfig cfg;
-            try
-            {
-                cfg = (ClientConfig)AbstractConfig.Read(ClientConfig.CONFIGNAME, typeof(ClientConfig));
-            }
-            catch (InvalidOperationException)
-            {
-                cfg = new ClientConfig("lololo", "123456789");
-                cfg.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
-            }
-            catch (System.IO.IOException)
-            {
-                cfg = new ClientConfig("lololo", "123456789");
-                cfg.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
-            }
-            return cfg;
+            new SettingsWindow(this) { Config = ClientConfig.getConfig() }.ShowDialog();
         }
     }
 }
