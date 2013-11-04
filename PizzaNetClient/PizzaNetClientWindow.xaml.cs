@@ -286,7 +286,8 @@ namespace PizzaNetClient
             foreach(var d in det)
                 foreach (var i in d.Ingredients)
                 {
-                    Ingredient s = ing.First((e) => { return e.IngredientID == i.Ingredient.IngredientID; });
+                    Ingredient s = ing.FirstOrDefault((e) => { return e.IngredientID == i.Ingredient.IngredientID; });
+                    if (s == null) throw new Exception("Inconsistien data");
                     i.Ingredient = s;
                 }
             return det;
@@ -295,11 +296,11 @@ namespace PizzaNetClient
         {
             foreach (var d in det)
             {
-                d.Size = sizes.First((e) => { return e.SizeValue == d.Size.SizeValue; });
+                d.Size = sizes.FirstOrDefault((e) => { return e.SizeValue == d.Size.SizeValue; });
+                if (d.Size == null) throw new Exception("Inconsistien data");
             }
             return det;
         }
-
 
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {

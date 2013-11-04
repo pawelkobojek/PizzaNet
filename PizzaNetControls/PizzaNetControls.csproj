@@ -54,12 +54,17 @@
   <ItemGroup>
     <Compile Include="Configuration\ClientConfig.cs" />
     <Compile Include="Configuration\AbstractConfig.cs" />
+    <Compile Include="Converters\BoolReverseConverter.cs" />
+    <Compile Include="Converters\BoolToBackgroundConverter.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
     <Compile Include="Converters\IngredientsConverter.cs" />
     <Compile Include="Converters\OrderDetailsIdConverter.cs" />
     <Compile Include="Converters\OrderIdConverter.cs" />
     <Compile Include="Converters\QuantityToBackgroundConverter.cs" />
     <Compile Include="Converters\StateConverter.cs" />
+    <Compile Include="IngredientsRowWork.xaml.cs">
+      <DependentUpon>IngredientsRowWork.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IngredientsList.xaml.cs">
       <DependentUpon>IngredientsList.xaml</DependentUpon>
     </Compile>
@@ -92,6 +97,10 @@
       <DependentUpon>WorkerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Worker\WorkFinishedEventArgs.cs" />
+    <Page Include="IngredientsRowWork.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="IngredientsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

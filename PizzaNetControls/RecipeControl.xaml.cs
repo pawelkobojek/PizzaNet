@@ -59,5 +59,11 @@ namespace PizzaNetControls
         {
             Prices = PriceCalculator.GetPrices(Recipe, sizes);
         }
+
+        public void Update(PizzaNetDataModel.Model.Size[] sizes)
+        {
+            NotifyPropertyChanged("Recipe");
+            RecalculatePrices(sizes);
+        }
     }
 }

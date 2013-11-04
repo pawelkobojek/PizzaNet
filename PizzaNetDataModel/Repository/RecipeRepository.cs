@@ -20,6 +20,8 @@ namespace PizzaNetDataModel.Repository
         IEnumerable<Recipe> FindAll();
 
         IEnumerable<Recipe> FindAllEagerly();
+
+        IEnumerable<Recipe> FindEagerly(int id);
     }
 
     /// <summary>
@@ -47,6 +49,11 @@ namespace PizzaNetDataModel.Repository
         public IEnumerable<Recipe> Find(int id)
         {
             return db.Recipies.Where(r => r.RecipeID == id);
+        }
+
+        public IEnumerable<Recipe> FindEagerly(int id)
+        {
+            return db.Recipies.Include(r => r.Ingredients).Where(r => r.RecipeID == id);
         }
 
         public Recipe Get(int id)

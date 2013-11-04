@@ -38,7 +38,7 @@ namespace PizzaNetWorkClient
             this.OrdersCollection = new ObservableCollection<PizzaNetControls.OrdersRow>();
             this.PizzasCollection = new ObservableCollection<PizzaNetControls.PizzaRow>();
             this.IngredientsCollection = new ObservableCollection<OrderIngredient>();
-            this.IngredientsRowsCollection = new ObservableCollection<IngredientsRow>();
+            this.IngredientsRowsCollection = new ObservableCollection<IngredientsRowWork>();
             this.RecipesCollection = new ObservableCollection<RecipeControl>();
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
             view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
@@ -129,12 +129,12 @@ namespace PizzaNetWorkClient
         public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
         public ObservableCollection<PizzaNetControls.PizzaRow> PizzasCollection { get; set; }
         public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
-        public ObservableCollection<IngredientsRow> IngredientsRowsCollection { get; set; }
+        public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
 
         IngredientMonitor im = new IngredientMonitor();
         Ingredient lastSelectedIngredient = null;
-        private const string ORDER_IMPOSSIBLE = "Akcja niemożliwa! Za mało składnika w magazynie!";
+        private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
         #endregion
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -519,24 +519,84 @@ namespace PizzaNetWorkClient
                 }
                 foreach (var item in result.Third)
                 {
-                    IngredientsRowsCollection.Add(new IngredientsRow(item));
+                    var row = new IngredientsRowWork(item, false);
+                    row.ButtonIncludeChanged += row_PropertyChanged;
+                    IngredientsRowsCollection.Add(row);
                 }
             }, null);
             worker.ShowDialog();
         }
 
+        void row_PropertyChanged(object sender, EventArgs e)
+        {
+            if (RecipesContainer.SelectedIndex < 0) return;
+            var rc = RecipesCollection[RecipesContainer.SelectedIndex];
+            var row = sender as IngredientsRowWork;
+            if (row == null) return;
+            new WorkerWindow(this, args =>
+            {
+                var rw = args[0] as IngredientsRowWork;
+                if (rw == null) return null;
+                var rec = args[1] as RecipeControl;
+                if (rec == null) return null;
+                try
+                {
+                    PizzaNetDataModel.Model.Size[] sizes = null;
+                    using (var ctx = new PizzaUnitOfWork())
+                    {
+                        var recipe = ctx.Recipies.FindEagerly(rec.Recipe.RecipeID);
+                        if (recipe.Count() != 1) throw new Exception("Incosistent data");
+                        rec.Recipe = recipe.First();
+
+                        var ingredient = ctx.Ingredients.Find(rw.Ingredient.IngredientID);
+                        if (ingredient.Count() != 1) throw new Exception("Incosistent data");
+                        rw.Ingredient = ingredient.First();
+
+                        if (rec.Recipe.Ingredients.Contains(rw.Ingredient))
+                        {
+                            rec.Recipe.Ingredients.Remove(rw.Ingredient);
+                        }
+                        else
+                        {
+                            rec.Recipe.Ingredients.Add(rw.Ingredient);
+                        }
+                        sizes = ctx.Sizes.FindAll().ToArray();
+                        ctx.Commit();
+                    }
+                    return new Pair<RecipeControl, PizzaNetDataModel.Model.Size[]> {First=rec, Second=sizes};
+                }
+                catch(Exception exc)
+                {
+                    return exc;
+                }
+            },
+            (s, args) =>
+            {
+                var exc = args.Result as Exception;
+                if (exc == null)
+                {
+                    var res = args.Result as Pair<RecipeControl, PizzaNetDataModel.Model.Size[]>;
+                    if (res == null)
+                        MessageBox.Show(exc.Message, "Unknown error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    res.First.Update(res.Second);
+                    return;
+                }
+                else MessageBox.Show(exc.Message,"PizzaNetWork",MessageBoxButton.OK,MessageBoxImage.Error);
+            },
+            row, rc).ShowDialog();
+        }
+
         private void RecipesContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*if (e.OriginalSource != RecipesContainer) return;
+            if (e.OriginalSource != RecipesContainer) return;
             if (RecipesContainer.SelectedIndex < 0) return;
-            bool[] quantities = new bool[Ingredients.Count];
-            foreach (var i in RecipesCollection[RecipesContainer.SelectedIndex].Recipe.Ingredients)
+            for (int i = 0; i < IngredientsRowsCollection.Count; i++)
             {
-                int ind = Ingredients.FindIndex((ing) => { return ing.IngredientID == i.IngredientID; });
-                if (ind > 0)
-                    quantities[ind] = true;
+                var item = IngredientsRowsCollection[i];
+                bool res = null != RecipesCollection[RecipesContainer.SelectedIndex].Recipe.Ingredients.FirstOrDefault(
+                ingr => ingr.IngredientID == item.Ingredient.IngredientID);
+                IngredientsRowsCollection[i].Included = res;
             }
-            SetCurrentQuantities(quantities);*/
         }
     }
 }

@@ -261,7 +261,7 @@
                     <ListView ItemsSource="{Binding RecipesCollection}"
                               Name="RecipesContainer"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              Margin="20">
+                              Margin="20" SelectionChanged="RecipesContainer_SelectionChanged">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel/>
