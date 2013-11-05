@@ -133,6 +133,7 @@ namespace PizzaNetWorkClient
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
+        private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
         #endregion
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -165,10 +166,13 @@ namespace PizzaNetWorkClient
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
-                        Console.WriteLine("Load Orders Start");
-                        var result = db.Orders.FindAllEagerly();
-                        Console.WriteLine("After query");
-                        return result;
+                        return db.inTransaction(uof =>
+                            {
+                                Console.WriteLine("Load Orders Start");
+                                var result = uof.Db.Orders.FindAllEagerly();
+                                Console.WriteLine("After query");
+                                return result;
+                            });
                     }
                 }
                 catch (Exception exc)
@@ -199,14 +203,17 @@ namespace PizzaNetWorkClient
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
-                        Console.WriteLine("LoadDataStart");
+                        return db.inTransaction(uof =>
+                            {
+                                Console.WriteLine("LoadDataStart");
 
-                        var result = db.Ingredients.FindAll();
-                        Console.WriteLine("after query");
+                                var result = uof.Db.Ingredients.FindAllIncludeRecipies();
+                                Console.WriteLine("after query");
 
-                        Console.WriteLine("Result is null: {0}", result == null);
+                                Console.WriteLine("Result is null: {0}", result == null);
 
-                        return result;
+                                return result;
+                            });
                     }
                 }
                 catch (Exception exc)
@@ -310,17 +317,32 @@ namespace PizzaNetWorkClient
             worker.ShowDialog();
         }
 
-        private void ButtonRemove_Click(object sender, RoutedEventArgs e)
+        private void ButtonRemoveIngredient_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Remove clicked");
             if (listStock.SelectedIndex < 0) return;
+
+            Console.WriteLine(((StockItem)listStock.SelectedItem).Ingredient.Recipies.Count);
+
             var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
                         StockItem toRemove = args[0] as StockItem;
                         if (toRemove == null) return null;
+                        Console.WriteLine("Count of recipies: " + toRemove.Ingredient.Recipies.Count);
+                        if (toRemove.Ingredient.Recipies.Count != 0)
+                        {
+
+                            Console.WriteLine("Count of recipies: " + toRemove.Ingredient.Recipies.Count);
+                            foreach (var item in toRemove.Ingredient.Recipies)
+                            {
+                                Console.WriteLine(item.Name);
+                            }
+                            return null;
+                        }
                         db.Ingredients.Delete(toRemove.Ingredient);
+
                         db.Commit();
                         return toRemove;
                     }
@@ -329,12 +351,13 @@ namespace PizzaNetWorkClient
                     StockItem toRemove = args.Result as StockItem;
                     if (toRemove == null)
                     {
-                        Console.WriteLine("WARNING: Trying to remove null stock item!");
+                        //Console.WriteLine("WARNING: Trying to remove null stock item!");
+                        MessageBox.Show(ING_REMOVE_IMPOSSIBLE);
                         return;
                     }
                     StockItemsCollection.Remove(toRemove);
                     Console.WriteLine("Removed " + toRemove.Ingredient.Name);
-                }, StockItemsCollection[listStock.SelectedIndex]);
+                }, listStock.SelectedItem);
             worker.ShowDialog();
         }
 
@@ -583,12 +606,12 @@ namespace PizzaNetWorkClient
 
         private void ButtonRemoveRecipe_Click(object sender, RoutedEventArgs e)
         {
-            
+
             Recipe r = ((RecipeControl)RecipesContainer.SelectedItem).Recipe;
             WorkerWindow worker = new WorkerWindow(this, (args) =>
                 {
-                    using(var db = new PizzaUnitOfWork())
-	                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
                         db.inTransaction(uof =>
                             {
                                 Recipe rec = db.Recipies.Get(r.RecipeID);
@@ -597,7 +620,7 @@ namespace PizzaNetWorkClient
                                 Console.WriteLine("Recipe " + rec.Name + " removed.");
                             });
                         return null;
-	                }
+                    }
                 }, (s, args) =>
                 {
                     RefreshRecipies();
@@ -612,15 +635,15 @@ namespace PizzaNetWorkClient
                     try
                     {
                         Recipe r = null;
-                        using(var ctx = new PizzaUnitOfWork())
+                        using (var ctx = new PizzaUnitOfWork())
                         {
-                            r = new Recipe { Name = "New recipe", Ingredients=new List<Ingredient>() };
+                            r = new Recipe { Name = "New recipe", Ingredients = new List<Ingredient>() };
                             ctx.Recipies.Insert(r);
                             ctx.Commit();
                         }
                         return r;
                     }
-                    catch(Exception exc)
+                    catch (Exception exc)
                     {
                         return exc;
                     }
@@ -669,14 +692,14 @@ namespace PizzaNetWorkClient
                         }
                         return result;
                     }
-                    catch(Exception exc)
+                    catch (Exception exc)
                     {
                         return exc;
                     }
                 }, (s, args) =>
                 {
                     var exc = args.Result as Exception;
-                    if (exc!=null)
+                    if (exc != null)
                     {
                         showError("Can't change recipe name!");
                     }
@@ -707,7 +730,7 @@ namespace PizzaNetWorkClient
             RecipeControl rc = RecipesCollection[RecipesContainer.SelectedIndex];
             if (e.Key == Key.Return)
             {
-                if (rc.Recipe.Name!=txtb.Text)
+                if (rc.Recipe.Name != txtb.Text)
                     txtb.GetBindingExpression(TextBox.TextProperty).UpdateSource();
             }
         }

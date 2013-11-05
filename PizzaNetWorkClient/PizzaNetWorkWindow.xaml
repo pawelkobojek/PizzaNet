@@ -231,7 +231,7 @@
                             </StackPanel.Resources>
                             <Button Click="ButtonOrderSupplies_Click">Order supplies</Button>
                             <Button Click="ButtonAddIngredient_Click">Add new ingredient</Button>
-                            <Button Click="ButtonRemove_Click">Remove ingredient</Button>
+                            <Button Click="ButtonRemoveIngredient_Click">Remove ingredient</Button>
                         </StackPanel>
                     </StackPanel>
                 </Grid>

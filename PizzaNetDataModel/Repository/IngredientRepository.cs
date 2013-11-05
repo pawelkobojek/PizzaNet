@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 using PizzaNetDataModel.Model;
 
 namespace PizzaNetDataModel.Repository
@@ -17,6 +18,12 @@ namespace PizzaNetDataModel.Repository
         /// </summary>
         /// <returns>List of all ingredients</returns>
         IEnumerable<Ingredient> FindAll();
+
+        /// <summary>
+        /// Retrieves all Ingredients from the repository with associated Recipies.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Ingredient> FindAllIncludeRecipies();
 
         /// <summary>
         /// Gets ingredient with a given name.
@@ -86,6 +93,12 @@ namespace PizzaNetDataModel.Repository
         public Ingredient Get(string name)
         {
             return db.Ingredients.Where(ing => ing.Name == name).First();
+        }
+
+
+        public IEnumerable<Ingredient> FindAllIncludeRecipies()
+        {
+            return db.Ingredients.Include(ing => ing.Recipies).ToList();
         }
     }
 }

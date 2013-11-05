@@ -24,6 +24,12 @@ namespace PizzaNetDataModel
             Database.Initialize(false);
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ingredient>().Property(o => o.PricePerUnit).HasPrecision(12, 10);
+            base.OnModelCreating(modelBuilder);
+        }
+
         public PizzaContext(IDatabaseInitializer<PizzaContext> db)
         {
             Database.SetInitializer(db);
