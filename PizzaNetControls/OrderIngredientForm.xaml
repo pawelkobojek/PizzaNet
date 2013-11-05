@@ -14,7 +14,7 @@
                 Quantity
             </Label>
 
-            <TextBox Name="textQuantity" Margin="10,0,10,10">
+            <TextBox Name="textQuantity" Margin="10,0,10,10" PreviewTextInput="textQuantity_PreviewTextInput">
 
             </TextBox>
 

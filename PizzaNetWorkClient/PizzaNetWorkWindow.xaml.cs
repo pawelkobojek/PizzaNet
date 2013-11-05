@@ -48,6 +48,8 @@ namespace PizzaNetWorkClient
             OrdersRefresher = new BackgroundWorker();
             OrdersRefresher.DoWork += OrdersRefresher_DoWork;
             OrdersRefresher.RunWorkerCompleted += OrdersRefresher_RunWorkerCompleted;
+
+            this.worker.Lock = this.tabControl;
         }
 
         void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -100,7 +102,7 @@ namespace PizzaNetWorkClient
         private void RefreshOrders()
         {
             OrdersCollection.Clear();
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            this.worker.EnqueueTask(new WorkerTask((args) =>
             {
                 try
                 {
@@ -128,14 +130,12 @@ namespace PizzaNetWorkClient
                 {
                     OrdersCollection.Add(new OrdersRow(order));
                 }
-            });
-
-            worker.ShowDialog();
+            }));
         }
 
         private void RefreshCurrentOrders()
         {
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
             {
                 try
                 {
@@ -165,16 +165,14 @@ namespace PizzaNetWorkClient
                     if (row != null) row.Order = order;
                     else OrdersCollection.Add(new OrdersRow(order));
                 }
-            });
-
-            worker.ShowDialog();
+            }));
         }
 
         private void RefreshStockItems()
         {
             StockItemsCollection.Clear();
 
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
             {
                 try
                 {
@@ -198,8 +196,7 @@ namespace PizzaNetWorkClient
                     Console.WriteLine(exc.Message);
                     return null;
                 }
-            }, PostData, null);
-            worker.ShowDialog();
+            }, PostData, null));
         }
 
         private void PostData(object sender, PizzaNetControls.Worker.WorkFinishedEventArgs e)
@@ -270,7 +267,7 @@ namespace PizzaNetWorkClient
         private void ButtonAddIngredient_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("AddIngredient click");
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
@@ -293,8 +290,7 @@ namespace PizzaNetWorkClient
                     }
                     StockItemsCollection.Add(new StockItem(ing));
                     Console.WriteLine("Added " + ing.Name);
-                });
-            worker.ShowDialog();
+                }));
         }
 
         private void ButtonRemoveIngredient_Click(object sender, RoutedEventArgs e)
@@ -304,7 +300,7 @@ namespace PizzaNetWorkClient
 
             Console.WriteLine(((StockItem)listStock.SelectedItem).Ingredient.Recipies.Count);
 
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
@@ -333,8 +329,7 @@ namespace PizzaNetWorkClient
                     }
                     StockItemsCollection.Remove(toRemove);
                     Console.WriteLine("Removed " + toRemove.Ingredient.Name);
-                }, StockItemsCollection[listStock.SelectedIndex]);
-            worker.ShowDialog();
+                }, StockItemsCollection[listStock.SelectedIndex]));
         }
 
         private void ButtonOrderSupplies_Click(object sender, RoutedEventArgs e)
@@ -358,7 +353,7 @@ namespace PizzaNetWorkClient
         private void ButtonSetInRealisation_Click(object sender, RoutedEventArgs e)
         {
             Order o = ((OrdersRow)ordersListView.SelectedItem).Order;
-            WorkerWindow worker = new WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
@@ -401,14 +396,13 @@ namespace PizzaNetWorkClient
             {
                 if ((bool)s.Result)
                     SetOrderStateInBackground(new State { StateValue = State.IN_REALISATION });
-            }, null);
-            worker.ShowDialog();
+            }));
         }
 
         private void SetOrderStateInBackground(State state)
         {
             OrdersRow or = ordersListView.SelectedItem as OrdersRow;
-            WorkerWindow worker = new WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
             {
                 using (var db = new PizzaUnitOfWork())
                 {
@@ -430,8 +424,7 @@ namespace PizzaNetWorkClient
                     RefreshCurrentOrders();
                     or.Order.State = state;
                     or.Update();
-                });
-            worker.ShowDialog();
+                }));
         }
 
         private void ButtonSetDone_Click(object sender, RoutedEventArgs e)
@@ -442,7 +435,7 @@ namespace PizzaNetWorkClient
         private void ButtonRemoveOrder_Click(object sender, RoutedEventArgs e)
         {
             OrdersRow or = ordersListView.SelectedItem as OrdersRow;
-            WorkerWindow worker = new WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
             {
                 using (var db = new PizzaUnitOfWork())
                 {
@@ -462,15 +455,14 @@ namespace PizzaNetWorkClient
                 (s, a) =>
                 {
                     RefreshOrders();
-                });
-            worker.ShowDialog();
+                }));
         }
 
         private void RefreshRecipies()
         {
             RecipesCollection.Clear();
             IngredientsRowsCollection.Clear();
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
             {
                 try
                 {
@@ -521,8 +513,7 @@ namespace PizzaNetWorkClient
                     row.ButtonIncludeChanged += row_PropertyChanged;
                     IngredientsRowsCollection.Add(row);
                 }
-            }, null);
-            worker.ShowDialog();
+            }));
         }
 
         void row_PropertyChanged(object sender, EventArgs e)
@@ -531,7 +522,7 @@ namespace PizzaNetWorkClient
             var rc = RecipesCollection[RecipesContainer.SelectedIndex];
             var row = sender as IngredientsRowWork;
             if (row == null) return;
-            new WorkerWindow(this, args =>
+            worker.EnqueueTask(new WorkerTask(args =>
             {
                 var rw = args[0] as IngredientsRowWork;
                 if (rw == null) return null;
@@ -585,7 +576,7 @@ namespace PizzaNetWorkClient
                 }
                 else MessageBox.Show(exc.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
             },
-            row, rc).ShowDialog();
+            row, rc));
         }
 
         private void RecipesContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -605,7 +596,7 @@ namespace PizzaNetWorkClient
         {
 
             Recipe r = ((RecipeControl)RecipesContainer.SelectedItem).Recipe;
-            WorkerWindow worker = new WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
@@ -621,13 +612,12 @@ namespace PizzaNetWorkClient
                 }, (s, args) =>
                 {
                     RefreshRecipies();
-                });
-            worker.ShowDialog();
+                }));
         }
 
         private void ButtonAddRecipe_Click(object sender, RoutedEventArgs e)
         {
-            new WorkerWindow(this, args =>
+            worker.EnqueueTask(new WorkerTask(args =>
                 {
                     try
                     {
@@ -666,15 +656,14 @@ namespace PizzaNetWorkClient
                         }
                         else RecipesCollection.Add(new RecipeControl() { Recipe = r });
                     }
-                },
-                null).ShowDialog();
+                }));
         }
 
         private void TextBoxRecipeName_SourceUpdated(object sender, DataTransferEventArgs e)
         {
             if (RecipesContainer.SelectedIndex < 0) return;
             RecipeControl rc = RecipesCollection[RecipesContainer.SelectedIndex];
-            new WorkerWindow(this, args =>
+            worker.EnqueueTask(new WorkerTask(args =>
                 {
                     var recipe = args[0] as Recipe;
                     Recipe result = null;
@@ -714,7 +703,7 @@ namespace PizzaNetWorkClient
                             rc.Recipe = rec;
                         }
                     }
-                }, rc.Recipe).ShowDialog();
+                }, rc.Recipe));
         }
 
         private void showError(string message)
@@ -739,7 +728,7 @@ namespace PizzaNetWorkClient
         {
             if (listStock.SelectedIndex < 0) return;
             StockItem ingr = StockItemsCollection[listStock.SelectedIndex];
-            new WorkerWindow(this, args =>
+            worker.EnqueueTask(new WorkerTask(args =>
             {
                 var i = args[0] as Ingredient;
                 Ingredient result = null;
@@ -787,7 +776,7 @@ namespace PizzaNetWorkClient
                         ingr.Ingredient = rec;
                     }
                 }
-            }, ingr.Ingredient).ShowDialog();
+            }, ingr.Ingredient));
         }
 
         private void TextBoxStockDetails_KeyDown(object sender, KeyEventArgs e)

@@ -61,14 +61,20 @@ namespace PizzaNetControls.Worker
             if (this.Lock != null)
                 this.Lock.IsEnabled = false;
             WorkerTask t = tasks.Dequeue();
-            worker.DoWork += (s, e) =>
+
+            DoWorkEventHandler doWorkHandler = (s, e) =>
             {
                 t.Result = t.Task(t.Arguments);
             };
-            worker.RunWorkerCompleted += (s, e) =>
+            RunWorkerCompletedEventHandler workCompletedHandler = (s, e) =>
             {
-                t.Handler(this, new WorkFinishedEventArgs(t.Result, t.Arguments));
+                worker.DoWork -= doWorkHandler;
+                t.Finish(this, new WorkFinishedEventArgs(t.Result, t.Arguments));
             };
+
+            worker.DoWork += doWorkHandler;
+            worker.RunWorkerCompleted += workCompletedHandler;
+            worker.RunWorkerCompleted += (s, e) => { worker.RunWorkerCompleted -= workCompletedHandler; };
             worker.RunWorkerAsync();
         }
     }

@@ -32,10 +32,10 @@
                     PizzaNet Work
                 </TextBlock>
             </StackPanel>
-            <PizzaNetWorkers:WorkerControl x:Name="worker"/>
+            <PizzaNetWorkers:WorkerControl Grid.Column="1" Margin="0,0,5,0" x:Name="worker"/>
             </Grid>
             <Separator Name="c" DockPanel.Dock="Top"/>
-        <TabControl SelectionChanged="TabControl_SelectionChanged">
+        <TabControl Name="tabControl" SelectionChanged="TabControl_SelectionChanged">
             <TabItem Name="OrdersTab" Header="Orders">
                 <Grid>
                     <Grid.ColumnDefinitions>

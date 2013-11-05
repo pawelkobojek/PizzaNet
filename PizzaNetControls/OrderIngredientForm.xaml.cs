@@ -16,6 +16,7 @@ using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Monitors;
 using PizzaNetDataModel.Repository;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace PizzaNetControls
 {
@@ -69,6 +70,17 @@ namespace PizzaNetControls
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private void textQuantity_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsNumber(e.Text);
+        }
+
+        private static bool IsNumber(string text)
+        {
+            Regex regex = new Regex("^[0-9]+$");
+            return regex.IsMatch(text);
         }
     }
 }

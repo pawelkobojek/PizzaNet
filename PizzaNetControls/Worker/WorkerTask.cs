@@ -11,6 +11,8 @@ namespace PizzaNetControls.Worker
         public delegate object RunnableTask(object[] args);
         public delegate void WorkFinishedHandler(object sender, WorkFinishedEventArgs e);
 
+        public event WorkFinishedHandler WorkFinished;
+
         public WorkerTask()
         {
         }
@@ -18,13 +20,19 @@ namespace PizzaNetControls.Worker
         public WorkerTask(RunnableTask task, WorkFinishedHandler handler, params object[] args)
         {
             this.Task = task;
-            this.Handler = handler;
             this.Arguments = args;
+            if (handler!=null)
+                this.WorkFinished += handler;
         }
 
         public RunnableTask Task { get; set; }
-        public WorkFinishedHandler Handler { get; set; }
         public object[] Arguments { get; set; }
         public object Result { get; set; }
+
+        public void Finish(object sender, WorkFinishedEventArgs e)
+        {
+            if (WorkFinished != null)
+                WorkFinished(sender, e);
+        }
     }
 }

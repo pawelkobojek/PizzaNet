@@ -2,8 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Background="Transparent"
-             Height="45"
-             Width="45">
+             Height="50"
+             Width="50">
   
   <UserControl.Resources>
     <SolidColorBrush x:Key="progressCirclesColor" Color="#FF2E6187" />
