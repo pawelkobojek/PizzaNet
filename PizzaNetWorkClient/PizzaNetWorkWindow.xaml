@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:PizzaNetWorkClient"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters;assembly=PizzaNetControls"
-        Title="PizzaNet Work" Height="600" Width="900" Icon="res/PizzaSliceIcon.png"
+        Title="PizzaNetWork" Height="600" Width="900" Icon="res/PizzaSliceIcon.png"
         Loaded="Window_Loaded">
     <Window.Resources>
         <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
@@ -225,6 +225,12 @@
             <TabItem Name="RecipiesTab" Header="Recipies">
                 <DockPanel LastChildFill="True">
                     <DockPanel DockPanel.Dock="Right" Name="PanelControl" Width="250" LastChildFill="True" Margin="0, 20, 20, 20">
+                        <Border DockPanel.Dock="Top" Margin="5" BorderBrush="DarkGray" BorderThickness="1">
+                            <DockPanel Margin="5">
+                                <TextBlock Text="Recipe name:" FontSize="15" Width="105"/>
+                                <TextBox Width="120" Text="{Binding ElementName=RecipesContainer, Path=SelectedItem.Recipe.Name, NotifyOnSourceUpdated=True}" SourceUpdated="TextBoxRecipeName_SourceUpdated"/>
+                            </DockPanel>
+                        </Border>
                         <TextBlock DockPanel.Dock="Top" FontSize="18" Margin="10, 0, 10, 10">
                             Ingredients
                         </TextBlock>
@@ -240,7 +246,7 @@
                                     <Setter Property="Padding" Value="20, 0, 20, 0" />
                                 </Style>
                             </StackPanel.Resources>
-                            <Button>
+                            <Button Click="ButtonAddRecipe_Click">
                                 Add new
                             </Button>
                             <Button Click="ButtonRemoveRecipe_Click">

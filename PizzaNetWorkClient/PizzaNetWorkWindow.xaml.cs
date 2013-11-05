@@ -483,6 +483,7 @@ namespace PizzaNetWorkClient
         private void RefreshRecipies()
         {
             RecipesCollection.Clear();
+            IngredientsRowsCollection.Clear();
             var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
             {
                 try
@@ -589,7 +590,7 @@ namespace PizzaNetWorkClient
                     res.First.Update(res.Second);
                     return;
                 }
-                else MessageBox.Show(exc.Message, "PizzaNetWork", MessageBoxButton.OK, MessageBoxImage.Error);
+                else MessageBox.Show(exc.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
             },
             row, rc).ShowDialog();
         }
@@ -629,6 +630,100 @@ namespace PizzaNetWorkClient
                     RefreshRecipies();
                 });
             worker.ShowDialog();
+        }
+
+        private void ButtonAddRecipe_Click(object sender, RoutedEventArgs e)
+        {
+            new WorkerWindow(this, args =>
+                {
+                    try
+                    {
+                        Recipe r = null;
+                        using(var ctx = new PizzaUnitOfWork())
+                        {
+                            r = new Recipe { Name = "New recipe", Ingredients=new List<Ingredient>() };
+                            ctx.Recipies.Insert(r);
+                            ctx.Commit();
+                        }
+                        return r;
+                    }
+                    catch(Exception exc)
+                    {
+                        return exc;
+                    }
+                },
+                (s, a) =>
+                {
+                    Exception exc = a.Result as Exception;
+                    if (exc != null)
+                    {
+                        showError("Can't add recipe!");
+                        return;
+                    }
+                    else
+                    {
+                        Recipe r = a.Result as Recipe;
+                        if (r == null)
+                        {
+                            showError("Unknown error occured!");
+                            return;
+                        }
+                        else RecipesCollection.Add(new RecipeControl() { Recipe = r });
+                    }
+                },
+                null).ShowDialog();
+        }
+
+        private void TextBoxRecipeName_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (RecipesContainer.SelectedIndex < 0) return;
+            RecipeControl rc = RecipesCollection[RecipesContainer.SelectedIndex];
+            new WorkerWindow(this, args =>
+                {
+                    var recipe = args[0] as Recipe;
+                    Recipe result = null;
+                    if (recipe == null) return false;
+                    string newName = recipe.Name;
+                    try
+                    {
+                        using (var ctx = new PizzaUnitOfWork())
+                        {
+                            var res = ctx.Recipies.FindEagerly(recipe.RecipeID);
+                            if (res == null || res.Count() != 1) return false;
+                            result = res.First();
+                            result.Name = newName;
+                            ctx.Commit();
+                        }
+                        return result;
+                    }
+                    catch(Exception exc)
+                    {
+                        return exc;
+                    }
+                }, (s, args) =>
+                {
+                    var exc = args.Result as Exception;
+                    if (exc!=null)
+                    {
+                        showError("Can't change recipe name!");
+                    }
+                    else
+                    {
+                        var bl = args.Result as bool?;
+                        if (bl != null) showError("Unknown error occured!");
+                        else
+                        {
+                            var rec = args.Result as Recipe;
+                            if (rec == null) return;
+                            rc.Recipe = rec;
+                        }
+                    }
+                }, rc.Recipe).ShowDialog();
+        }
+
+        private void showError(string message)
+        {
+            MessageBox.Show(message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
