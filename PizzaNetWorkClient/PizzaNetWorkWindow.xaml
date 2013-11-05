@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PizzaNetWorkClient"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
+        xmlns:PizzaNetWorkers="clr-namespace:PizzaNetControls.Worker;assembly=PizzaNetControls"
         xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters;assembly=PizzaNetControls"
         xmlns:PizzaNetValidation="clr-namespace:PizzaNetControls.Validation;assembly=PizzaNetControls"
         Title="PizzaNetWork" Height="600" Width="900" Icon="res/PizzaSliceIcon.png"
@@ -14,19 +15,26 @@
         </Style>
     </Window.Resources>
     <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Top"
-    		Orientation="Horizontal" 
-    		HorizontalAlignment="Left"
-            Margin="5"
-            Height="auto">
-            <Image Height="50" Width="50" Source="res/PizzaSliceIcon.png"/>
-            <TextBlock VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontSize="30" Margin="10,0,0,0">
-                PizzaNet Work
-            </TextBlock>
-        </StackPanel>
-        <Separator Name="c" DockPanel.Dock="Top"/>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel
+    		    Orientation="Horizontal" 
+    		    HorizontalAlignment="Left"
+                Margin="5"
+                Height="auto">
+                <Image Height="50" Width="50" Source="res/PizzaSliceIcon.png"/>
+                <TextBlock VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontSize="30" Margin="10,0,0,0">
+                    PizzaNet Work
+                </TextBlock>
+            </StackPanel>
+            <PizzaNetWorkers:WorkerControl x:Name="worker"/>
+            </Grid>
+            <Separator Name="c" DockPanel.Dock="Top"/>
         <TabControl SelectionChanged="TabControl_SelectionChanged">
             <TabItem Name="OrdersTab" Header="Orders">
                 <Grid>

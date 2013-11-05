@@ -52,6 +52,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CircularProgressBar.xaml.cs">
+      <DependentUpon>CircularProgressBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\ClientConfig.cs" />
     <Compile Include="Configuration\AbstractConfig.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
@@ -94,10 +97,18 @@
     <Compile Include="StockItem.cs" />
     <Compile Include="Updater.cs" />
     <Compile Include="Validation\NumberValidation.cs" />
+    <Compile Include="Worker\WorkerControl.xaml.cs">
+      <DependentUpon>WorkerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Worker\WorkerTask.cs" />
     <Compile Include="Worker\WorkerWindow.xaml.cs">
       <DependentUpon>WorkerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Worker\WorkFinishedEventArgs.cs" />
+    <Page Include="CircularProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="IngredientsRowWork.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -135,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Worker\WorkerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
