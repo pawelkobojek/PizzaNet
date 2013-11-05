@@ -725,5 +725,18 @@ namespace PizzaNetWorkClient
         {
             MessageBox.Show(message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        private void TextBoxRecipeName_KeyDown(object sender, KeyEventArgs e)
+        {
+            var txtb = sender as TextBox;
+            if (txtb == null) return;
+            if (RecipesContainer.SelectedIndex < 0) return;
+            RecipeControl rc = RecipesCollection[RecipesContainer.SelectedIndex];
+            if (e.Key == Key.Return)
+            {
+                if (rc.Recipe.Name!=txtb.Text)
+                    txtb.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            }
+        }
     }
 }

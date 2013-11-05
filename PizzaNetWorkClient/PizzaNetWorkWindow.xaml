@@ -228,7 +228,10 @@
                         <Border DockPanel.Dock="Top" Margin="5" BorderBrush="DarkGray" BorderThickness="1">
                             <DockPanel Margin="5">
                                 <TextBlock Text="Recipe name:" FontSize="15" Width="105"/>
-                                <TextBox Width="120" Text="{Binding ElementName=RecipesContainer, Path=SelectedItem.Recipe.Name, NotifyOnSourceUpdated=True}" SourceUpdated="TextBoxRecipeName_SourceUpdated"/>
+                                <TextBox Width="120" 
+                                         Text="{Binding ElementName=RecipesContainer, Path=SelectedItem.Recipe.Name, NotifyOnSourceUpdated=True}" 
+                                         SourceUpdated="TextBoxRecipeName_SourceUpdated"
+                                         KeyDown="TextBoxRecipeName_KeyDown"/>
                             </DockPanel>
                         </Border>
                         <TextBlock DockPanel.Dock="Top" FontSize="18" Margin="10, 0, 10, 10">
