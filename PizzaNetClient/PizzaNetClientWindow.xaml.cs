@@ -101,19 +101,22 @@ namespace PizzaNetClient
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
-                        Console.WriteLine("LoadDataStart");
-                        var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
+                        return db.inTransaction(uof =>
                         {
-                            First = db.Recipies.FindAllEagerly(),
-                            Second = db.Sizes.FindAll().ToArray(),
-                            Third = db.Ingredients.FindAll()
-                        };
+                            Console.WriteLine("LoadDataStart");
+                            var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
+                            {
+                                First = uof.Db.Recipies.FindAllEagerly(),
+                                Second = uof.Db.Sizes.FindAll().ToArray(),
+                                Third = uof.Db.Ingredients.FindAll()
+                            };
 
-                        Console.WriteLine("after query");
+                            Console.WriteLine("after query");
 
-                        Console.WriteLine("Result is null: {0}", result == null);
+                            Console.WriteLine("Result is null: {0}", result == null);
 
-                        return result;
+                            return result;
+                        });
                     }
                 }
                 catch (Exception exc)
@@ -250,18 +253,21 @@ namespace PizzaNetClient
                     {
                         using (var ctx = new PizzaUnitOfWork())
                         {
-                            det = mergeIngredients(det, ctx.Ingredients.FindAll());
-                            det = mergeSizes(det, ctx.Sizes.FindAll());
-
-                            ctx.Orders.Insert(new Order()
+                            ctx.inTransaction(uof =>
                             {
-                                Address = cfg.UserAddress,
-                                CustomerPhone = cfg.UserPhone,
-                                Date = DateTime.Now,
-                                OrderDetails = det,
-                                State = new State() {StateValue = State.NEW}
+                                det = mergeIngredients(det, uof.Db.Ingredients.FindAll());
+                                det = mergeSizes(det, uof.Db.Sizes.FindAll());
+
+                                uof.Db.Orders.Insert(new Order()
+                                {
+                                    Address = cfg.UserAddress,
+                                    CustomerPhone = cfg.UserPhone,
+                                    Date = DateTime.Now,
+                                    OrderDetails = det,
+                                    State = new State() { StateValue = State.NEW }
+                                });
+                                uof.Db.Commit();
                             });
-                            ctx.Commit();
                         }
                     }
                     catch(Exception)
@@ -273,6 +279,7 @@ namespace PizzaNetClient
                 {
                     bool b = (args.Result as bool?) ?? false;
                     MessageBox.Show((b) ? "Ordered successfully" : "Error while ordering", "PizzaNet");
+                    if (b) OrderedPizzasCollection.Clear();
                 }, ClientConfig.getConfig(), details).ShowDialog();
         }
         /// <summary>

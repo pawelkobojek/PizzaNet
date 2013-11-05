@@ -23,6 +23,7 @@ using PizzaNetDataModel.Monitors;
 using PizzaNetControls.Worker;
 using System.Threading;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace PizzaNetWorkClient
 {
@@ -44,85 +45,20 @@ namespace PizzaNetWorkClient
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
             view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
 
-            /*#region example data
-            #region recipes
-            var c = new PizzaNetControls.IngredientsRow(new Ingredient()
-            {
-                Name = "Ingredient1",
-                NormalWeight = 200,
-                ExtraWeight = 300
-            });
-            this.IngredientsRowsCollection.Add(c);
-            for (int i = 0; i < 10; i++)
-            {
-                c = new PizzaNetControls.IngredientsRow(new Ingredient()
-                {
-                    Name = "Mozzarella Cheese",
-                    NormalWeight = 100,
-                    ExtraWeight = 200
-                });
-                c.CurrentQuantity = c.Ingredient.NormalWeight;
-                this.IngredientsRowsCollection.Add(c);
-            }
+            OrdersRefresher = new BackgroundWorker();
+            OrdersRefresher.DoWork += OrdersRefresher_DoWork;
+            OrdersRefresher.RunWorkerCompleted += OrdersRefresher_RunWorkerCompleted;
+        }
 
-            PizzaNetControls.RecipeControl d;
-            for (int i = 0; i < 10; i++)
-            {
-                d = new PizzaNetControls.RecipeControl();
-                d.RecipeName = "MyRecipeName";
-                d.Prices = new PizzaNetControls.PriceData() { PriceLow = 10, PriceMed = 20, PriceHigh = 30 };
-                d.Ingredients = new List<string>() { "Mozarella Cheese", "Mushrooms", "Ingredient3" };
-                d.Width = 300;
-                this.RecipesCollection.Add(d);
-            }
-            #endregion
+        void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            RefreshCurrentOrders();
+            OrdersRefresher.RunWorkerAsync();
+        }
 
-            #region stock items
-            PizzaNetControls.StockItem st;
-            for (int i = 0; i < 20; i++)
-            {
-                st = new PizzaNetControls.StockItem(new Ingredient()
-                    {
-                        IngredientID = 13,
-                        Name = "ItemName",
-                        StockQuantity = 100,
-                        NormalWeight = 10,
-                        ExtraWeight = 20,
-                        PricePerUnit = 1.2M
-                    });
-                StockItemsCollection.Add(st);
-            }
-            #endregion
-
-            #region orders
-            PizzaNetControls.OrdersRow o;
-            for (int i = 0; i < 10; i++)
-            {
-                o = new PizzaNetControls.OrdersRow(new Order()
-                {
-                    OrderID = 12 * i,
-                    State = new State() { StateValue = i % 3 },
-                    OrderDetails = new List<OrderDetail>() { new OrderDetail() 
-                                                                { 
-                                                                    OrderDetailID = 2*i,
-                                                                    Ingredients = new List<OrderIngredient>()
-                                                                    {
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i)}, Quantity=20*(i%2+1)},
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+1)}, Quantity=30*(i%2+1)}
-                                                                    }
-                                                                },
-                                                             new OrderDetail() { OrderDetailID = 2*i+1,
-                                                                    Ingredients = new List<OrderIngredient>()
-                                                                    {
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+2)}, Quantity=40*(i%2+1)},
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+3)}, Quantity=50*(i%2+1)}
-                                                                    }
-                                                             }}
-                });
-                OrdersCollection.Add(o);
-            }
-            #endregion
-            #endregion*/
+        void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.Sleep(TIMER_INTERVAL);
         }
 
         #region fields and properties
@@ -133,7 +69,11 @@ namespace PizzaNetWorkClient
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
+
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
+        private const int TIMER_INTERVAL = 60000;
+        private BackgroundWorker OrdersRefresher;
+
         #endregion
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -148,7 +88,7 @@ namespace PizzaNetWorkClient
 
             if (OrdersTab.IsSelected)
             {
-                RefreshOrders();
+                RefreshCurrentOrders();
             }
 
             if (RecipiesTab.IsSelected)
@@ -167,12 +107,12 @@ namespace PizzaNetWorkClient
                     using (var db = new PizzaUnitOfWork())
                     {
                         return db.inTransaction(uof =>
-                            {
-                                Console.WriteLine("Load Orders Start");
-                                var result = uof.Db.Orders.FindAllEagerly();
-                                Console.WriteLine("After query");
-                                return result;
-                            });
+                        {
+                            Console.WriteLine("Load Orders Start");
+                            var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
+                            Console.WriteLine("After query");
+                            return result;
+                        });
                     }
                 }
                 catch (Exception exc)
@@ -187,6 +127,43 @@ namespace PizzaNetWorkClient
                 foreach (var order in orders)
                 {
                     OrdersCollection.Add(new OrdersRow(order));
+                }
+            });
+
+            worker.ShowDialog();
+        }
+
+        private void RefreshCurrentOrders()
+        {
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            {
+                try
+                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        return db.inTransaction(uof =>
+                        {
+                            Console.WriteLine("Load Orders Start");
+                            var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
+                            Console.WriteLine("After query");
+                            return result;
+                        });
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc);
+                    return null;
+                }
+            }, (s, a) =>
+            {
+                IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
+                bool[] current = new bool[orders.Count()];
+                foreach (var order in orders)
+                {
+                    OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
+                    if (row != null) row.Order = order;
+                    else OrdersCollection.Add(new OrdersRow(order));
                 }
             });
 
@@ -297,11 +274,14 @@ namespace PizzaNetWorkClient
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
-                        Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2 };
-                        db.Ingredients.Insert(ing);
-                        db.Commit();
-                        Console.WriteLine("Commited " + ing.Name);
-                        return ing;
+                        return db.inTransaction(uof =>
+                        {
+                            Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, Recipies=new List<Recipe>() };
+                            uof.Db.Ingredients.Insert(ing);
+                            uof.Db.Commit();
+                            Console.WriteLine("Commited " + ing.Name);
+                            return ing;
+                        });
                     }
                 }, (s, a) =>
                 {
@@ -313,7 +293,7 @@ namespace PizzaNetWorkClient
                     }
                     StockItemsCollection.Add(new StockItem(ing));
                     Console.WriteLine("Added " + ing.Name);
-                }, null);
+                });
             worker.ShowDialog();
         }
 
@@ -328,23 +308,19 @@ namespace PizzaNetWorkClient
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
-                        StockItem toRemove = args[0] as StockItem;
-                        if (toRemove == null) return null;
-                        Console.WriteLine("Count of recipies: " + toRemove.Ingredient.Recipies.Count);
-                        if (toRemove.Ingredient.Recipies.Count != 0)
+                        return db.inTransaction(uof =>
                         {
-
-                            Console.WriteLine("Count of recipies: " + toRemove.Ingredient.Recipies.Count);
-                            foreach (var item in toRemove.Ingredient.Recipies)
+                            StockItem toRemove = args[0] as StockItem;
+                            if (toRemove == null) return null;
+                            if (toRemove.Ingredient.Recipies.Count != 0)
                             {
-                                Console.WriteLine(item.Name);
+                                return null;
                             }
-                            return null;
-                        }
-                        db.Ingredients.Delete(toRemove.Ingredient);
+                            uof.Db.Ingredients.Delete(toRemove.Ingredient);
 
-                        db.Commit();
-                        return toRemove;
+                            uof.Db.Commit();
+                            return toRemove;
+                        });
                     }
                 }, (s, args) =>
                 {
@@ -357,7 +333,7 @@ namespace PizzaNetWorkClient
                     }
                     StockItemsCollection.Remove(toRemove);
                     Console.WriteLine("Removed " + toRemove.Ingredient.Name);
-                }, listStock.SelectedItem);
+                }, StockItemsCollection[listStock.SelectedIndex]);
             worker.ShowDialog();
         }
 
@@ -376,6 +352,7 @@ namespace PizzaNetWorkClient
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshOrders();
+            OrdersRefresher.RunWorkerAsync();
         }
 
         private void ButtonSetInRealisation_Click(object sender, RoutedEventArgs e)
@@ -383,39 +360,43 @@ namespace PizzaNetWorkClient
             Order o = ((OrdersRow)ordersListView.SelectedItem).Order;
             WorkerWindow worker = new WorkerWindow(this, (args) =>
                 {
-                    try
+                    using (var db = new PizzaUnitOfWork())
                     {
-                        List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
-                        foreach (var od in o.OrderDetails)
-                        {
-                            foreach (var odIng in od.Ingredients)
-                            {
-                                orderIngredients.Add(odIng);
-                            }
-                        }
-                        using (var db = new PizzaUnitOfWork())
-                        {
-                            foreach (var odIng in orderIngredients)
-                            {
-                                Ingredient i = db.Ingredients.Get(odIng.Ingredient.IngredientID);
 
-                                if (i.StockQuantity - odIng.Quantity < 0)
+                        return db.inTransaction(uof =>
+                        {
+                            try
+                            {
+                                List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
+                                foreach (var od in o.OrderDetails)
                                 {
-                                    MessageBox.Show(ORDER_IMPOSSIBLE);
-                                    return false;
+                                    foreach (var odIng in od.Ingredients)
+                                    {
+                                        orderIngredients.Add(odIng);
+                                    }
                                 }
+                                foreach (var odIng in orderIngredients)
+                                {
+                                    Ingredient i = uof.Db.Ingredients.Get(odIng.Ingredient.IngredientID);
 
-                                i.StockQuantity -= odIng.Quantity;
+                                    if (i.StockQuantity - odIng.Quantity < 0)
+                                    {
+                                        MessageBox.Show(ORDER_IMPOSSIBLE);
+                                        return false;
+                                    }
+
+                                    i.StockQuantity -= odIng.Quantity;
+                                }
+                                uof.Db.Commit();
                             }
-                            db.Commit();
-                        }
+                            catch (Exception exc)
+                            {
+                                Console.WriteLine(exc);
+                                return false;
+                            }
+                            return true;
+                        });
                     }
-                    catch (Exception exc)
-                    {
-                        Console.WriteLine(exc);
-                        return false;
-                    }
-                    return true;
                 }, (a, s) =>
             {
                 if ((bool)s.Result)
@@ -431,19 +412,24 @@ namespace PizzaNetWorkClient
             {
                 using (var db = new PizzaUnitOfWork())
                 {
-                    Console.WriteLine("Set in realisation");
+                    return db.inTransaction(uof =>
+                        {
+                            Console.WriteLine("Set in realisation");
 
-                    Order o = db.Orders.Get(or.Order.OrderID);
-                    o.State.StateValue = state.StateValue;
-                    db.Commit();
+                            Order o = uof.Db.Orders.Get(or.Order.OrderID);
+                            o.State.StateValue = state.StateValue;
+                            uof.Db.Commit();
 
-                    Console.WriteLine("Order " + or.Order.OrderID + " state set to IN REALISATION");
-                    return null;
+                            Console.WriteLine("Order " + or.Order.OrderID + " state set to IN REALISATION");
+                            return or;
+                        });
                 }
             },
                 (s, a) =>
                 {
-                    RefreshOrders();
+                    RefreshCurrentOrders();
+                    or.Order.State = state;
+                    or.Update();
                 });
             worker.ShowDialog();
         }
@@ -460,13 +446,17 @@ namespace PizzaNetWorkClient
             {
                 using (var db = new PizzaUnitOfWork())
                 {
-                    Console.WriteLine("Remove order");
+                    return db.inTransaction(uof =>
+                    {
 
-                    Order o = db.Orders.Get(or.Order.OrderID);
-                    db.Orders.Delete(o);
-                    db.Commit();
-                    Console.WriteLine("Order " + or.Order.OrderID + " removed.");
-                    return null;
+                        Console.WriteLine("Remove order");
+
+                        Order o = db.Orders.Get(or.Order.OrderID);
+                        db.Orders.Delete(o);
+                        db.Commit();
+                        Console.WriteLine("Order " + or.Order.OrderID + " removed.");
+                        return or;
+                    });
                 }
             },
                 (s, a) =>
@@ -486,19 +476,22 @@ namespace PizzaNetWorkClient
                 {
                     using (var db = new PizzaUnitOfWork())
                     {
-                        Console.WriteLine("LoadDataStart");
-                        var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
+                        return db.inTransaction(uof =>
                         {
-                            First = db.Recipies.FindAllEagerly(),
-                            Second = db.Sizes.FindAll().ToArray(),
-                            Third = db.Ingredients.FindAll()
-                        };
+                            Console.WriteLine("LoadDataStart");
+                            var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
+                            {
+                                First = db.Recipies.FindAllEagerly(),
+                                Second = db.Sizes.FindAll().ToArray(),
+                                Third = db.Ingredients.FindAll()
+                            };
 
-                        Console.WriteLine("after query");
+                            Console.WriteLine("after query");
 
-                        Console.WriteLine("Result is null: {0}", result == null);
+                            Console.WriteLine("Result is null: {0}", result == null);
 
-                        return result;
+                            return result;
+                        });
                     }
                 }
                 catch (Exception exc)
@@ -549,26 +542,30 @@ namespace PizzaNetWorkClient
                     PizzaNetDataModel.Model.Size[] sizes = null;
                     using (var ctx = new PizzaUnitOfWork())
                     {
-                        var recipe = ctx.Recipies.FindEagerly(rec.Recipe.RecipeID);
-                        if (recipe.Count() != 1) throw new Exception("Incosistent data");
-                        rec.Recipe = recipe.First();
-
-                        var ingredient = ctx.Ingredients.Find(rw.Ingredient.IngredientID);
-                        if (ingredient.Count() != 1) throw new Exception("Incosistent data");
-                        rw.Ingredient = ingredient.First();
-
-                        if (rec.Recipe.Ingredients.Contains(rw.Ingredient))
+                        return ctx.inTransaction(uof =>
                         {
-                            rec.Recipe.Ingredients.Remove(rw.Ingredient);
-                        }
-                        else
-                        {
-                            rec.Recipe.Ingredients.Add(rw.Ingredient);
-                        }
-                        sizes = ctx.Sizes.FindAll().ToArray();
-                        ctx.Commit();
+                            var recipe = uof.Db.Recipies.FindEagerly(rec.Recipe.RecipeID);
+                            if (recipe.Count() != 1) throw new Exception("Incosistent data");
+                            rec.Recipe = recipe.First();
+
+                            var ingredient = uof.Db.Ingredients.Find(rw.Ingredient.IngredientID);
+                            if (ingredient.Count() != 1) throw new Exception("Incosistent data");
+                            rw.Ingredient = ingredient.First();
+
+                            if (rec.Recipe.Ingredients.Contains(rw.Ingredient))
+                            {
+                                rec.Recipe.Ingredients.Remove(rw.Ingredient);
+                            }
+                            else
+                            {
+                                rec.Recipe.Ingredients.Add(rw.Ingredient);
+                            }
+                            sizes = uof.Db.Sizes.FindAll().ToArray();
+                            uof.Db.Commit();
+
+                            return new Pair<RecipeControl, PizzaNetDataModel.Model.Size[]> { First = rec, Second = sizes };
+                        });
                     }
-                    return new Pair<RecipeControl, PizzaNetDataModel.Model.Size[]> { First = rec, Second = sizes };
                 }
                 catch (Exception exc)
                 {
@@ -637,9 +634,12 @@ namespace PizzaNetWorkClient
                         Recipe r = null;
                         using (var ctx = new PizzaUnitOfWork())
                         {
-                            r = new Recipe { Name = "New recipe", Ingredients = new List<Ingredient>() };
-                            ctx.Recipies.Insert(r);
-                            ctx.Commit();
+                            ctx.inTransaction(uof =>
+                            {
+                                r = new Recipe { Name = "New recipe", Ingredients = new List<Ingredient>() };
+                                uof.Db.Recipies.Insert(r);
+                                uof.Db.Commit();
+                            });
                         }
                         return r;
                     }
@@ -748,15 +748,20 @@ namespace PizzaNetWorkClient
                 {
                     using (var ctx = new PizzaUnitOfWork())
                     {
-                        var res = ctx.Ingredients.Find(i.IngredientID);
-                        if (res == null || res.Count() != 1) return false;
-                        result = res.First();
-                        result.IngredientID = i.IngredientID;
-                        result.Name = i.Name;
-                        result.NormalWeight = i.NormalWeight;
-                        result.ExtraWeight = i.ExtraWeight;
-                        result.PricePerUnit = i.PricePerUnit;
-                        ctx.Commit();
+                        bool b = ctx.inTransaction(uof =>
+                        {
+                            var res = ctx.Ingredients.Find(i.IngredientID);
+                            if (res == null || res.Count() != 1) return false;
+                            result = res.First();
+                            result.IngredientID = i.IngredientID;
+                            result.Name = i.Name;
+                            result.NormalWeight = i.NormalWeight;
+                            result.ExtraWeight = i.ExtraWeight;
+                            result.PricePerUnit = i.PricePerUnit;
+                            ctx.Commit();
+                            return true;
+                        });
+                        if (!b) return b;
                     }
                     return result;
                 }
@@ -793,12 +798,14 @@ namespace PizzaNetWorkClient
             StockItem rc = StockItemsCollection[listStock.SelectedIndex];
             if (e.Key == Key.Return)
             {
-                Ingredient ingr = txtb.GetBindingExpression(TextBox.TextProperty).ResolvedSource as Ingredient;
+                BindingExpression exp = txtb.GetBindingExpression(TextBox.TextProperty);
+                Ingredient ingr = exp.ResolvedSource as Ingredient;
                 if (ingr == null) return;
-                PropertyInfo pi = ingr.GetType().GetProperty(txtb.GetBindingExpression(TextBox.TextProperty).ResolvedSourcePropertyName);
+                PropertyInfo pi = ingr.GetType().GetProperty(exp.ResolvedSourcePropertyName);
                 string target = pi.GetValue(ingr).ToString();
                 if (target != txtb.Text)
-                    txtb.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                    exp.UpdateSource();
+                else exp.ValidateWithoutUpdate();
             }
         }
 

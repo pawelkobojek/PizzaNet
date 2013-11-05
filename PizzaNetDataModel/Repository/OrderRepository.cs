@@ -25,6 +25,14 @@ namespace PizzaNetDataModel.Repository
         /// </summary>
         /// <returns>List of all orders.</returns>
         IEnumerable<Order> FindAllEagerly();
+
+        /// <summary>
+        /// Retrieves all Orders in the database satisfying a condition 'predicate' in a eager manner.
+        /// In order to use lazy loading call FindAll() method.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        IEnumerable<Order> FindAllEagerlyWhere(Func<Order, bool> predicate);
     }
     
     /// <summary>
@@ -84,6 +92,16 @@ namespace PizzaNetDataModel.Repository
                 .Include(o => o.OrderDetails.Select(od => od.Ingredients.Select(ing => ing.Ingredient)))
                 .Include(o=>o.OrderDetails.Select(od=>od.Size))
                 .Include(o => o.State)
+                .ToList();
+        }
+
+        public IEnumerable<Order> FindAllEagerlyWhere(Func<Order, bool> predicate)
+        {
+            return db.Orders
+                .Include(o => o.OrderDetails.Select(od => od.Ingredients))
+                .Include(o => o.OrderDetails.Select(od => od.Ingredients.Select(ing => ing.Ingredient)))
+                .Include(o => o.OrderDetails.Select(od => od.Size))
+                .Include(o => o.State).Where(predicate)
                 .ToList();
         }
     }
