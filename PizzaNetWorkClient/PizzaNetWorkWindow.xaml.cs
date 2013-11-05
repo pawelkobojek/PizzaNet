@@ -22,6 +22,7 @@ using PizzaNetDataModel.Repository;
 using PizzaNetDataModel.Monitors;
 using PizzaNetControls.Worker;
 using System.Threading;
+using System.Reflection;
 
 namespace PizzaNetWorkClient
 {
@@ -131,9 +132,6 @@ namespace PizzaNetWorkClient
         public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
-
-        IngredientMonitor im = new IngredientMonitor();
-        Ingredient lastSelectedIngredient = null;
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
         #endregion
 
@@ -145,12 +143,6 @@ namespace PizzaNetWorkClient
             if (StockTab.IsSelected)
             {
                 RefreshStockItems();
-            }
-            else
-            {
-                if (lastSelectedIngredient != null)
-                    Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
-                lastSelectedIngredient = null;
             }
 
             if (OrdersTab.IsSelected)
@@ -199,7 +191,6 @@ namespace PizzaNetWorkClient
 
         private void RefreshStockItems()
         {
-            lastSelectedIngredient = null;
             StockItemsCollection.Clear();
 
             var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
@@ -290,7 +281,6 @@ namespace PizzaNetWorkClient
                 return;
             Console.WriteLine("Zaznaczono " + listStock.SelectedIndex);
             Console.WriteLine("CollectionCount: " + StockItemsCollection.Count);
-            im.StartMonitor(StockItemsCollection[listStock.SelectedIndex].Ingredient);
         }
 
         private void ButtonAddIngredient_Click(object sender, RoutedEventArgs e)
@@ -346,23 +336,6 @@ namespace PizzaNetWorkClient
                     Console.WriteLine("Removed " + toRemove.Ingredient.Name);
                 }, StockItemsCollection[listStock.SelectedIndex]);
             worker.ShowDialog();
-        }
-
-        private void listStock_LostFocus(object sender, RoutedEventArgs e)
-        {
-            // TODO: chyba trzeba zmienić Monitor żeby monitorował obiekty StockItem. Wtedy będzie można łatwiej
-            //  wyciągać modyfikowany row.
-            Console.WriteLine("Focus lost");
-            if (listStock.SelectedIndex < 0) return;
-            lastSelectedIngredient = StockItemsCollection[listStock.SelectedIndex].Ingredient;
-            Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
-            Console.WriteLine("Updated " + StockItemsCollection[listStock.SelectedIndex].Ingredient.Name);
-        }
-
-        private void TextBox_StockItemDetails_FocusChanged(object sender, RoutedEventArgs e)
-        {
-            if (lastSelectedIngredient != null)
-                Updater<IMonitor<Ingredient>, Ingredient>.Update(this, im, lastSelectedIngredient);
         }
 
         private void ButtonOrderSupplies_Click(object sender, RoutedEventArgs e)
@@ -738,5 +711,73 @@ namespace PizzaNetWorkClient
                     txtb.GetBindingExpression(TextBox.TextProperty).UpdateSource();
             }
         }
+
+        private void TextBoxStockDetails_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (listStock.SelectedIndex < 0) return;
+            StockItem ingr = StockItemsCollection[listStock.SelectedIndex];
+            new WorkerWindow(this, args =>
+            {
+                var i = args[0] as Ingredient;
+                Ingredient result = null;
+                if (i == null) return false;
+                try
+                {
+                    using (var ctx = new PizzaUnitOfWork())
+                    {
+                        var res = ctx.Ingredients.Find(i.IngredientID);
+                        if (res == null || res.Count() != 1) return false;
+                        result = res.First();
+                        result.IngredientID = i.IngredientID;
+                        result.Name = i.Name;
+                        result.NormalWeight = i.NormalWeight;
+                        result.ExtraWeight = i.ExtraWeight;
+                        result.PricePerUnit = i.PricePerUnit;
+                        ctx.Commit();
+                    }
+                    return result;
+                }
+                catch (Exception exc)
+                {
+                    return exc;
+                }
+            }, (s, args) =>
+            {
+                var exc = args.Result as Exception;
+                if (exc != null)
+                {
+                    showError("Can't change ingredient detail!");
+                }
+                else
+                {
+                    var bl = args.Result as bool?;
+                    if (bl != null) showError("Unknown error occured!");
+                    else
+                    {
+                        var rec = args.Result as Ingredient;
+                        if (rec == null) return;
+                        ingr.Ingredient = rec;
+                    }
+                }
+            }, ingr.Ingredient).ShowDialog();
+        }
+
+        private void TextBoxStockDetails_KeyDown(object sender, KeyEventArgs e)
+        {
+            var txtb = sender as TextBox;
+            if (txtb == null) return;
+            if (listStock.SelectedIndex < 0) return;
+            StockItem rc = StockItemsCollection[listStock.SelectedIndex];
+            if (e.Key == Key.Return)
+            {
+                Ingredient ingr = txtb.GetBindingExpression(TextBox.TextProperty).ResolvedSource as Ingredient;
+                if (ingr == null) return;
+                PropertyInfo pi = ingr.GetType().GetProperty(txtb.GetBindingExpression(TextBox.TextProperty).ResolvedSourcePropertyName);
+                string target = pi.GetValue(ingr).ToString();
+                if (target != txtb.Text)
+                    txtb.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            }
+        }
+
     }
 }

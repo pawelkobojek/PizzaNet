@@ -157,7 +157,7 @@
                                   ShowsPreview="True"
                                   Width="1"/>
 
-                    <ListView x:Name="listStock" ItemsSource="{Binding StockItemsCollection}" SelectionChanged="listStock_SelectionChanged" LostFocus="listStock_LostFocus">
+                    <ListView x:Name="listStock" ItemsSource="{Binding StockItemsCollection}" SelectionChanged="listStock_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Width="200" Header="Item name" DisplayMemberBinding="{Binding Ingredient.Name}" />
@@ -185,27 +185,41 @@
                             </StackPanel.Resources>
                             <DockPanel>
                                 <TextBlock Text="Id:"/>
-                                <TextBox IsReadOnly="True" GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.IngredientID}"/>
+                                <TextBox IsReadOnly="True" 
+                                         Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.IngredientID, NotifyOnSourceUpdated=True}"
+                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                                         KeyDown="TextBoxStockDetails_KeyDown"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Name:"/>
-                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.Name}"/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.Name}"
+                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                                         KeyDown="TextBoxStockDetails_KeyDown"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Quantity:"/>
-                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" IsReadOnly="True" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.StockQuantity}"/>
+                                <TextBox IsReadOnly="True" 
+                                         Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.StockQuantity, NotifyOnSourceUpdated=True}"
+                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                                         KeyDown="TextBoxStockDetails_KeyDown"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Normal weight:"/>
-                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.NormalWeight}"/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.NormalWeight, NotifyOnSourceUpdated=True}"
+                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                                         KeyDown="TextBoxStockDetails_KeyDown"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Extra weight:"/>
-                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.ExtraWeight}"/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.ExtraWeight, NotifyOnSourceUpdated=True}"
+                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                                         KeyDown="TextBoxStockDetails_KeyDown"/>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Price per unit:"/>
-                                <TextBox GotFocus="TextBox_StockItemDetails_FocusChanged" LostFocus="TextBox_StockItemDetails_FocusChanged" Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.PricePerUnit}"/>
+                                <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.PricePerUnit, NotifyOnSourceUpdated=True}"
+                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                                         KeyDown="TextBoxStockDetails_KeyDown"/>
                             </DockPanel>
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
