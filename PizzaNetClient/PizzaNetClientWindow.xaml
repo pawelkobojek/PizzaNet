@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters;assembly=PizzaNetControls"
+        xmlns:PizzaNetWorkers="clr-namespace:PizzaNetControls.Worker;assembly=PizzaNetControls"
         xmlns:local="clr-namespace:PizzaNetClient"
         Title="PizzaNet" Height="600" Width="950" Icon="res/PizzaSliceIcon.png" Loaded="PizzaNetWindowClass_Loaded">
     <Window.Resources>
@@ -27,10 +28,11 @@
                        FontSize="30" Margin="10,0,0,0">
                 PizzaNet
             </TextBlock>
-            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
-            <Button Background="Transparent" Height="50" Width="50" Click="settingsButton_Click">
-                <Image Source="res/SettingsIcon.png"/>
-            </Button>
+            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
+                <PizzaNetWorkers:WorkerControl Name="worker"/>
+                <Button Background="Transparent" Height="50" Width="50" Click="settingsButton_Click">
+                    <Image Source="res/SettingsIcon.png"/>
+                </Button>
             </StackPanel>
         </DockPanel>
         <Separator Grid.Row="1"/>
@@ -40,7 +42,7 @@
             </Button>
         </StackPanel>
         <Separator  Grid.Row="3"/>
-        <DockPanel Grid.Row="2" LastChildFill="True">
+        <DockPanel Name="contentDockPanel" Grid.Row="2" LastChildFill="True">
             <DockPanel.Resources>
                 <Style TargetType="{x:Type Separator}"
                            BasedOn="{StaticResource {x:Type Separator}}">

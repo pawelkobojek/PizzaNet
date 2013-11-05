@@ -24,7 +24,7 @@ namespace PizzaNetControls.Worker
         private Queue<WorkerTask> tasks;
         private BackgroundWorker worker;
 
-        public Control Lock { get; set; }
+        public FrameworkElement Lock { get; set; }
 
         public WorkerControl()
         {

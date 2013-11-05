@@ -1,5 +1,6 @@
 ﻿using PizzaNetControls;
 using PizzaNetControls.Configuration;
+using PizzaNetControls.Worker;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using System;
@@ -35,43 +36,7 @@ namespace PizzaNetClient
             this.OrderedPizzasCollection = new ObservableCollection<IngredientsList>();
             this.Ingredients = new List<Ingredient>();
 
-            #region ExampleData
-           /* var c = new PizzaNetControls.IngredientsRow(new Ingredient()
-            {
-                Name = "Ingredient1",
-                NormalWeight = 200,
-                ExtraWeight = 300
-            });
-            this.IngredientsCollection.Add(c);
-            for (int i = 0; i < 10; i++)
-            {
-                c = new PizzaNetControls.IngredientsRow(new Ingredient()
-                {
-                    Name = "Mozzarella Cheese",
-                    NormalWeight = 100,
-                    ExtraWeight = 200
-                });
-                c.CurrentQuantity = c.Ingredient.NormalWeight;
-                this.IngredientsCollection.Add(c);
-            }*/
-            
-           /* PizzaNetControls.RecipeControl d;
-            for (int i = 0; i < 10; i++)
-            {
-                d = new PizzaNetControls.RecipeControl();
-                d.Recipe = new Recipe()
-                {
-                    Ingredients = new List<Ingredient>() { new Ingredient() { Name="Mozarella Cheese", NormalWeight=100, PricePerUnit=0.2M},
-                                                                new Ingredient() { Name="Mushrooms", NormalWeight=50, PricePerUnit=0.2M},
-                                                                new Ingredient() { Name="Ingredient3", NormalWeight=200, PricePerUnit=0.2M}},
-                    Name = "MyRecipe"
-                };
-                d.RecalculatePrices(new PizzaNetDataModel.Model.Size[] { new PizzaNetDataModel.Model.Size() { SizeValue=1},
-                                                        new PizzaNetDataModel.Model.Size() { SizeValue=1.5},
-                                                        new PizzaNetDataModel.Model.Size() { SizeValue=2}});
-                this.RecipesCollection.Add(d);
-            }*/
-            #endregion
+            this.worker.Lock = this.contentDockPanel;
         }
 
         public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection { get; set; }
@@ -95,7 +60,7 @@ namespace PizzaNetClient
 
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
-            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
             {
                 try
                 {
@@ -152,8 +117,7 @@ namespace PizzaNetClient
                     mediumButton.Tag = result.Second[1];
                     greatButton.Tag = result.Second[2];
                     CurrentSizeValue = result.Second[0];
-                }, null);
-            worker.ShowDialog();
+                }));
         }
 
         void row_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -244,7 +208,7 @@ namespace PizzaNetClient
             foreach(var item in OrderedPizzasCollection)
                 details.Add(item.OrderDetail);
 
-            new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
                 {
                     var cfg = args[0] as ClientConfig;
                     var det = args[1] as List<OrderDetail>;
@@ -270,7 +234,7 @@ namespace PizzaNetClient
                             });
                         }
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
                         return false;
                     }
@@ -280,7 +244,7 @@ namespace PizzaNetClient
                     bool b = (args.Result as bool?) ?? false;
                     MessageBox.Show((b) ? "Ordered successfully" : "Error while ordering", "PizzaNet");
                     if (b) OrderedPizzasCollection.Clear();
-                }, ClientConfig.getConfig(), details).ShowDialog();
+                }, ClientConfig.getConfig(), details));
         }
         /// <summary>
         /// Method needed to merge Ingredients and avoid to duplicate them in Ingredients table
