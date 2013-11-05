@@ -23,6 +23,7 @@ using PizzaNetDataModel.Monitors;
 using PizzaNetControls.Worker;
 using System.Threading;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace PizzaNetWorkClient
 {
@@ -44,85 +45,20 @@ namespace PizzaNetWorkClient
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
             view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
 
-            /*#region example data
-            #region recipes
-            var c = new PizzaNetControls.IngredientsRow(new Ingredient()
-            {
-                Name = "Ingredient1",
-                NormalWeight = 200,
-                ExtraWeight = 300
-            });
-            this.IngredientsRowsCollection.Add(c);
-            for (int i = 0; i < 10; i++)
-            {
-                c = new PizzaNetControls.IngredientsRow(new Ingredient()
-                {
-                    Name = "Mozzarella Cheese",
-                    NormalWeight = 100,
-                    ExtraWeight = 200
-                });
-                c.CurrentQuantity = c.Ingredient.NormalWeight;
-                this.IngredientsRowsCollection.Add(c);
-            }
+            OrdersRefresher = new BackgroundWorker();
+            OrdersRefresher.DoWork += OrdersRefresher_DoWork;
+            OrdersRefresher.RunWorkerCompleted += OrdersRefresher_RunWorkerCompleted;
+        }
 
-            PizzaNetControls.RecipeControl d;
-            for (int i = 0; i < 10; i++)
-            {
-                d = new PizzaNetControls.RecipeControl();
-                d.RecipeName = "MyRecipeName";
-                d.Prices = new PizzaNetControls.PriceData() { PriceLow = 10, PriceMed = 20, PriceHigh = 30 };
-                d.Ingredients = new List<string>() { "Mozarella Cheese", "Mushrooms", "Ingredient3" };
-                d.Width = 300;
-                this.RecipesCollection.Add(d);
-            }
-            #endregion
+        void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            RefreshCurrentOrders();
+            OrdersRefresher.RunWorkerAsync();
+        }
 
-            #region stock items
-            PizzaNetControls.StockItem st;
-            for (int i = 0; i < 20; i++)
-            {
-                st = new PizzaNetControls.StockItem(new Ingredient()
-                    {
-                        IngredientID = 13,
-                        Name = "ItemName",
-                        StockQuantity = 100,
-                        NormalWeight = 10,
-                        ExtraWeight = 20,
-                        PricePerUnit = 1.2M
-                    });
-                StockItemsCollection.Add(st);
-            }
-            #endregion
-
-            #region orders
-            PizzaNetControls.OrdersRow o;
-            for (int i = 0; i < 10; i++)
-            {
-                o = new PizzaNetControls.OrdersRow(new Order()
-                {
-                    OrderID = 12 * i,
-                    State = new State() { StateValue = i % 3 },
-                    OrderDetails = new List<OrderDetail>() { new OrderDetail() 
-                                                                { 
-                                                                    OrderDetailID = 2*i,
-                                                                    Ingredients = new List<OrderIngredient>()
-                                                                    {
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i)}, Quantity=20*(i%2+1)},
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+1)}, Quantity=30*(i%2+1)}
-                                                                    }
-                                                                },
-                                                             new OrderDetail() { OrderDetailID = 2*i+1,
-                                                                    Ingredients = new List<OrderIngredient>()
-                                                                    {
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+2)}, Quantity=40*(i%2+1)},
-                                                                        new OrderIngredient() { Ingredient = new Ingredient() {Name = String.Format("Ingredient #{0}",4*i+3)}, Quantity=50*(i%2+1)}
-                                                                    }
-                                                             }}
-                });
-                OrdersCollection.Add(o);
-            }
-            #endregion
-            #endregion*/
+        void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.Sleep(TIMER_INTERVAL);
         }
 
         #region fields and properties
@@ -133,6 +69,10 @@ namespace PizzaNetWorkClient
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
+
+        private const int TIMER_INTERVAL = 60000;
+
+        private BackgroundWorker OrdersRefresher;
         #endregion
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -147,7 +87,7 @@ namespace PizzaNetWorkClient
 
             if (OrdersTab.IsSelected)
             {
-                RefreshOrders();
+                RefreshCurrentOrders();
             }
 
             if (RecipiesTab.IsSelected)
@@ -166,7 +106,7 @@ namespace PizzaNetWorkClient
                     using (var db = new PizzaUnitOfWork())
                     {
                         Console.WriteLine("Load Orders Start");
-                        var result = db.Orders.FindAllEagerly();
+                        var result = db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue==State.NEW);
                         Console.WriteLine("After query");
                         return result;
                     }
@@ -183,6 +123,40 @@ namespace PizzaNetWorkClient
                 foreach (var order in orders)
                 {
                     OrdersCollection.Add(new OrdersRow(order));
+                }
+            });
+
+            worker.ShowDialog();
+        }
+
+        private void RefreshCurrentOrders()
+        {
+            var worker = new PizzaNetControls.Worker.WorkerWindow(this, (args) =>
+            {
+                try
+                {
+                    using (var db = new PizzaUnitOfWork())
+                    {
+                        Console.WriteLine("Load Orders Start");
+                        var result = db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
+                        Console.WriteLine("After query");
+                        return result;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc);
+                    return null;
+                }
+            }, (s, a) =>
+            {
+                IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
+                bool[] current = new bool[orders.Count()];
+                foreach (var order in orders)
+                {
+                    OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID;});
+                    if (row != null) row.Order = order;
+                    else OrdersCollection.Add(new OrdersRow(order));
                 }
             });
 
@@ -353,6 +327,7 @@ namespace PizzaNetWorkClient
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshOrders();
+            OrdersRefresher.RunWorkerAsync();
         }
 
         private void ButtonSetInRealisation_Click(object sender, RoutedEventArgs e)
@@ -420,7 +395,9 @@ namespace PizzaNetWorkClient
             },
                 (s, a) =>
                 {
-                    RefreshOrders();
+                    RefreshCurrentOrders();
+                    or.Order.State = state;
+                    or.Update();
                 });
             worker.ShowDialog();
         }

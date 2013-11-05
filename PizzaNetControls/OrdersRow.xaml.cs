@@ -40,7 +40,7 @@ namespace PizzaNetControls
             set { _order = value; NotifyPropertyChanged("Order"); }
         }
 
-        public void NotifyAll()
+        public void Update()
         {
             NotifyPropertyChanged("Order");
         }

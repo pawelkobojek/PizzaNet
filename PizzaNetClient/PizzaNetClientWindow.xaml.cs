@@ -273,6 +273,7 @@ namespace PizzaNetClient
                 {
                     bool b = (args.Result as bool?) ?? false;
                     MessageBox.Show((b) ? "Ordered successfully" : "Error while ordering", "PizzaNet");
+                    if (b) OrderedPizzasCollection.Clear();
                 }, ClientConfig.getConfig(), details).ShowDialog();
         }
         /// <summary>
