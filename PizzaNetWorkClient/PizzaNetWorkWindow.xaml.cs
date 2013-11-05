@@ -770,12 +770,14 @@ namespace PizzaNetWorkClient
             StockItem rc = StockItemsCollection[listStock.SelectedIndex];
             if (e.Key == Key.Return)
             {
-                Ingredient ingr = txtb.GetBindingExpression(TextBox.TextProperty).ResolvedSource as Ingredient;
+                BindingExpression exp = txtb.GetBindingExpression(TextBox.TextProperty);
+                Ingredient ingr = exp.ResolvedSource as Ingredient;
                 if (ingr == null) return;
-                PropertyInfo pi = ingr.GetType().GetProperty(txtb.GetBindingExpression(TextBox.TextProperty).ResolvedSourcePropertyName);
+                PropertyInfo pi = ingr.GetType().GetProperty(exp.ResolvedSourcePropertyName);
                 string target = pi.GetValue(ingr).ToString();
                 if (target != txtb.Text)
-                    txtb.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                    exp.UpdateSource();
+                else exp.ValidateWithoutUpdate();
             }
         }
 
