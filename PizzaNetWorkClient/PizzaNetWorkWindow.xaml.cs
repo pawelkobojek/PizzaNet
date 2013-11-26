@@ -52,12 +52,24 @@ namespace PizzaNetWorkClient
             this.worker.Lock = this.tabControl;
         }
 
+        /// <summary>
+        /// This method is invoked every minute in order to refresh Orders.
+        /// After completion it invokes OrdersRefresher_DoWork() method.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             RefreshCurrentOrders();
             OrdersRefresher.RunWorkerAsync();
         }
-
+        
+        /// <summary>
+        /// Method which waits for 1 minute in separate thread.
+        /// After the sleep time it invokes OrdersRefresher_RunWorkerCompleted() method.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
         {
             System.Threading.Thread.Sleep(TIMER_INTERVAL);
@@ -78,6 +90,11 @@ namespace PizzaNetWorkClient
 
         #endregion
 
+        /// <summary>
+        /// Refreshes current tab when changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.OriginalSource is TabControl) || !this.IsLoaded)
@@ -99,6 +116,9 @@ namespace PizzaNetWorkClient
             }
         }
 
+        /// <summary>
+        /// Refreshes orders tab. It clears the list and then pulls new data from database.
+        /// </summary>
         private void RefreshOrders()
         {
             OrdersCollection.Clear();
@@ -133,6 +153,10 @@ namespace PizzaNetWorkClient
             }));
         }
 
+        /// <summary>
+        /// Refreshes orders tab. This method gets only new rows in the database.
+        /// It is designed to be invoked every minute.
+        /// </summary>
         private void RefreshCurrentOrders()
         {
             worker.EnqueueTask(new WorkerTask((args) =>
@@ -168,6 +192,9 @@ namespace PizzaNetWorkClient
             }));
         }
 
+        /// <summary>
+        /// Refreshes Stock items. It clears the list and then pulls new data from database.
+        /// </summary>
         private void RefreshStockItems()
         {
             StockItemsCollection.Clear();
@@ -196,10 +223,16 @@ namespace PizzaNetWorkClient
                     Console.WriteLine(exc.Message);
                     return null;
                 }
-            }, PostData, null));
+            }, PostStockItemsData, null));
         }
 
-        private void PostData(object sender, PizzaNetControls.Worker.WorkFinishedEventArgs e)
+        /// <summary>
+        /// Method invoked after pull of Ingredients from the database.
+        /// It works with orders tab.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PostStockItemsData(object sender, PizzaNetControls.Worker.WorkFinishedEventArgs e)
         {
             if (e.Result == null)
             {
@@ -213,6 +246,11 @@ namespace PizzaNetWorkClient
             }
         }
 
+        /// <summary>
+        /// Logic for changing selection of orders in orders tab.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ordersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             OrdersRow ord = ordersListView.SelectedItem as OrdersRow;
@@ -239,6 +277,11 @@ namespace PizzaNetWorkClient
             }
         }
 
+        /// <summary>
+        /// Logic for changing selection of pizzas. It works with recipies tab.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pizzasListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             IngredientsCollection.Clear();
@@ -264,6 +307,11 @@ namespace PizzaNetWorkClient
             Console.WriteLine("CollectionCount: " + StockItemsCollection.Count);
         }
 
+        /// <summary>
+        /// Logic for button Add Ingredient
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonAddIngredient_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("AddIngredient click");
@@ -293,6 +341,11 @@ namespace PizzaNetWorkClient
                 }));
         }
 
+        /// <summary>
+        /// Logic for button Remove Ingredient
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonRemoveIngredient_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Remove clicked");
@@ -350,6 +403,11 @@ namespace PizzaNetWorkClient
             OrdersRefresher.RunWorkerAsync();
         }
 
+        /// <summary>
+        /// Logic for button Set in Realisation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonSetInRealisation_Click(object sender, RoutedEventArgs e)
         {
             Order o = ((OrdersRow)ordersListView.SelectedItem).Order;
@@ -399,6 +457,10 @@ namespace PizzaNetWorkClient
             }));
         }
 
+        /// <summary>
+        /// Method which sets current selected  order.
+        /// </summary>
+        /// <param name="state"></param>
         private void SetOrderStateInBackground(State state)
         {
             OrdersRow or = ordersListView.SelectedItem as OrdersRow;
@@ -427,11 +489,22 @@ namespace PizzaNetWorkClient
                 }));
         }
 
+        /// <summary>
+        /// Logic for button Set Done
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonSetDone_Click(object sender, RoutedEventArgs e)
         {
             SetOrderStateInBackground(new State { StateValue = State.DONE });
         }
 
+
+        /// <summary>
+        /// Logic for button Remove Order
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonRemoveOrder_Click(object sender, RoutedEventArgs e)
         {
             OrdersRow or = ordersListView.SelectedItem as OrdersRow;
@@ -458,6 +531,11 @@ namespace PizzaNetWorkClient
                 }));
         }
 
+
+
+        /// <summary>
+        /// Refreshes recipies tab. It clears the list and then pulls new data from database.
+        /// </summary>
         private void RefreshRecipies()
         {
             RecipesCollection.Clear();
@@ -516,6 +594,11 @@ namespace PizzaNetWorkClient
             }));
         }
 
+        /// <summary>
+        /// Logic for adding/removing ingredient from recipe.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void row_PropertyChanged(object sender, EventArgs e)
         {
             if (RecipesContainer.SelectedIndex < 0) return;

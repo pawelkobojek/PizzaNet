@@ -196,5 +196,47 @@ namespace PizzaNetTests
             }
             return toRemove;
         }
+
+        [TestMethod]
+        public void Order_PersistanceTest()
+        {
+            var compare = new CompareObjects();
+            compare.IgnoreObjectTypes = true;
+
+            InAutoRollbackTransaction(uof =>
+            {
+                Order o = new Order { Address = "A", CustomerPhone = 123, Date = DateTime.Now, OrderDetails = new List<OrderDetail>(), State = new State { StateValue = State.DONE } };
+                int x = ((List<Order>)uof.Db.Orders.FindAll()).Count;
+
+                uof.Db.Orders.Insert(o);
+                uof.Db.Commit();
+                uof.Db.ObjectContext().DetachAll();
+
+                int y = ((List<Order>)uof.Db.Orders.FindAll()).Count;
+
+                Assert.IsTrue(y == x + 1);
+            });
+        }
+
+        [TestMethod]
+        public void Size_PersistanceTest()
+        {
+            var compare = new CompareObjects();
+            compare.IgnoreObjectTypes = true;
+
+            InAutoRollbackTransaction(uof =>
+            {
+                Size s = new Size { SizeValue = Size.MEDIUM };
+                int x = ((List<Size>)uof.Db.Sizes.FindAll()).Count;
+
+                uof.Db.Sizes.Insert(s);
+                uof.Db.Commit();
+                uof.Db.ObjectContext().DetachAll();
+
+                int y = ((List<Size>)uof.Db.Sizes.FindAll()).Count;
+
+                Assert.IsTrue(y == x + 1);
+            });
+        }
     }
 }
