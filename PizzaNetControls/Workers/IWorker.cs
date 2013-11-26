@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Workers
 {
-    public class Trio<F, S, T> : Pair<F, S>
+    public interface IWorker
     {
-        public T Third;
+        void EnqueueTask(WorkerTask task);
     }
 }

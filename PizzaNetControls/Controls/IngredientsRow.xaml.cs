@@ -1,4 +1,5 @@
-﻿using PizzaNetDataModel.Model;
+﻿using PizzaNetControls.Common;
+using PizzaNetDataModel.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -107,10 +108,10 @@ namespace PizzaNetControls
             set { _backgroundParameter = value; NotifyPropertyChanged("BackgroundParameter"); }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;/*
         private Ingredient item;
         private int p;
-        private PizzaNetDataModel.Model.Size size;
+        private PizzaNetDataModel.Model.Size size;*/
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

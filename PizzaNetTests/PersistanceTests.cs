@@ -8,6 +8,7 @@ using PizzaNetDataModel.Repository;
 using PizzaNetWorkClient;
 using System.Transactions;
 using PizzaNetControls;
+using PizzaNetControls.Controls;
 
 namespace PizzaNetTests
 {

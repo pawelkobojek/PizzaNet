@@ -52,7 +52,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CircularProgressBar.xaml.cs">
+    <Compile Include="Controls\CircularProgressBar.xaml.cs">
       <DependentUpon>CircularProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\ClientConfig.cs" />
@@ -65,95 +65,106 @@
     <Compile Include="Converters\OrderIdConverter.cs" />
     <Compile Include="Converters\QuantityToBackgroundConverter.cs" />
     <Compile Include="Converters\StateConverter.cs" />
-    <Compile Include="IngredientsRowWork.xaml.cs">
+    <Compile Include="Controls\IngredientsRowWork.xaml.cs">
       <DependentUpon>IngredientsRowWork.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IngredientsList.xaml.cs">
+    <Compile Include="Controls\IngredientsList.xaml.cs">
       <DependentUpon>IngredientsList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IngredientsListItem.xaml.cs">
+    <Compile Include="Controls\IngredientsListItem.xaml.cs">
       <DependentUpon>IngredientsListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OrderIngredientForm.xaml.cs">
+    <Compile Include="Dialogs\LoginDialog.xaml.cs">
+      <DependentUpon>LoginDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ModalDialog.cs" />
+    <Compile Include="Dialogs\OrderIngredientForm.xaml.cs">
       <DependentUpon>OrderIngredientForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OrdersRow.xaml.cs">
+    <Compile Include="Controls\OrdersRow.xaml.cs">
       <DependentUpon>OrdersRow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pair.cs" />
-    <Compile Include="SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Trio.cs" />
-    <Compile Include="PizzaRow.xaml.cs">
+    <Compile Include="Common\Pair.cs" />
+    <Compile Include="Common\Trio.cs" />
+    <Compile Include="Controls\PizzaRow.xaml.cs">
       <DependentUpon>PizzaRow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PriceCalculator.cs" />
-    <Compile Include="PriceData.cs" />
+    <Compile Include="Common\PriceCalculator.cs" />
+    <Compile Include="Common\PriceData.cs" />
     <Compile Include="Converters\PriceDataConverter.cs" />
-    <Compile Include="RecipeControl.xaml.cs">
+    <Compile Include="Controls\RecipeControl.xaml.cs">
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StockItem.cs" />
-    <Compile Include="Updater.cs" />
+    <Compile Include="Controls\StockItem.cs" />
+    <Compile Include="Common\Updater.cs" />
     <Compile Include="Validation\NumberValidation.cs" />
-    <Compile Include="Worker\WorkerControl.xaml.cs">
+    <Compile Include="ViewModels\MyOrdersViewModel.xaml.cs">
+      <DependentUpon>MyOrdersViewModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BaseView.cs" />
+    <Compile Include="Views\MyOrdersView.cs" />
+    <Compile Include="Workers\IWorker.cs" />
+    <Compile Include="Workers\WorkerControl.xaml.cs">
       <DependentUpon>WorkerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Worker\WorkerTask.cs" />
-    <Compile Include="Worker\WorkerWindow.xaml.cs">
+    <Compile Include="Workers\WorkerTask.cs" />
+    <Compile Include="Workers\WorkerWindow.xaml.cs">
       <DependentUpon>WorkerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Worker\WorkFinishedEventArgs.cs" />
-    <Page Include="CircularProgressBar.xaml">
+    <Compile Include="Workers\WorkFinishedEventArgs.cs" />
+    <Page Include="Controls\CircularProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="IngredientsRowWork.xaml">
+    <Page Include="Controls\IngredientsRowWork.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="IngredientsList.xaml">
+    <Page Include="Controls\IngredientsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="IngredientsListItem.xaml">
+    <Page Include="Controls\IngredientsListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="IngredientsRow.xaml">
+    <Page Include="Controls\IngredientsRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="IngredientsRow.xaml.cs">
+    <Compile Include="Controls\IngredientsRow.xaml.cs">
       <DependentUpon>IngredientsRow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="OrderIngredientForm.xaml">
+    <Page Include="Dialogs\LoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OrdersRow.xaml">
+    <Page Include="Dialogs\OrderIngredientForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PizzaRow.xaml">
+    <Page Include="Controls\OrdersRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RecipeControl.xaml">
+    <Page Include="Controls\PizzaRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="Controls\RecipeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Worker\WorkerControl.xaml">
+    <Page Include="ViewModels\MyOrdersViewModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Worker\WorkerWindow.xaml">
+    <Page Include="Workers\WorkerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Workers\WorkerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,6 +198,9 @@
       <Project>{7c8d9142-6cd2-4ddb-9bd4-fba4c425ddd1}</Project>
       <Name>PizzaNetDataModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="res\PizzaSliceIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

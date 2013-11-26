@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Common
 {
     public static class PriceCalculator
     {

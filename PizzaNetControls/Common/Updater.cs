@@ -7,7 +7,7 @@ using PizzaNetDataModel.Monitors;
 using PizzaNetDataModel.Model;
 using System.Windows;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Common
 {
     public static class Updater<M, E>
         where M : IMonitor<E>
@@ -17,7 +17,7 @@ namespace PizzaNetControls
         {
             if (!monitor.IsMonitoring()) return;
             if (!monitor.HasStateChanged(entity)) return;
-            var worker = new Worker.WorkerWindow(owner, (args) =>
+            var worker = new Workers.WorkerWindow(owner, (args) =>
                 {
                     monitor.Update(entity);
                     return null;
