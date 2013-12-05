@@ -98,10 +98,18 @@
     <Compile Include="Controls\StockItem.cs" />
     <Compile Include="Common\Updater.cs" />
     <Compile Include="Validation\NumberValidation.cs" />
+    <Compile Include="ViewModels\ClientMainViewModel.xaml.cs">
+      <DependentUpon>ClientMainViewModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\ClientSettingsViewModel.xaml.cs">
+      <DependentUpon>ClientSettingsViewModel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\MyOrdersViewModel.xaml.cs">
       <DependentUpon>MyOrdersViewModel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BaseView.cs" />
+    <Compile Include="Views\ClientMainView.cs" />
+    <Compile Include="Views\ClientSettingsView.cs" />
     <Compile Include="Views\MyOrdersView.cs" />
     <Compile Include="Workers\IWorker.cs" />
     <Compile Include="Workers\WorkerControl.xaml.cs">
@@ -153,6 +161,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RecipeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModels\ClientMainViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModels\ClientSettingsViewModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

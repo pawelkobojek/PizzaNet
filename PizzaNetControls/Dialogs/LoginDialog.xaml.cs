@@ -76,7 +76,7 @@ namespace PizzaNetControls.Dialogs
         public void Execute(object parameter)
         {
             // TODO
-            MessageBox.Show("sign in");
+            MessageBox.Show("sign up");
         }
     }
 }

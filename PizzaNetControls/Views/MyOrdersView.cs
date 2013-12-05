@@ -8,20 +8,10 @@ using System.Threading.Tasks;
 
 namespace PizzaNetControls.Views
 {
-    public class MyOrdersView : BaseView, INotifyPropertyChanged
+    public class MyOrdersView : BaseView
     {
         public MyOrdersView(IWorker worker) : base(worker)
         {
-        }
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-        internal void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
     }
 }
