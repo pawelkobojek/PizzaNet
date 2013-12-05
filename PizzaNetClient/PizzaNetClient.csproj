@@ -113,6 +113,10 @@
     <Resource Include="res\PizzaSliceIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PizzaNetCommon\PizzaNetCommon.csproj">
+      <Project>{3a51264f-f151-4f82-a069-955910229d98}</Project>
+      <Name>PizzaNetCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PizzaNetControls\PizzaNetControls.csproj">
       <Project>{1e4bd86e-9d85-4284-b5d7-c4aba7ead238}</Project>
       <Name>PizzaNetControls</Name>

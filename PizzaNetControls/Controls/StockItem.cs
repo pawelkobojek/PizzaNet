@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.Controls
 {
@@ -13,6 +14,19 @@ namespace PizzaNetControls.Controls
         public StockItem(Ingredient t)
         {
             this._ingredient = t;
+        }
+
+        public StockItem(IngredientDTO t)
+        {
+            this._ingredient = new Ingredient
+            {
+                ExtraWeight = t.ExtraWeight,
+                IngredientID = t.IngredientID,
+                Name = t.Name,
+                NormalWeight = t.NormalWeight,
+                PricePerUnit = t.PricePerUnit,
+                StockQuantity = t.StockQuantity
+            };
         }
 
         private Ingredient _ingredient;

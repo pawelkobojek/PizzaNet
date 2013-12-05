@@ -27,6 +27,11 @@ using System.ComponentModel;
 using PizzaNetControls.Dialogs;
 using PizzaNetControls.Controls;
 using PizzaNetControls.Common;
+using System.ServiceModel;
+using PizzaNetCommon.Services;
+using PizzaNetCommon.DTOs;
+using PizzaNetCommon.Requests;
+using PizzaNetWorkClient.WCFClientInfrastructure;
 
 namespace PizzaNetWorkClient
 {
@@ -66,7 +71,7 @@ namespace PizzaNetWorkClient
             RefreshCurrentOrders();
             OrdersRefresher.RunWorkerAsync();
         }
-        
+
         /// <summary>
         /// Method which waits for 1 minute in separate thread.
         /// After the sleep time it invokes OrdersRefresher_RunWorkerCompleted() method.
@@ -90,6 +95,8 @@ namespace PizzaNetWorkClient
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
         private const int TIMER_INTERVAL = 60000;
         private BackgroundWorker OrdersRefresher;
+
+        private readonly string ADDRESS = "http://localhost:60499/PizzaService.svc";
 
         #endregion
 
@@ -125,35 +132,35 @@ namespace PizzaNetWorkClient
         private void RefreshOrders()
         {
             OrdersCollection.Clear();
-            this.worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                try
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-                        return db.inTransaction(uof =>
-                        {
-                            Console.WriteLine("Load Orders Start");
-                            var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
-                            Console.WriteLine("After query");
-                            return result;
-                        });
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc);
-                    return null;
-                }
-            }, (s, a) =>
-            {
-                IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
+            //this.worker.EnqueueTask(new WorkerTask((args) =>
+            //{
+            //    try
+            //    {
+            //        using (var db = new PizzaUnitOfWork())
+            //        {
+            //            return db.inTransaction(uof =>
+            //            {
+            //                Console.WriteLine("Load Orders Start");
+            //                var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
+            //                Console.WriteLine("After query");
+            //                return result;
+            //            });
+            //        }
+            //    }
+            //    catch (Exception exc)
+            //    {
+            //        Console.WriteLine(exc);
+            //        return null;
+            //    }
+            //}, (s, a) =>
+            //{
+            //    IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
 
-                foreach (var order in orders)
-                {
-                    OrdersCollection.Add(new OrdersRow(order));
-                }
-            }));
+            //    foreach (var order in orders)
+            //    {
+            //        OrdersCollection.Add(new OrdersRow(order));
+            //    }
+            //}));
         }
 
         /// <summary>
@@ -162,37 +169,37 @@ namespace PizzaNetWorkClient
         /// </summary>
         private void RefreshCurrentOrders()
         {
-            worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                try
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-                        return db.inTransaction(uof =>
-                        {
-                            Console.WriteLine("Load Orders Start");
-                            var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
-                            Console.WriteLine("After query");
-                            return result;
-                        });
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc);
-                    return null;
-                }
-            }, (s, a) =>
-            {
-                IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
-                bool[] current = new bool[orders.Count()];
-                foreach (var order in orders)
-                {
-                    OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
-                    if (row != null) row.Order = order;
-                    else OrdersCollection.Add(new OrdersRow(order));
-                }
-            }));
+            //worker.EnqueueTask(new WorkerTask((args) =>
+            //{
+            //    try
+            //    {
+            //        using (var db = new PizzaUnitOfWork())
+            //        {
+            //            return db.inTransaction(uof =>
+            //            {
+            //                Console.WriteLine("Load Orders Start");
+            //                var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
+            //                Console.WriteLine("After query");
+            //                return result;
+            //            });
+            //        }
+            //    }
+            //    catch (Exception exc)
+            //    {
+            //        Console.WriteLine(exc);
+            //        return null;
+            //    }
+            //}, (s, a) =>
+            //{
+            //    IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
+            //    bool[] current = new bool[orders.Count()];
+            //    foreach (var order in orders)
+            //    {
+            //        OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
+            //        if (row != null) row.Order = order;
+            //        else OrdersCollection.Add(new OrdersRow(order));
+            //    }
+            //}));
         }
 
         /// <summary>
@@ -206,19 +213,9 @@ namespace PizzaNetWorkClient
             {
                 try
                 {
-                    using (var db = new PizzaUnitOfWork())
+                    using (var ch = new WorkChannel(ADDRESS))
                     {
-                        return db.inTransaction(uof =>
-                            {
-                                Console.WriteLine("LoadDataStart");
-
-                                var result = uof.Db.Ingredients.FindAllIncludeRecipies();
-                                Console.WriteLine("after query");
-
-                                Console.WriteLine("Result is null: {0}", result == null);
-
-                                return result;
-                            });
+                        return ch.GetIngredients();
                     }
                 }
                 catch (Exception exc)
@@ -247,7 +244,7 @@ namespace PizzaNetWorkClient
                 Console.WriteLine("Result is null");
                 return;
             }
-            foreach (var item in (IEnumerable<Ingredient>)e.Result)
+            foreach (var item in ((ListResponse<IngredientDTO>)e.Result).Data)
             {
                 Console.WriteLine(item.Name);
                 StockItemsCollection.Add(new StockItem(item));
@@ -329,7 +326,7 @@ namespace PizzaNetWorkClient
                     {
                         return db.inTransaction(uof =>
                         {
-                            Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, Recipies=new List<Recipe>() };
+                            Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, Recipies = new List<Recipe>() };
                             uof.Db.Ingredients.Insert(ing);
                             uof.Db.Commit();
                             Console.WriteLine("Commited " + ing.Name);
@@ -552,24 +549,28 @@ namespace PizzaNetWorkClient
             {
                 try
                 {
-                    using (var db = new PizzaUnitOfWork())
+                    //using (var db = new PizzaUnitOfWork())
+                    //{
+                    //    return db.inTransaction(uof =>
+                    //    {
+                    //        Console.WriteLine("LoadDataStart");
+                    //        var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
+                    //        {
+                    //            First = db.Recipies.FindAllEagerly(),
+                    //            Second = db.Sizes.FindAll().ToArray(),
+                    //            Third = db.Ingredients.FindAll()
+                    //        };
+
+                    //        Console.WriteLine("after query");
+
+                    //        Console.WriteLine("Result is null: {0}", result == null);
+
+                    //        return result;
+                    //    });
+                    //}
+                    using (var proxy = new WorkChannel(ADDRESS))
                     {
-                        return db.inTransaction(uof =>
-                        {
-                            Console.WriteLine("LoadDataStart");
-                            var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
-                            {
-                                First = db.Recipies.FindAllEagerly(),
-                                Second = db.Sizes.FindAll().ToArray(),
-                                Third = db.Ingredients.FindAll()
-                            };
-
-                            Console.WriteLine("after query");
-
-                            Console.WriteLine("Result is null: {0}", result == null);
-
-                            return result;
-                        });
+                        return proxy.GetRecipesTabData();
                     }
                 }
                 catch (Exception exc)
@@ -579,7 +580,8 @@ namespace PizzaNetWorkClient
                 }
             }, (s, args) =>
             {
-                var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
+                //var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
+                var result = args.Result as TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<IngredientDTO>>;
                 if (result == null)
                 {
                     Console.WriteLine("Result is null");
@@ -588,8 +590,24 @@ namespace PizzaNetWorkClient
                 foreach (var item in result.First)
                 {
                     var rc = new RecipeControl();
-                    rc.Recipe = item;
-                    rc.RecalculatePrices(result.Second);
+                    //rc.Recipe = item;
+                    rc.Recipe = new Recipe { Name = item.Name, RecipeID = item.RecipeID };
+                    List<Ingredient> ings = new List<Ingredient>();
+                    foreach (var ingDto in item.Ingredients)
+                    {
+                        ings.Add(new Ingredient
+                        {
+                            ExtraWeight = ingDto.ExtraWeight,
+                            IngredientID = ingDto.IngredientID,
+                            Name = ingDto.Name,
+                            NormalWeight = ingDto.NormalWeight,
+                            PricePerUnit = ingDto.PricePerUnit,
+                            StockQuantity = ingDto.StockQuantity
+                        });
+                    }
+                    rc.Recipe.Ingredients = ings;
+
+                    rc.RecalculatePrices(result.Second.ToArray());
                     RecipesCollection.Add(rc);
                     Console.WriteLine(item.Name);
                 }

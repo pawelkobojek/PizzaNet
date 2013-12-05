@@ -67,6 +67,14 @@
     <Compile Include="PersistanceTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PizzaNetClient\PizzaNetClient.csproj">
+      <Project>{71d03a52-04bb-40e5-9617-d83dff3585e4}</Project>
+      <Name>PizzaNetClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PizzaNetCommon\PizzaNetCommon.csproj">
+      <Project>{3a51264f-f151-4f82-a069-955910229d98}</Project>
+      <Name>PizzaNetCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PizzaNetControls\PizzaNetControls.csproj">
       <Project>{1e4bd86e-9d85-4284-b5d7-c4aba7ead238}</Project>
       <Name>PizzaNetControls</Name>
@@ -78,6 +86,10 @@
     <ProjectReference Include="..\PizzaNetWorkClient\PizzaNetWorkClient.csproj">
       <Project>{792e5a29-a532-40b6-aba0-277b0b54a2be}</Project>
       <Name>PizzaNetWorkClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PizzaService\PizzaService.csproj">
+      <Project>{81e02345-8544-4d78-a261-3866a48dcf78}</Project>
+      <Name>PizzaService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

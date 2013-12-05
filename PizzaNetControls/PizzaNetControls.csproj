@@ -194,6 +194,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PizzaNetCommon\PizzaNetCommon.csproj">
+      <Project>{3a51264f-f151-4f82-a069-955910229d98}</Project>
+      <Name>PizzaNetCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PizzaNetDataModel\PizzaNetDataModel.csproj">
       <Project>{7c8d9142-6cd2-4ddb-9bd4-fba4c425ddd1}</Project>
       <Name>PizzaNetDataModel</Name>
