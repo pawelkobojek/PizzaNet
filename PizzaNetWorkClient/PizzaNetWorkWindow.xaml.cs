@@ -39,47 +39,22 @@ namespace PizzaNetWorkClient
         {
             InitializeComponent();
             this.DataContext = this;
-            this.StockItemsCollection = new ObservableCollection<StockItem>();
-            this.OrdersCollection = new ObservableCollection<OrdersRow>();
-            this.PizzasCollection = new ObservableCollection<PizzaRow>();
-            this.IngredientsCollection = new ObservableCollection<OrderIngredient>();
             this.IngredientsRowsCollection = new ObservableCollection<IngredientsRowWork>();
             this.RecipesCollection = new ObservableCollection<RecipeControl>();
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
-            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
-
-            OrdersRefresher = new BackgroundWorker();
-            OrdersRefresher.DoWork += OrdersRefresher_DoWork;
-            OrdersRefresher.RunWorkerCompleted += OrdersRefresher_RunWorkerCompleted;
 
             this.worker.Lock = this.tabControl;
         }
 
-        void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            RefreshCurrentOrders();
-            OrdersRefresher.RunWorkerAsync();
-        }
-
-        void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
-        {
-            System.Threading.Thread.Sleep(TIMER_INTERVAL);
-        }
-
         #region fields and properties
-        public ObservableCollection<StockItem> StockItemsCollection { get; set; }
-        public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
-        public ObservableCollection<PizzaNetControls.PizzaRow> PizzasCollection { get; set; }
-        public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
-        private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
-
-        private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
-        private const int TIMER_INTERVAL = 60000;
-        private BackgroundWorker OrdersRefresher;
 
         #endregion
+
+        private void showError(string message)
+        {
+            Utils.showError(this.Title, message);
+        }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -88,377 +63,18 @@ namespace PizzaNetWorkClient
 
             if (StockTab.IsSelected)
             {
-                RefreshStockItems();
+                stockViewModel.StockView.RefreshStockItems();
             }
 
             if (OrdersTab.IsSelected)
             {
-                RefreshCurrentOrders();
+                ordersViewModel.WorkOrdersView.RefreshCurrentOrders();
             }
 
             if (RecipiesTab.IsSelected)
             {
                 RefreshRecipies();
             }
-        }
-
-        private void RefreshOrders()
-        {
-            OrdersCollection.Clear();
-            this.worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                try
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-                        return db.inTransaction(uof =>
-                        {
-                            Console.WriteLine("Load Orders Start");
-                            var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
-                            Console.WriteLine("After query");
-                            return result;
-                        });
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc);
-                    return null;
-                }
-            }, (s, a) =>
-            {
-                IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
-
-                foreach (var order in orders)
-                {
-                    OrdersCollection.Add(new OrdersRow(order));
-                }
-            }));
-        }
-
-        private void RefreshCurrentOrders()
-        {
-            worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                try
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-                        return db.inTransaction(uof =>
-                        {
-                            Console.WriteLine("Load Orders Start");
-                            var result = uof.Db.Orders.FindAllEagerlyWhere((o) => o.State.StateValue == State.IN_REALISATION || o.State.StateValue == State.NEW);
-                            Console.WriteLine("After query");
-                            return result;
-                        });
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc);
-                    return null;
-                }
-            }, (s, a) =>
-            {
-                IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
-                bool[] current = new bool[orders.Count()];
-                foreach (var order in orders)
-                {
-                    OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
-                    if (row != null) row.Order = order;
-                    else OrdersCollection.Add(new OrdersRow(order));
-                }
-            }));
-        }
-
-        private void RefreshStockItems()
-        {
-            StockItemsCollection.Clear();
-
-            worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                try
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-                        return db.inTransaction(uof =>
-                            {
-                                Console.WriteLine("LoadDataStart");
-
-                                var result = uof.Db.Ingredients.FindAllIncludeRecipies();
-                                Console.WriteLine("after query");
-
-                                Console.WriteLine("Result is null: {0}", result == null);
-
-                                return result;
-                            });
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc.Message);
-                    return null;
-                }
-            }, PostData, null));
-        }
-
-        private void PostData(object sender, PizzaNetControls.Workers.WorkFinishedEventArgs e)
-        {
-            if (e.Result == null)
-            {
-                Console.WriteLine("Result is null");
-                return;
-            }
-            foreach (var item in (IEnumerable<Ingredient>)e.Result)
-            {
-                Console.WriteLine(item.Name);
-                StockItemsCollection.Add(new StockItem(item));
-            }
-        }
-
-        private void ordersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            OrdersRow ord = ordersListView.SelectedItem as OrdersRow;
-            if (ord != null)
-            {
-                Console.WriteLine("Order.Address: " + ord.Order.Address);
-                Console.WriteLine("Order.CustomerPhone: " + ord.Order.CustomerPhone.ToString());
-                Console.WriteLine("Order.Date: " + ord.Order.Date.ToString());
-                Console.WriteLine("Order.State: " + ord.Order.State.ToString());
-            }
-
-            PizzasCollection.Clear();
-            IList selected = e.AddedItems;
-            if (selected.Count > 0)
-            {
-                OrdersRow or = selected[0] as OrdersRow;
-                if (or != null)
-                {
-                    foreach (var od in or.Order.OrderDetails)
-                    {
-                        PizzasCollection.Add(new PizzaRow(od));
-                    }
-                }
-            }
-        }
-
-        private void pizzasListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            IngredientsCollection.Clear();
-            IList selected = e.AddedItems;
-            if (selected.Count > 0)
-            {
-                PizzaRow pr = selected[0] as PizzaRow;
-                if (pr != null)
-                {
-                    foreach (var ingr in pr.OrderDetail.Ingredients)
-                    {
-                        IngredientsCollection.Add(ingr);
-                    }
-                }
-            }
-        }
-
-        private void listStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (!(e.OriginalSource is ListView) || listStock.SelectedIndex < 0)
-                return;
-            Console.WriteLine("Zaznaczono " + listStock.SelectedIndex);
-            Console.WriteLine("CollectionCount: " + StockItemsCollection.Count);
-        }
-
-        private void ButtonAddIngredient_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("AddIngredient click");
-            worker.EnqueueTask(new WorkerTask((args) =>
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-                        return db.inTransaction(uof =>
-                        {
-                            Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, Recipies=new List<Recipe>() };
-                            uof.Db.Ingredients.Insert(ing);
-                            uof.Db.Commit();
-                            Console.WriteLine("Commited " + ing.Name);
-                            return ing;
-                        });
-                    }
-                }, (s, a) =>
-                {
-                    Ingredient ing = a.Result as Ingredient;
-                    if (ing == null)
-                    {
-                        Console.WriteLine("WARNING: Trying to add null ingredient!");
-                        return;
-                    }
-                    StockItemsCollection.Add(new StockItem(ing));
-                    Console.WriteLine("Added " + ing.Name);
-                }));
-        }
-
-        private void ButtonRemoveIngredient_Click(object sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("Remove clicked");
-            if (listStock.SelectedIndex < 0) return;
-
-            Console.WriteLine(((StockItem)listStock.SelectedItem).Ingredient.Recipies.Count);
-
-            worker.EnqueueTask(new WorkerTask((args) =>
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-                        return db.inTransaction(uof =>
-                        {
-                            StockItem toRemove = args[0] as StockItem;
-                            if (toRemove == null) return null;
-                            if (toRemove.Ingredient.Recipies.Count != 0)
-                            {
-                                return null;
-                            }
-                            uof.Db.Ingredients.Delete(toRemove.Ingredient);
-
-                            uof.Db.Commit();
-                            return toRemove;
-                        });
-                    }
-                }, (s, args) =>
-                {
-                    StockItem toRemove = args.Result as StockItem;
-                    if (toRemove == null)
-                    {
-                        //Console.WriteLine("WARNING: Trying to remove null stock item!");
-                        MessageBox.Show(ING_REMOVE_IMPOSSIBLE);
-                        return;
-                    }
-                    StockItemsCollection.Remove(toRemove);
-                    Console.WriteLine("Removed " + toRemove.Ingredient.Name);
-                }, StockItemsCollection[listStock.SelectedIndex]));
-        }
-
-        private void ButtonOrderSupplies_Click(object sender, RoutedEventArgs e)
-        {
-            ObservableCollection<Ingredient> ings = new ObservableCollection<Ingredient>();
-            foreach (var item in StockItemsCollection)
-            {
-                ings.Add(item.Ingredient);
-            }
-            OrderIngredientForm form = new OrderIngredientForm(this, ings);
-            form.ShowDialog();
-            RefreshStockItems();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            RefreshOrders();
-            OrdersRefresher.RunWorkerAsync();
-        }
-
-        private void ButtonSetInRealisation_Click(object sender, RoutedEventArgs e)
-        {
-            Order o = ((OrdersRow)ordersListView.SelectedItem).Order;
-            worker.EnqueueTask(new WorkerTask((args) =>
-                {
-                    using (var db = new PizzaUnitOfWork())
-                    {
-
-                        return db.inTransaction(uof =>
-                        {
-                            try
-                            {
-                                List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
-                                foreach (var od in o.OrderDetails)
-                                {
-                                    foreach (var odIng in od.Ingredients)
-                                    {
-                                        orderIngredients.Add(odIng);
-                                    }
-                                }
-                                foreach (var odIng in orderIngredients)
-                                {
-                                    Ingredient i = uof.Db.Ingredients.Get(odIng.Ingredient.IngredientID);
-
-                                    if (i.StockQuantity - odIng.Quantity < 0)
-                                    {
-                                        MessageBox.Show(ORDER_IMPOSSIBLE);
-                                        return false;
-                                    }
-
-                                    i.StockQuantity -= odIng.Quantity;
-                                }
-                                uof.Db.Commit();
-                            }
-                            catch (Exception exc)
-                            {
-                                Console.WriteLine(exc);
-                                return false;
-                            }
-                            return true;
-                        });
-                    }
-                }, (a, s) =>
-            {
-                if ((bool)s.Result)
-                    SetOrderStateInBackground(new State { StateValue = State.IN_REALISATION });
-            }));
-        }
-
-        private void SetOrderStateInBackground(State state)
-        {
-            OrdersRow or = ordersListView.SelectedItem as OrdersRow;
-            worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                using (var db = new PizzaUnitOfWork())
-                {
-                    return db.inTransaction(uof =>
-                        {
-                            Console.WriteLine("Set in realisation");
-
-                            Order o = uof.Db.Orders.Get(or.Order.OrderID);
-                            o.State.StateValue = state.StateValue;
-                            uof.Db.Commit();
-
-                            Console.WriteLine("Order " + or.Order.OrderID + " state set to IN REALISATION");
-                            return or;
-                        });
-                }
-            },
-                (s, a) =>
-                {
-                    RefreshCurrentOrders();
-                    or.Order.State = state;
-                    or.Update();
-                }));
-        }
-
-        private void ButtonSetDone_Click(object sender, RoutedEventArgs e)
-        {
-            SetOrderStateInBackground(new State { StateValue = State.DONE });
-        }
-
-        private void ButtonRemoveOrder_Click(object sender, RoutedEventArgs e)
-        {
-            OrdersRow or = ordersListView.SelectedItem as OrdersRow;
-            worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                using (var db = new PizzaUnitOfWork())
-                {
-                    return db.inTransaction(uof =>
-                    {
-
-                        Console.WriteLine("Remove order");
-
-                        Order o = db.Orders.Get(or.Order.OrderID);
-                        db.Orders.Delete(o);
-                        db.Commit();
-                        Console.WriteLine("Order " + or.Order.OrderID + " removed.");
-                        return or;
-                    });
-                }
-            },
-                (s, a) =>
-                {
-                    RefreshOrders();
-                }));
         }
 
         private void RefreshRecipies()
@@ -708,12 +324,7 @@ namespace PizzaNetWorkClient
                     }
                 }, rc.Recipe));
         }
-
-        private void showError(string message)
-        {
-            MessageBox.Show(message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
+        
         private void TextBoxRecipeName_KeyDown(object sender, KeyEventArgs e)
         {
             var txtb = sender as TextBox;
@@ -726,80 +337,5 @@ namespace PizzaNetWorkClient
                     txtb.GetBindingExpression(TextBox.TextProperty).UpdateSource();
             }
         }
-
-        private void TextBoxStockDetails_SourceUpdated(object sender, DataTransferEventArgs e)
-        {
-            if (listStock.SelectedIndex < 0) return;
-            StockItem ingr = StockItemsCollection[listStock.SelectedIndex];
-            worker.EnqueueTask(new WorkerTask(args =>
-            {
-                var i = args[0] as Ingredient;
-                Ingredient result = null;
-                if (i == null) return false;
-                try
-                {
-                    using (var ctx = new PizzaUnitOfWork())
-                    {
-                        bool b = ctx.inTransaction(uof =>
-                        {
-                            var res = ctx.Ingredients.Find(i.IngredientID);
-                            if (res == null || res.Count() != 1) return false;
-                            result = res.First();
-                            result.IngredientID = i.IngredientID;
-                            result.Name = i.Name;
-                            result.NormalWeight = i.NormalWeight;
-                            result.ExtraWeight = i.ExtraWeight;
-                            result.PricePerUnit = i.PricePerUnit;
-                            ctx.Commit();
-                            return true;
-                        });
-                        if (!b) return b;
-                    }
-                    return result;
-                }
-                catch (Exception exc)
-                {
-                    return exc;
-                }
-            }, (s, args) =>
-            {
-                var exc = args.Result as Exception;
-                if (exc != null)
-                {
-                    showError("Can't change ingredient detail!");
-                }
-                else
-                {
-                    var bl = args.Result as bool?;
-                    if (bl != null) showError("Unknown error occured!");
-                    else
-                    {
-                        var rec = args.Result as Ingredient;
-                        if (rec == null) return;
-                        ingr.Ingredient = rec;
-                    }
-                }
-            }, ingr.Ingredient));
-        }
-
-        private void TextBoxStockDetails_KeyDown(object sender, KeyEventArgs e)
-        {
-            var txtb = sender as TextBox;
-            if (txtb == null) return;
-            if (listStock.SelectedIndex < 0) return;
-            StockItem rc = StockItemsCollection[listStock.SelectedIndex];
-            if (e.Key == Key.Return)
-            {
-                BindingExpression exp = txtb.GetBindingExpression(TextBox.TextProperty);
-                Ingredient ingr = exp.ResolvedSource as Ingredient;
-                if (ingr == null) return;
-                PropertyInfo pi = ingr.GetType().GetProperty(exp.ResolvedSourcePropertyName);
-                string target = pi.GetValue(ingr).ToString();
-                if (target != txtb.Text)
-                    exp.UpdateSource();
-                else exp.ValidateWithoutUpdate();
-            }
-        }
-
     }
 }

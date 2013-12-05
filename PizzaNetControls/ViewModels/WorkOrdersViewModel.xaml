@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="PizzaNetControls.ViewModels.WorkOrdersViewModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="SelectionMode" Value="Single"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
+            <TextBlock Text="Orders" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <ListView Margin="10, 0, 10, 20" x:Name="ordersListView"
+                                 ItemsSource="{Binding WorkOrdersView.OrdersCollection}" 
+                                 HorizontalContentAlignment="Stretch"
+                                 SelectionChanged="ordersListView_SelectionChanged"
+                                 />
+        </DockPanel>
+        <DockPanel Grid.Column="1" LastChildFill="True" Margin="10, 0, 5, 0">
+            <TextBlock Text="Details" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <StackPanel Margin="20, 20, 20, 5" DockPanel.Dock="Top">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type DockPanel}">
+                        <Setter Property="Margin" Value="0, 0, 0, 5"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="DockPanel.Dock" Value="Right"/>
+                        <Setter Property="TextAlignment" Value="Right"/>
+                        <Setter Property="IsReadOnly" Value="True"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Width" Value="100"/>
+                    </Style>
+                </StackPanel.Resources>
+                <DockPanel>
+                    <TextBlock Text="Id:"/>
+                    <TextBox Text="{Binding SelectedItem.Order.OrderID, ElementName=ordersListView}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Adress:"/>
+                    <TextBox Text="{Binding SelectedItem.Order.Address, ElementName=ordersListView}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Date:"/>
+                    <TextBox Text="{Binding SelectedItem.Order.Date, ElementName=ordersListView}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="State:"/>
+                    <TextBox Text="{Binding SelectedItem.Order.State, ElementName=ordersListView, Converter={StaticResource ResourceKey=stateConverter}}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Customer Phone:"/>
+                    <TextBox Text="{Binding SelectedItem.Order.CustomerPhone, ElementName=ordersListView}"/>
+                </DockPanel>
+            </StackPanel>
+            <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <ListView x:Name="pizzasListView" Margin="20, 5, 20, 20" 
+                      ItemsSource="{Binding WorkOrdersView.PizzasCollection}" 
+                      SelectionChanged="pizzasListView_SelectionChanged"/>
+        </DockPanel>
+        <DockPanel Grid.Column="2" LastChildFill="True">
+            <TextBlock Text="Ingredients" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <ListView Margin="10, 0, 10, 20" x:Name="ingredientsListView"
+                                 ItemsSource="{Binding WorkOrdersView.IngredientsCollection}" 
+                                 HorizontalContentAlignment="Stretch">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Ingredient.Name}"/>
+                        <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DockPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="20,0,0,10" Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style x:Key="btnStyle" TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="10, 0, 0, 10"/>
+                    <Setter Property="Padding" Value="10, 0, 10, 0"/>
+                    <Setter Property="Height" Value="30"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button Click="ButtonSetInRealisation_Click">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=btnStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Order.State.StateValue, ElementName=ordersListView}"
+                                                 Value="1">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedItem.Order.State.StateValue, ElementName=ordersListView}"
+                                                 Value="2">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                Set in realization
+            </Button>
+            <Button Click="ButtonSetDone_Click">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=btnStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem.Order.State.StateValue, ElementName=ordersListView}"
+                                                 Value="2">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                Set done
+            </Button>
+            <Button Style="{StaticResource ResourceKey=btnStyle}" Click="ButtonRemoveOrder_Click">
+                Remove
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
