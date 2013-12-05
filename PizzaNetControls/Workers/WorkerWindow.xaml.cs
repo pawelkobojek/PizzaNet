@@ -13,11 +13,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace PizzaNetControls.Worker
+namespace PizzaNetControls.Workers
 {
     /// <summary>
     /// Interaction logic for WorkerWindow.xaml
     /// </summary>
+    [System.Obsolete("Deprecated, use WorkerControl instead")]
     public partial class WorkerWindow : Window
     {
         public delegate object RunnableTask(object[] args);

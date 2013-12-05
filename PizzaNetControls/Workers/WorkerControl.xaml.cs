@@ -14,12 +14,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PizzaNetControls.Worker
+namespace PizzaNetControls.Workers
 {
     /// <summary>
     /// Interaction logic for WorkerControl.xaml
     /// </summary>
-    public partial class WorkerControl : UserControl
+    public partial class WorkerControl : UserControl, IWorker
     {
         private Queue<WorkerTask> tasks;
         private BackgroundWorker worker;

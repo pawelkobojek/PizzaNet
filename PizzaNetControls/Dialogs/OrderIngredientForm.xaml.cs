@@ -17,8 +17,9 @@ using PizzaNetDataModel.Monitors;
 using PizzaNetDataModel.Repository;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using PizzaNetControls.Common;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Dialogs
 {
     /// <summary>
     /// Interaction logic for OrderIngredientForm.xaml

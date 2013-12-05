@@ -20,10 +20,13 @@ using PizzaNetDataModel;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using PizzaNetDataModel.Monitors;
-using PizzaNetControls.Worker;
+using PizzaNetControls.Workers;
 using System.Threading;
 using System.Reflection;
 using System.ComponentModel;
+using PizzaNetControls.Dialogs;
+using PizzaNetControls.Controls;
+using PizzaNetControls.Common;
 
 namespace PizzaNetWorkClient
 {
@@ -36,9 +39,9 @@ namespace PizzaNetWorkClient
         {
             InitializeComponent();
             this.DataContext = this;
-            this.StockItemsCollection = new ObservableCollection<PizzaNetControls.StockItem>();
-            this.OrdersCollection = new ObservableCollection<PizzaNetControls.OrdersRow>();
-            this.PizzasCollection = new ObservableCollection<PizzaNetControls.PizzaRow>();
+            this.StockItemsCollection = new ObservableCollection<StockItem>();
+            this.OrdersCollection = new ObservableCollection<OrdersRow>();
+            this.PizzasCollection = new ObservableCollection<PizzaRow>();
             this.IngredientsCollection = new ObservableCollection<OrderIngredient>();
             this.IngredientsRowsCollection = new ObservableCollection<IngredientsRowWork>();
             this.RecipesCollection = new ObservableCollection<RecipeControl>();
@@ -76,7 +79,7 @@ namespace PizzaNetWorkClient
         }
 
         #region fields and properties
-        public ObservableCollection<PizzaNetControls.StockItem> StockItemsCollection { get; set; }
+        public ObservableCollection<StockItem> StockItemsCollection { get; set; }
         public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
         public ObservableCollection<PizzaNetControls.PizzaRow> PizzasCollection { get; set; }
         public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
@@ -226,13 +229,18 @@ namespace PizzaNetWorkClient
             }, PostStockItemsData, null));
         }
 
+        private void PostStockItemsData(object sender, WorkFinishedEventArgs e)
+        {
+            PostData(sender, e);
+        }
+
         /// <summary>
         /// Method invoked after pull of Ingredients from the database.
         /// It works with orders tab.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PostStockItemsData(object sender, PizzaNetControls.Worker.WorkFinishedEventArgs e)
+        private void PostData(object sender, PizzaNetControls.Workers.WorkFinishedEventArgs e)
         {
             if (e.Result == null)
             {

@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="PizzaNetControls.ViewModels.MyOrdersViewModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
+            <TextBlock Text="Orders" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <ListView Margin="10, 0, 10, 20" x:Name="ordersListView"
+                                 ItemsSource="{Binding MyOrdersView.Orders}" 
+                                 HorizontalContentAlignment="Stretch"
+                                 
+                                 />
+            <!--SelectionChanged="ordersListView_SelectionChanged"-->
+        </DockPanel>
+        <DockPanel Grid.Column="1" LastChildFill="True" Margin="10, 0, 5, 0">
+            <TextBlock Text="Details" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <StackPanel Margin="20, 20, 20, 5" DockPanel.Dock="Top">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type DockPanel}">
+                        <Setter Property="Margin" Value="0, 0, 0, 5"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="DockPanel.Dock" Value="Right"/>
+                        <Setter Property="TextAlignment" Value="Right"/>
+                        <Setter Property="IsReadOnly" Value="True"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Width" Value="100"/>
+                    </Style>
+                </StackPanel.Resources>
+                <DockPanel>
+                    <TextBlock Text="Date:"/>
+                    <TextBox Text="{Binding SelectedItem.Order.Date, ElementName=ordersListView}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="State:"/>
+                    <TextBox Text="{Binding SelectedItem.Order.State, ElementName=ordersListView, Converter={StaticResource ResourceKey=stateConverter}}"/>
+                </DockPanel>
+            </StackPanel>
+            <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <ListView x:Name="pizzasListView" Margin="20, 5, 20, 20" 
+                                  ItemsSource="{Binding MyOrdersView.Pizzas}" 
+                                  />
+            <!--SelectionChanged="pizzasListView_SelectionChanged"-->
+        </DockPanel>
+        <DockPanel Grid.Column="2" LastChildFill="True">
+            <TextBlock Text="Ingredients" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
+            <ListView Margin="10, 0, 10, 20" x:Name="ingredientsListView"
+                                 ItemsSource="{Binding MyOrdersView.Ingredients}" 
+                                 HorizontalContentAlignment="Stretch">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Ingredient.Name}"/>
+                        <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DockPanel>
+    </Grid>
+</UserControl>

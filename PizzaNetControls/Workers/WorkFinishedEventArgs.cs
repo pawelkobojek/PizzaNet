@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PizzaNetControls.Worker
+namespace PizzaNetControls.Workers
 {
     public class WorkFinishedEventArgs : EventArgs
     {

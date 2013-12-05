@@ -1,6 +1,8 @@
 ﻿using PizzaNetControls;
+using PizzaNetControls.Common;
 using PizzaNetControls.Configuration;
-using PizzaNetControls.Worker;
+using PizzaNetControls.Dialogs;
+using PizzaNetControls.Workers;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using System;
@@ -10,6 +12,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,13 +39,20 @@ namespace PizzaNetClient
             this.OrderedPizzasCollection = new ObservableCollection<IngredientsList>();
             this.Ingredients = new List<Ingredient>();
 
-            this.worker.Lock = this.contentDockPanel;
+            this.worker.Lock = this.contentControl;
         }
 
         public ObservableCollection<PizzaNetControls.IngredientsRow> IngredientsCollection { get; set; }
         public List<Ingredient> Ingredients { get; set; }
         public ObservableCollection<PizzaNetControls.RecipeControl> RecipesCollection { get; set; }
         public ObservableCollection<PizzaNetControls.IngredientsList> OrderedPizzasCollection { get; set; }
+
+        private ClientConfig _config;
+        public ClientConfig Config 
+        {
+            get { return _config; }
+            set { _config = value; NotifyPropertyChanged("Config"); }
+        }
 
         private PizzaNetDataModel.Model.Size _currentSizeValue;
         public PizzaNetDataModel.Model.Size CurrentSizeValue
@@ -60,6 +70,15 @@ namespace PizzaNetClient
 
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
+            loginDialog.ModalDialogHidden += loginDialog_ModalDialogHidden;
+            loginDialog.Show();
+        }
+
+        void loginDialog_ModalDialogHidden(object sender, ModalDialog.ModalDialogEventArgs e)
+        {
+            if (!loginDialog.DialogResult) 
+                this.Close();
+
             worker.EnqueueTask(new WorkerTask((args) =>
             {
                 try
@@ -89,37 +108,37 @@ namespace PizzaNetClient
                     Console.WriteLine(exc.Message);
                     return null;
                 }
-            }, (s,args) =>
+            }, (s, args) =>
+            {
+                var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
+                if (result == null)
                 {
-                    var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
-                    if (result == null)
-                    {
-                        Console.WriteLine("Result is null");
-                        return;
-                    }
-                    if (result.Second.Length != 3) throw new Exception("Invalid number of sizes");
-                    foreach (var item in result.First)
-                    {
-                        var rc = new RecipeControl();
-                        rc.Recipe = item;
-                        rc.RecalculatePrices(result.Second);
-                        RecipesCollection.Add(rc);
-                        Console.WriteLine(item.Name);
-                    }
-                    foreach (var item in result.Third)
-                    {
-                        var row = new IngredientsRow(item,0,result.Second[0]);
-                        row.PropertyChanged += row_PropertyChanged;
-                        IngredientsCollection.Add(row);
-                        Ingredients.Add(item);
-                    }
-                    smallButton.Tag = result.Second[0];
-                    mediumButton.Tag = result.Second[1];
-                    greatButton.Tag = result.Second[2];
-                    CurrentSizeValue = result.Second[0];
-                }));
+                    Console.WriteLine("Result is null");
+                    return;
+                }
+                if (result.Second.Length != 3) throw new Exception("Invalid number of sizes");
+                foreach (var item in result.First)
+                {
+                    var rc = new RecipeControl();
+                    rc.Recipe = item;
+                    rc.RecalculatePrices(result.Second);
+                    RecipesCollection.Add(rc);
+                    Console.WriteLine(item.Name);
+                }
+                foreach (var item in result.Third)
+                {
+                    var row = new IngredientsRow(item, 0, result.Second[0]);
+                    row.PropertyChanged += row_PropertyChanged;
+                    IngredientsCollection.Add(row);
+                    Ingredients.Add(item);
+                }
+                smallButton.Tag = result.Second[0];
+                mediumButton.Tag = result.Second[1];
+                greatButton.Tag = result.Second[2];
+                CurrentSizeValue = result.Second[0];
+            }));
         }
-
+        
         void row_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Ingredient" || e.PropertyName == "CurrentQuantity")
@@ -276,10 +295,39 @@ namespace PizzaNetClient
             }
             return det;
         }
-
-        private void settingsButton_Click(object sender, RoutedEventArgs e)
+        
+        private void SettingsButtonApply_Click(object sender, RoutedEventArgs e)
         {
-            new SettingsWindow(this) { Config = ClientConfig.getConfig() }.ShowDialog();
+            worker.EnqueueTask(new WorkerTask((args) =>
+            {
+                Config.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+                return null;
+            }, null));
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsNumber(e.Text);
+        }
+
+        private static bool IsNumber(string text)
+        {
+            Regex regex = new Regex("^[0-9]+$");
+            return regex.IsMatch(text);
+        }
+
+        private void contentControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (contentControl.SelectedIndex==2)
+            {
+                worker.EnqueueTask(new WorkerTask((args) =>
+                    {
+                        return ClientConfig.getConfig();
+                    }, (s, args) =>
+                    {
+                        Config = args.Result as ClientConfig;
+                    }));
+            }
         }
     }
 }
