@@ -20,7 +20,7 @@ namespace PizzaNetControls.ViewModels
     /// <summary>
     /// Interaction logic for MyOrdersViewModel.xaml
     /// </summary>
-    public partial class MyOrdersViewModel : UserControl
+    public partial class MyOrdersViewModel : UserControl, INotifyPropertyChanged
     {
         public MyOrdersViewModel()
         {
@@ -38,7 +38,17 @@ namespace PizzaNetControls.ViewModels
             set
             {
                 _vo = value;
-                _vo.NotifyPropertyChanged("MyOrdersView");
+                NotifyPropertyChanged("MyOrdersView");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        internal void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }
