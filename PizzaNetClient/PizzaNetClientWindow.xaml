@@ -35,40 +35,10 @@
                     <PizzaNetViewModels:ClientMainViewModel Name="clientMainViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
                 <TabItem Name="OrdersTab" Header="My orders">
-                    <PizzaNetViewModels:MyOrdersViewModel  Name="myOrdersViewModel"/>
+                    <PizzaNetViewModels:MyOrdersViewModel Name="myOrdersViewModel"/>
                 </TabItem>
-
                 <TabItem Header="Settings">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Margin="30" Grid.Column="0" Grid.Row="0">
-                            <StackPanel.Resources>
-                                <Style TargetType="{x:Type DockPanel}">
-                                    <Setter Property="Margin" Value="0, 5, -5, 5"/>
-                                </Style>
-                            </StackPanel.Resources>
-                            <DockPanel>
-                                <TextBlock Text="Client address:" Width="145"/>
-                                <TextBox DockPanel.Dock="Right" Text="{Binding Config.UserAddress}" Width="100"/>
-                            </DockPanel>
-                            <DockPanel>
-                                <TextBlock Text="Client phone number:" Width="145"/>
-                                <TextBox DockPanel.Dock="Right" Text="{Binding Config.UserPhone}" 
-                                     Width="100" PreviewTextInput="TextBox_PreviewTextInput"/>
-                            </DockPanel>
-                            <Button Margin="20" Grid.Column="0" Click="SettingsButtonApply_Click">
-                                Apply
-                            </Button>
-                        </StackPanel>
-                    </Grid>
+                    <PizzaNetViewModels:ClientSettingsViewModel Name="settingsViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
             </TabControl>
         </Grid>

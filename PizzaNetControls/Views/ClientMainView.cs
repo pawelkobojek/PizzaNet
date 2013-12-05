@@ -114,6 +114,12 @@ namespace PizzaNetControls.Views
             }, ClientConfig.getConfig(), details));
         }
 
+        /// <summary>
+        /// Method needed to merge Ingredients and avoid to duplicate them in Ingredients table
+        /// </summary>
+        /// <param name="det"></param>
+        /// <param name="ing"></param>
+        /// <returns></returns>
         private List<OrderDetail> mergeIngredients(List<OrderDetail> det, IEnumerable<Ingredient> ing)
         {
             foreach (var d in det)

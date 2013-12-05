@@ -31,9 +31,15 @@ namespace PizzaNetControls.ViewModels
             this.Loaded += ClientMainViewModel_Loaded;
         }
 
+        bool initialized = false;
+
         void ClientMainViewModel_Loaded(object sender, RoutedEventArgs e)
         {
-            this.ClientMainView = new ClientMainView(Worker);
+            if (!initialized)
+            {
+                this.ClientMainView = new ClientMainView(Worker);
+                initialized = true;
+            }
         }
 
         private ClientMainView _vo;
