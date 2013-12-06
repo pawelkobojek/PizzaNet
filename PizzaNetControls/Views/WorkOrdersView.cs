@@ -176,6 +176,7 @@ namespace PizzaNetControls.Views
                 RefreshCurrentOrders();
                 or.Order.State = state;
                 or.Update();
+                // TODO zwalone sortowanie po zmianie stanu, nie uaktualnia się
             }));
         }
 
