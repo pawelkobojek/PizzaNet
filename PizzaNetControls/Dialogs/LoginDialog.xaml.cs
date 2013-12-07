@@ -29,8 +29,18 @@ namespace PizzaNetControls.Dialogs
             SignUpCommand = new SignUpCommand();
         }
 
-        public SignUpCommand SignUpCommand { get; set; }
+        public SignUpCommand SignUpCommand { get; private set; }
 
+        public bool ShowSignUp
+        {
+            get { return (bool)GetValue(ShowSignUpProperty); }
+            set { SetValue(ShowSignUpProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowSignUp.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowSignUpProperty =
+            DependencyProperty.Register("ShowSignUp", typeof(bool), typeof(LoginDialog), new UIPropertyMetadata(true));
+        
         private void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
             ValidateLogin((s,o) =>

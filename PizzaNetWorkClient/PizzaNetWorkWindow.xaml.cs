@@ -1,37 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PizzaNetControls.Dialogs;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using PizzaNetControls;
-using PizzaNetDataModel;
-using PizzaNetDataModel.Model;
-using PizzaNetDataModel.Repository;
-using PizzaNetDataModel.Monitors;
-using PizzaNetControls.Workers;
-using System.Threading;
-using System.Reflection;
-using System.ComponentModel;
-using PizzaNetControls.Dialogs;
-using PizzaNetControls.Controls;
-using PizzaNetControls.Common;
-using System.ServiceModel;
-using PizzaNetCommon.Services;
-using PizzaNetCommon.DTOs;
-using PizzaNetCommon.Requests;
-using PizzaNetWorkClient.WCFClientInfrastructure;
 
 namespace PizzaNetWorkClient
 {
@@ -45,6 +14,19 @@ namespace PizzaNetWorkClient
             InitializeComponent();
             this.DataContext = this;
             this.worker.Lock = this.tabControl;
+        }
+
+        private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
+        {
+            loginDialog.ModalDialogHidden += loginDialog_ModalDialogHidden;
+            loginDialog.Show();
+        }
+
+        void loginDialog_ModalDialogHidden(object sender, ModalDialog.ModalDialogEventArgs e)
+        {
+            if (!loginDialog.DialogResult)
+                this.Close();
+            // TODO uncomment ordersViewModel.WorkOrdersView.Load();
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)

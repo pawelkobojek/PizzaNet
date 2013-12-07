@@ -273,12 +273,20 @@ namespace PizzaNetControls.Views
             {
                 IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
                 if (orders == null)
+                {
                     MessageBox.Show(REFRESH_FAILED);
+                    return;
+                }
                 foreach (var order in orders)
                 {
                     OrdersCollection.Add(new OrdersRow(order));
                 }
             }));
+        }
+
+        public void Load()
+        {
+            RefreshOrders();
         }
     }
 }

@@ -60,6 +60,7 @@
     <Compile Include="Configuration\AbstractConfig.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToBackgroundConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
     <Compile Include="Converters\IngredientsConverter.cs" />
     <Compile Include="Converters\OrderDetailsIdConverter.cs" />
@@ -114,6 +115,9 @@
     <Compile Include="ViewModels\StockViewModel.xaml.cs">
       <DependentUpon>StockViewModel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\UsersViewModel.xaml.cs">
+      <DependentUpon>UsersViewModel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\WorkOrdersViewModel.xaml.cs">
       <DependentUpon>WorkOrdersViewModel.xaml</DependentUpon>
     </Compile>
@@ -123,6 +127,7 @@
     <Compile Include="Views\MyOrdersView.cs" />
     <Compile Include="Views\RecipiesView.cs" />
     <Compile Include="Views\StockView.cs" />
+    <Compile Include="Views\UsersView.cs" />
     <Compile Include="Views\WorkOrdersView.cs" />
     <Compile Include="WCFClientInfrastructure\WorkChannel.cs" />
     <Compile Include="Workers\IWorker.cs" />
@@ -195,6 +200,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewModels\StockViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModels\UsersViewModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
