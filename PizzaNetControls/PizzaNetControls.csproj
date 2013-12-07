@@ -52,6 +52,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Utils.cs" />
     <Compile Include="Controls\CircularProgressBar.xaml.cs">
       <DependentUpon>CircularProgressBar.xaml</DependentUpon>
     </Compile>
@@ -107,10 +108,22 @@
     <Compile Include="ViewModels\MyOrdersViewModel.xaml.cs">
       <DependentUpon>MyOrdersViewModel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\RecipiesViewModel.xaml.cs">
+      <DependentUpon>RecipiesViewModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\StockViewModel.xaml.cs">
+      <DependentUpon>StockViewModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\WorkOrdersViewModel.xaml.cs">
+      <DependentUpon>WorkOrdersViewModel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BaseView.cs" />
     <Compile Include="Views\ClientMainView.cs" />
     <Compile Include="Views\ClientSettingsView.cs" />
     <Compile Include="Views\MyOrdersView.cs" />
+    <Compile Include="Views\RecipiesView.cs" />
+    <Compile Include="Views\StockView.cs" />
+    <Compile Include="Views\WorkOrdersView.cs" />
     <Compile Include="Workers\IWorker.cs" />
     <Compile Include="Workers\WorkerControl.xaml.cs">
       <DependentUpon>WorkerControl.xaml</DependentUpon>
@@ -173,6 +186,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewModels\MyOrdersViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModels\RecipiesViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModels\StockViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModels\WorkOrdersViewModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

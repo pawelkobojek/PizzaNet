@@ -5,12 +5,10 @@ d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\De
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\EntityFramework.SqlServer.dll
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\PizzaNetControls.dll
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\PizzaNetDataModel.dll
-d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\PizzaNetCommon.dll
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\PizzaNetControls.pdb
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\PizzaNetDataModel.pdb
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\EntityFramework.xml
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\EntityFramework.SqlServer.xml
-d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\bin\Debug\PizzaNetCommon.pdb
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\obj\Debug\PizzaNetClient.csprojResolveAssemblyReference.cache
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\obj\Debug\PizzaNetClientWindow.g.cs
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetClient\obj\Debug\App.g.cs

@@ -266,7 +266,6 @@ namespace PizzaNetControls.Views
                     Ingredients.Add(item);
                 }
                 // MODIFIED Tag uses now dependency property
-                // TODO set Tag dependency property binding
                 SmallSize = result.Second[0];
                 MedSize = result.Second[1];
                 GreatSize = result.Second[2];

@@ -67,7 +67,6 @@ namespace PizzaNetControls.Dialogs
     {
         public bool CanExecute(object parameter)
         {
-            // TODO
             return true;
         }
 
@@ -75,7 +74,6 @@ namespace PizzaNetControls.Dialogs
 
         public void Execute(object parameter)
         {
-            // TODO
             MessageBox.Show("sign up");
         }
     }

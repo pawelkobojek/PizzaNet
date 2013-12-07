@@ -1,7 +1,7 @@
 ﻿PizzaNetWorkClient
 
 
-exe
+winexe
 C#
 .cs
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Debug\
@@ -12,8 +12,8 @@ DEBUG;TRACE
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\App.xaml
 1918745598
 
-6972369454
-20-1005113417
+52028057688
+17-896422840
 PizzaNetWorkWindow.xaml;
 
 False

@@ -42,7 +42,14 @@ namespace PizzaNetControls
 
         public void Update()
         {
+            NotifyOrderChanged();
+        }
+
+        private void NotifyOrderChanged()
+        {
             NotifyPropertyChanged("Order");
+            foreach (var p in typeof(Order).GetProperties())
+                NotifyPropertyChanged(p.Name);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

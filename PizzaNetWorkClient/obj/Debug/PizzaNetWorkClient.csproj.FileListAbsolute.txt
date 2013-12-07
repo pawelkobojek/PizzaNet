@@ -3,10 +3,8 @@ d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bi
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetWorkClient.pdb
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\EntityFramework.dll
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\EntityFramework.SqlServer.dll
-d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetCommon.dll
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetControls.dll
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetDataModel.dll
-d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetCommon.pdb
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetControls.pdb
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetDataModel.pdb
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\EntityFramework.xml
