@@ -1,26 +1,38 @@
 ﻿<Window x:Class="PizzaNetControls.Dialogs.OrderIngredientForm"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="OrderIngredientForm" Height="250" Width="200" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+        xmlns:PizzaNetDialogs="clr-namespace:PizzaNetControls.Dialogs"
+        Title="OrderIngredientForm" 
+        Height="250" Width="200" 
+        ResizeMode="NoResize" WindowStyle="ToolWindow"
+        ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <DockPanel Name="contentPanel">
+            <StackPanel DockPanel.Dock="Top" 
+                        Orientation="Vertical" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center">
+                <ComboBox Name="listBox" 
+                          Width="100" 
+                          Height="25" 
+                          SelectedIndex="0" 
+                          Margin="10,10,10,10"
+                          ItemsSource="{Binding Ingredients}" 
+                          SelectionChanged="listBox_SelectionChanged"/>
 
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label Margin="10,10,10,0">
+                    Quantity
+                </Label>
 
-            <ComboBox Name="listBox" Width="100" Height="25" SelectedIndex="0" Margin="10,10,10,10" ItemsSource="{Binding Ingredients}" SelectionChanged="listBox_SelectionChanged">
+                <TextBox Name="textQuantity" Margin="10,0,10,10" PreviewTextInput="textQuantity_PreviewTextInput">
 
-            </ComboBox>
+                </TextBox>
 
-            <Label Margin="10,10,10,0">
-                Quantity
-            </Label>
-
-            <TextBox Name="textQuantity" Margin="10,0,10,10" PreviewTextInput="textQuantity_PreviewTextInput">
-
-            </TextBox>
-
-            <Button Width="100" Height="25" Margin="10,10,10,10" Click="ButtonOrder_Click">
-                Order
-            </Button>
-        </StackPanel>
-    </DockPanel>
+                <Button Width="100" Height="25" Margin="10,10,10,10" Click="ButtonOrder_Click">
+                    Order
+                </Button>
+            </StackPanel>
+        </DockPanel>
+        <PizzaNetDialogs:WorkerDialog x:Name="worker" OverlayOn="{Binding ElementName=contentPanel}"/>
+    </Grid>
 </Window>

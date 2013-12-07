@@ -85,7 +85,7 @@ namespace PizzaNetControls.ViewModels
 
         private void ButtonOrderSupplies_Click(object sender, RoutedEventArgs e)
         {
-            // TODO remove OrderIngredientForm
+            // TODO modify OrderIngredientForm
             ObservableCollection<Ingredient> ings = new ObservableCollection<Ingredient>();
             foreach (var item in StockView.StockItemsCollection)
             {

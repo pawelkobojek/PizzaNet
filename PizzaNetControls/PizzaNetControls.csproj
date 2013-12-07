@@ -102,6 +102,9 @@
     <Compile Include="Dialogs\SignUpWindow.xaml.cs">
       <DependentUpon>SignUpWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\WorkerDialog.xaml.cs">
+      <DependentUpon>WorkerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Validation\NumberValidation.cs" />
     <Compile Include="ViewModels\ClientMainViewModel.xaml.cs">
       <DependentUpon>ClientMainViewModel.xaml</DependentUpon>
@@ -183,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\SignUpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\WorkerDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

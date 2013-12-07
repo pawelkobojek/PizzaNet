@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using PizzaNetDataModel.Monitors;
 using PizzaNetDataModel.Model;
 using System.Windows;
+using PizzaNetControls.Workers;
 
 namespace PizzaNetControls.Common
 {
@@ -13,16 +14,15 @@ namespace PizzaNetControls.Common
         where M : IMonitor<E>
         where E : Entity
     {
-        public static void Update(Window owner, M monitor, E entity)
+        public static void Update(IWorker worker, M monitor, E entity)
         {
             if (!monitor.IsMonitoring()) return;
             if (!monitor.HasStateChanged(entity)) return;
-            var worker = new Workers.WorkerWindow(owner, (args) =>
+            worker.EnqueueTask(new WorkerTask((args) =>
                 {
                     monitor.Update(entity);
                     return null;
-                }, null, null);
-            worker.ShowDialog();
+                }, null, null));
         }
     }
 }
