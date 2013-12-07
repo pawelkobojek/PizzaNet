@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.Services;
 
 namespace PizzaNetControls
 {
@@ -57,6 +58,11 @@ namespace PizzaNetControls
         }
 
         public void RecalculatePrices(PizzaNetDataModel.Model.Size[] sizes)
+        {
+            Prices = PriceCalculator.GetPrices(Recipe, sizes);
+        }
+
+        public void RecalculatePrices(SizeDTO[] sizes)
         {
             Prices = PriceCalculator.GetPrices(Recipe, sizes);
         }

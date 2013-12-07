@@ -1,7 +1,0 @@
-.gitignore
-*/bin
-*/obj
-packages
-*/packages.config
-*.sln
-*.v11.suo

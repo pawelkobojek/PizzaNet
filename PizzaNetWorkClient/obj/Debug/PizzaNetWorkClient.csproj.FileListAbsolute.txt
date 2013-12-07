@@ -20,3 +20,5 @@ d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\ob
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Debug\PizzaNetWorkClient.csproj.GenerateResource.Cache
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Debug\PizzaNetWorkClient.exe
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Debug\PizzaNetWorkClient.pdb
+d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetCommon.dll
+d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Debug\PizzaNetCommon.pdb

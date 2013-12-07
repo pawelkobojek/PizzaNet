@@ -7,4 +7,3 @@ d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetDataModel\bin
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetDataModel\bin\Debug\EntityFramework.SqlServer.xml
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetDataModel\obj\Debug\PizzaNetDataModel.dll
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetDataModel\obj\Debug\PizzaNetDataModel.pdb
-d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetDataModel\obj\Debug\PizzaNetDataModel.csprojResolveAssemblyReference.cache

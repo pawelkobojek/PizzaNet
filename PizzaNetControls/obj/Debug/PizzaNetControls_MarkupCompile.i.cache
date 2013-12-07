@@ -13,7 +13,7 @@ DEBUG;TRACE
 18890261642
 
 55-1917051242
-15-1975281399
+16915018516
 Controls\CircularProgressBar.xaml;Controls\IngredientsRowWork.xaml;Controls\IngredientsList.xaml;Controls\IngredientsListItem.xaml;Controls\IngredientsRow.xaml;Dialogs\LoginDialog.xaml;Dialogs\OrderIngredientForm.xaml;Controls\OrdersRow.xaml;Controls\PizzaRow.xaml;Controls\RecipeControl.xaml;ViewModels\ClientMainViewModel.xaml;ViewModels\ClientSettingsViewModel.xaml;ViewModels\MyOrdersViewModel.xaml;ViewModels\RecipiesViewModel.xaml;ViewModels\StockViewModel.xaml;ViewModels\WorkOrdersViewModel.xaml;Workers\WorkerControl.xaml;Workers\WorkerWindow.xaml;
 
 True

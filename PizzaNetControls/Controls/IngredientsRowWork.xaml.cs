@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls
 {
@@ -40,6 +41,26 @@ namespace PizzaNetControls
             : this(ingredient)
         {
             Included = included;
+        }
+
+        public IngredientsRowWork(IngredientDTO ingredient, bool included)
+            : this(ingredient)
+        {
+            Included = included;
+        }
+
+        public IngredientsRowWork(IngredientDTO ingredient)
+        {
+            Ingredient = new Ingredient
+            {
+                StockQuantity = ingredient.StockQuantity,
+                PricePerUnit = ingredient.PricePerUnit,
+                NormalWeight = ingredient.NormalWeight,
+                Name = ingredient.Name,
+                IngredientID = ingredient.IngredientID,
+                ExtraWeight = ingredient.ExtraWeight
+            };
+            Included = false;
         }
 
         private Ingredient _ingredient;
@@ -73,7 +94,7 @@ namespace PizzaNetControls
         private void Button_LT_Click(object sender, RoutedEventArgs e)
         {
             Included = false;
-            if (ButtonIncludeChanged!=null)
+            if (ButtonIncludeChanged != null)
                 ButtonIncludeChanged(this, new EventArgs());
         }
 

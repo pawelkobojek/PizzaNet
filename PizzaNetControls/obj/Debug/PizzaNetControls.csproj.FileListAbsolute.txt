@@ -49,3 +49,5 @@ d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetControls\obj\
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetControls\obj\Debug\ViewModels\ClientMainViewModel.baml
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetControls\obj\Debug\ViewModels\StockViewModel.baml
 d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetControls\obj\Debug\ViewModels\WorkOrdersViewModel.baml
+d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetControls\bin\Debug\PizzaNetCommon.dll
+d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetControls\bin\Debug\PizzaNetCommon.pdb

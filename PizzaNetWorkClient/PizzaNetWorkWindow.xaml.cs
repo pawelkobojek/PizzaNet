@@ -27,6 +27,11 @@ using System.ComponentModel;
 using PizzaNetControls.Dialogs;
 using PizzaNetControls.Controls;
 using PizzaNetControls.Common;
+using System.ServiceModel;
+using PizzaNetCommon.Services;
+using PizzaNetCommon.DTOs;
+using PizzaNetCommon.Requests;
+using PizzaNetWorkClient.WCFClientInfrastructure;
 
 namespace PizzaNetWorkClient
 {
@@ -41,7 +46,7 @@ namespace PizzaNetWorkClient
             this.DataContext = this;
             this.worker.Lock = this.tabControl;
         }
-       
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.OriginalSource is TabControl) || !this.IsLoaded)
@@ -62,5 +67,7 @@ namespace PizzaNetWorkClient
                 recipiesViewModel.RecipiesView.RefreshRecipies();
             }
         }
+
     }
 }
+

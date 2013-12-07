@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{792E5A29-A532-40B6-ABA0-277B0B54A2BE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PizzaNetWorkClient</RootNamespace>
     <AssemblyName>PizzaNetWorkClient</AssemblyName>
@@ -52,6 +52,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -69,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="WCFClientInfrastructure\WorkChannel.cs" />
     <Page Include="PizzaNetWorkWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,6 +115,10 @@
     <Resource Include="res\PizzaSliceIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PizzaNetCommon\PizzaNetCommon.csproj">
+      <Project>{3a51264f-f151-4f82-a069-955910229d98}</Project>
+      <Name>PizzaNetCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PizzaNetControls\PizzaNetControls.csproj">
       <Project>{1e4bd86e-9d85-4284-b5d7-c4aba7ead238}</Project>
       <Name>PizzaNetControls</Name>
@@ -124,6 +131,7 @@
   <ItemGroup>
     <Resource Include="PizzaSliceIcon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
