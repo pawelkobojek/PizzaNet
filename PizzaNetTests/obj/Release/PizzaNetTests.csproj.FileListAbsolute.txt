@@ -1,0 +1,1 @@
+D:\programy\Microsoft Visual Studio 2012\Projects\PizzaNet\PizzaNetTests\obj\Release\PizzaNetTests.csprojResolveAssemblyReference.cache

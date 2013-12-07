@@ -1,0 +1,6 @@
+D:\programy\Microsoft Visual Studio 2012\Projects\PizzaNet\PizzaNetWorkClient\bin\Release\PizzaNetWorkClient.exe.config
+D:\programy\Microsoft Visual Studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Release\PizzaNetWorkClient.csprojResolveAssemblyReference.cache
+D:\programy\Microsoft Visual Studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Release\PizzaNetWorkWindow.g.cs
+D:\programy\Microsoft Visual Studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Release\App.g.cs
+D:\programy\Microsoft Visual Studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Release\PizzaNetWorkClient_MarkupCompile.cache
+D:\programy\Microsoft Visual Studio 2012\Projects\PizzaNet\PizzaNetWorkClient\obj\Release\PizzaNetWorkClient_MarkupCompile.lref

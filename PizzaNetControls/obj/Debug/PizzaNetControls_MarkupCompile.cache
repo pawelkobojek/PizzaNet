@@ -1,0 +1,20 @@
+﻿PizzaNetControls
+
+
+library
+C#
+.cs
+d:\programy\microsoft visual studio 2012\Projects\PizzaNet\PizzaNetControls\obj\Debug\
+PizzaNetControls
+none
+false
+DEBUG;TRACE
+
+131566047878
+
+40-1125186438
+16915018516
+Controls\CircularProgressBar.xaml;Controls\IngredientsRowWork.xaml;Controls\IngredientsList.xaml;Controls\IngredientsListItem.xaml;Controls\IngredientsRow.xaml;Dialogs\LoginDialog.xaml;Dialogs\OrderIngredientForm.xaml;Controls\OrdersRow.xaml;Controls\PizzaRow.xaml;Controls\RecipeControl.xaml;ViewModels\MyOrdersViewModel.xaml;Workers\WorkerControl.xaml;Workers\WorkerWindow.xaml;
+
+False
+
