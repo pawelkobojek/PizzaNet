@@ -124,6 +124,7 @@
     <Compile Include="Views\RecipiesView.cs" />
     <Compile Include="Views\StockView.cs" />
     <Compile Include="Views\WorkOrdersView.cs" />
+    <Compile Include="WCFClientInfrastructure\WorkChannel.cs" />
     <Compile Include="Workers\IWorker.cs" />
     <Compile Include="Workers\WorkerControl.xaml.cs">
       <DependentUpon>WorkerControl.xaml</DependentUpon>

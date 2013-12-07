@@ -10,6 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using PizzaNetWorkClient.WCFClientInfrastructure;
+using PizzaNetCommon.Requests;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.Views
 {
@@ -18,6 +21,7 @@ namespace PizzaNetControls.Views
         public ObservableCollection<StockItem> StockItemsCollection { get; set; }
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
         private const string TITLE = "PizzaNetWorkClient";
+        private const string ADDRESS = "http://localhost:60499/PizzaService.svc";
 
         public StockView(IWorker worker) : base(worker)
         {
@@ -99,20 +103,24 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var db = new PizzaUnitOfWork())
+                    using (var proxy = new WorkChannel(ADDRESS))
                     {
-                        return db.inTransaction(uof =>
-                        {
-                            Console.WriteLine("LoadDataStart");
-
-                            var result = uof.Db.Ingredients.FindAllIncludeRecipies();
-                            Console.WriteLine("after query");
-
-                            Console.WriteLine("Result is null: {0}", result == null);
-
-                            return result;
-                        });
+                        return proxy.GetIngredients();
                     }
+                    //using (var db = new PizzaUnitOfWork())
+                    //{
+                    //    return db.inTransaction(uof =>
+                    //    {
+                    //        Console.WriteLine("LoadDataStart");
+
+                    //        var result = uof.Db.Ingredients.FindAllIncludeRecipies();
+                    //        Console.WriteLine("after query");
+
+                    //        Console.WriteLine("Result is null: {0}", result == null);
+
+                    //        return result;
+                    //    });
+                    //}
                 }
                 catch (Exception exc)
                 {
@@ -129,7 +137,8 @@ namespace PizzaNetControls.Views
                 Console.WriteLine("Result is null");
                 return;
             }
-            foreach (var item in (IEnumerable<Ingredient>)e.Result)
+            IList<IngredientDTO> ings = ((ListResponse<IngredientDTO>)e.Result).Data;
+            foreach (var item in ings)
             {
                 Console.WriteLine(item.Name);
                 StockItemsCollection.Add(new StockItem(item));
