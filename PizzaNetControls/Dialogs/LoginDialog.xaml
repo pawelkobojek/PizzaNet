@@ -54,6 +54,11 @@
                         <Style TargetType="{x:Type DockPanel}">
                             <Setter Property="Margin" Value="0,5,0,0"/>
                         </Style>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Setter Property="Width" Value="180"/>
+                            <Setter Property="DockPanel.Dock" Value="Right"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                        </Style>
                         <Style TargetType="{x:Type PasswordBox}">
                             <Setter Property="Width" Value="180"/>
                             <Setter Property="DockPanel.Dock" Value="Right"/>
@@ -61,12 +66,12 @@
                         </Style>
                     </StackPanel.Resources>
                     <DockPanel>
-                        <TextBlock Text="Login:"/>
-                        <PasswordBox/>
+                        <TextBlock Text="Email:"/>
+                        <TextBox Name="emailInput"/>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock Text="Password:"/>
-                        <PasswordBox/>
+                        <PasswordBox Name="passwordInput"/>
                     </DockPanel>
                     <TextBlock Margin="0,5,0,0" HorizontalAlignment="Center" FontSize="9" Visibility="{Binding ShowSignUp, Converter={StaticResource ResourceKey=boolToVisibilityConverter}}">
                         <Hyperlink Command="{Binding SignUpCommand}" 

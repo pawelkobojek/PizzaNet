@@ -9,6 +9,7 @@
     <UserControl.Resources>
         <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
         <PizzaNetConverters:OrderDetailsIdConverter x:Key="orderDetailsIdConverter"/>
+        <PizzaNetConverters:OrderToPriceConverter x:Key="orderToPriceConverter"/>
         <PizzaNetConverters:OrderDetailsToPriceConverter x:Key="orderDetailsToPriceConverter"/>
         <Style TargetType="{x:Type ListView}">
             <Setter Property="SelectionMode" Value="Single"/>
@@ -67,6 +68,10 @@
                 <DockPanel>
                     <TextBlock Text="Customer Phone:"/>
                     <TextBox Text="{Binding SelectedItem.Order.CustomerPhone, ElementName=ordersListView}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Order price:"/>
+                    <TextBox Text="{Binding SelectedItem.Order, ElementName=ordersListView, Converter={StaticResource ResourceKey=orderToPriceConverter}}"/>
                 </DockPanel>
             </StackPanel>
             <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>

@@ -9,5 +9,7 @@ namespace PizzaNetControls.Workers
     public interface IWorker
     {
         void EnqueueTask(WorkerTask task);
+
+        event EventHandler<EventArgs> AllWorkDone;
     }
 }

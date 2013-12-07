@@ -10,6 +10,7 @@
         <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
         <PizzaNetConverters:OrderDetailsIdConverter x:Key="orderDetailsIdConverter"/>
         <PizzaNetConverters:OrderDetailsToPriceConverter x:Key="orderDetailsToPriceConverter"/>
+        <PizzaNetConverters:OrderDetailsToPriceConverter x:Key="orderToPriceConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -53,6 +54,10 @@
                 <DockPanel>
                     <TextBlock Text="State:"/>
                     <TextBox Text="{Binding SelectedItem.Order.State, ElementName=ordersListView, Converter={StaticResource ResourceKey=stateConverter}}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Price:"/>
+                    <TextBox Text="{Binding SelectedItem.Order, ElementName=ordersListView, Converter={StaticResource ResourceKey=orderToPriceConverter}}"/>
                 </DockPanel>
             </StackPanel>
             <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>

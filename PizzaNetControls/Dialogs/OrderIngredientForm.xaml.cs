@@ -54,7 +54,7 @@ namespace PizzaNetControls.Dialogs
             int quantity = int.Parse(textQuantity.Text);
 
             ing.StockQuantity += quantity;
-            Updater<IngredientMonitor, Ingredient>.Update(this, im, ing);
+            Updater<IngredientMonitor, Ingredient>.Update(worker, im, ing);
             Console.WriteLine("Updated");
         }
 

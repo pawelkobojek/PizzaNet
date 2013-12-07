@@ -42,6 +42,11 @@ namespace PizzaNetControls.Workers
             {
                 nextTask();
             }
+            else
+            {
+                if (AllWorkDone != null)
+                    AllWorkDone(this, new EventArgs());
+            }
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -77,5 +82,7 @@ namespace PizzaNetControls.Workers
             worker.RunWorkerCompleted += (s, e) => { worker.RunWorkerCompleted -= workCompletedHandler; };
             worker.RunWorkerAsync();
         }
+
+        public event EventHandler<EventArgs> AllWorkDone;
     }
 }
