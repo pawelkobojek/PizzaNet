@@ -62,5 +62,12 @@ namespace PizzaNetControls.Common
             }
             return result;
         }
+        public static double CalculatePrice(this Order order)
+        {
+            double result = 0;
+            foreach (var od in order.OrderDetails)
+                result += od.CalculatePrice();
+            return result;
+        }
     }
 }

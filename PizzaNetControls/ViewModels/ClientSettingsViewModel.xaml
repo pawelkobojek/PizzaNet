@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="700" d:DesignWidth="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -15,43 +15,68 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="{x:Type DockPanel}">
+                <Setter Property="Margin" Value="0, 5, -5, 5"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Width" Value="130"/>
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="DockPanel.Dock" Value="Right"/>
+                <Setter Property="Width" Value="130"/>
+                <Setter Property="TextAlignment" Value="Left"/>
+            </Style>
+            <Style TargetType="{x:Type PasswordBox}">
+                <Setter Property="DockPanel.Dock" Value="Right"/>
+                <Setter Property="Width" Value="130"/>
+            </Style>
+        </Grid.Resources>
         <StackPanel Margin="30" Grid.Column="0" Grid.Row="0">
-            <StackPanel.Resources>
-                <Style TargetType="{x:Type DockPanel}">
-                    <Setter Property="Margin" Value="0, 5, -5, 5"/>
-                </Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Setter Property="DockPanel.Dock" Value="Right"/>
-                    <Setter Property="Width" Value="100"/>
-                    <Setter Property="TextAlignment" Value="Right"/>
-                </Style>
-            </StackPanel.Resources>
             <DockPanel>
-                <TextBlock Text="Id:" Width="145"/>
+                <TextBlock Text="Id:"/>
                 <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.UserId}"/>
             </DockPanel>
             <DockPanel>
-                <TextBlock Text="Name:" Width="145"/>
+                <TextBlock Text="Name:"/>
                 <TextBox Text="{Binding ClientSettingsView.User.Name}"/>
             </DockPanel>
             <DockPanel>
-                <TextBlock Text="Phone:" Width="145"/>
+                <TextBlock Text="Phone:"/>
                 <TextBox Text="{Binding ClientSettingsView.User.Phone}"/>
             </DockPanel>
             <DockPanel>
-                <TextBlock Text="Address:" Width="145"/>
+                <TextBlock Text="Address:"/>
                 <TextBox Text="{Binding ClientSettingsView.User.Address}"/>
             </DockPanel>
             <DockPanel>
-                <TextBlock Text="Email:" Width="145"/>
+                <TextBlock Text="Email:"/>
                 <TextBox Text="{Binding ClientSettingsView.User.Email}"/>
             </DockPanel>
             <DockPanel>
-                <TextBlock Text="Rights:" Width="145"/>
+                <TextBlock Text="Rights:"/>
                 <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.Rights}"/>
             </DockPanel>
             <Button Margin="20" Grid.Column="0" Click="SettingsButtonApply_Click">
                 Apply
+            </Button>
+        </StackPanel>
+        <StackPanel Margin="30" Grid.Column="1" Grid.Row="0">
+            <DockPanel>
+                <TextBlock Text="Current password:"/>
+                <PasswordBox Name="currentPasswordInput"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="New password:"/>
+                <PasswordBox Name="newPasswordInput"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="Repeat new password:"/>
+                <PasswordBox Name="newPasswordRepeatInput"/>
+            </DockPanel>
+
+            <Button Margin="20" Grid.Column="1" Click="SettingsButtonSavePassword_Click">
+                Save password
             </Button>
         </StackPanel>
     </Grid>

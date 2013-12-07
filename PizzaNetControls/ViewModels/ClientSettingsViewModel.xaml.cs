@@ -68,6 +68,11 @@ namespace PizzaNetControls.ViewModels
             e.Handled = !IsNumber(e.Text);
         }
 
+        private void SettingsButtonSavePassword_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO implement save new password
+        }
+
         private static bool IsNumber(string text)
         {
             Regex regex = new Regex("^[0-9]+$");

@@ -67,6 +67,7 @@
     <Compile Include="Converters\OrderDetailsIdConverter.cs" />
     <Compile Include="Converters\OrderDetailsToPriceConverter.cs" />
     <Compile Include="Converters\OrderIdConverter.cs" />
+    <Compile Include="Converters\OrderToPriceConverter.cs" />
     <Compile Include="Converters\QuantityToBackgroundConverter.cs" />
     <Compile Include="Converters\StateConverter.cs" />
     <Compile Include="Controls\IngredientsRowWork.xaml.cs">
@@ -98,6 +99,9 @@
     </Compile>
     <Compile Include="Controls\StockItem.cs" />
     <Compile Include="Common\Updater.cs" />
+    <Compile Include="Dialogs\SignUpWindow.xaml.cs">
+      <DependentUpon>SignUpWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Validation\NumberValidation.cs" />
     <Compile Include="ViewModels\ClientMainViewModel.xaml.cs">
       <DependentUpon>ClientMainViewModel.xaml</DependentUpon>
@@ -175,6 +179,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RecipeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SignUpWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
