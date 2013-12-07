@@ -2,46 +2,53 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:PizzaNetWorkClient"
+        xmlns:PizzaNetDialogs="clr-namespace:PizzaNetControls.Dialogs;assembly=PizzaNetControls"
         xmlns:PizzaNetControls="clr-namespace:PizzaNetControls;assembly=PizzaNetControls"
         xmlns:PizzaNetWorkers="clr-namespace:PizzaNetControls.Workers;assembly=PizzaNetControls"
         xmlns:PizzaNetViewModels="clr-namespace:PizzaNetControls.ViewModels;assembly=PizzaNetControls"
-        Title="PizzaNetWork" Height="600" Width="900" Icon="res/PizzaSliceIcon.png">
+        Title="PizzaNetWork" Height="600" Width="900" Icon="res/PizzaSliceIcon.png" Loaded="PizzaNetWindowClass_Loaded">
     <Window.Resources>
         <Style TargetType="{x:Type ListView}">
             <Setter Property="SelectionMode" Value="Single"/>
         </Style>
     </Window.Resources>
-    <DockPanel LastChildFill="True">
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel
+    <Grid>
+        <DockPanel LastChildFill="True" Name="allContent">
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel
     		    Orientation="Horizontal" 
     		    HorizontalAlignment="Left"
                 Margin="5"
                 Height="auto">
-                <Image Height="50" Width="50" Source="res/PizzaSliceIcon.png"/>
-                <TextBlock VerticalAlignment="Center"
+                    <Image Height="50" Width="50" Source="res/PizzaSliceIcon.png"/>
+                    <TextBlock VerticalAlignment="Center"
                            HorizontalAlignment="Center"
                            FontSize="30" Margin="10,0,0,0">
                     PizzaNet Work
-                </TextBlock>
-            </StackPanel>
-            <PizzaNetWorkers:WorkerControl Grid.Column="1" Margin="0,0,5,0" x:Name="worker"/>
+                    </TextBlock>
+                </StackPanel>
+                <PizzaNetWorkers:WorkerControl Grid.Column="1" Margin="0,0,5,0" x:Name="worker"/>
             </Grid>
             <Separator Name="c" DockPanel.Dock="Top"/>
-        <TabControl Name="tabControl" SelectionChanged="TabControl_SelectionChanged">
-            <TabItem Name="OrdersTab" Header="Orders">
-                <PizzaNetViewModels:WorkOrdersViewModel Name="ordersViewModel" Worker="{Binding ElementName=worker}"/>
-            </TabItem>
-            <TabItem Name="StockTab" Header="Stock" >
-                <PizzaNetViewModels:StockViewModel Name="stockViewModel" Worker="{Binding ElementName=worker}"/>
-            </TabItem>
-            <TabItem Name="RecipiesTab" Header="Recipies">
-                <PizzaNetViewModels:RecipiesViewModel Name="recipiesViewModel" Worker="{Binding ElementName=worker}"/>
-            </TabItem>
-        </TabControl>
-    </DockPanel>
+            <TabControl Name="tabControl" SelectionChanged="TabControl_SelectionChanged">
+                <TabItem Name="OrdersTab" Header="Orders">
+                    <PizzaNetViewModels:WorkOrdersViewModel Name="ordersViewModel" Worker="{Binding ElementName=worker}"/>
+                </TabItem>
+                <TabItem Name="StockTab" Header="Stock" >
+                    <PizzaNetViewModels:StockViewModel Name="stockViewModel" Worker="{Binding ElementName=worker}"/>
+                </TabItem>
+                <TabItem Name="RecipiesTab" Header="Recipies">
+                    <PizzaNetViewModels:RecipiesViewModel Name="recipiesViewModel" Worker="{Binding ElementName=worker}"/>
+                </TabItem>
+                <TabItem Name="UsersTab" Header="Users">
+                    <PizzaNetViewModels:UsersViewModel Name="usersViewModel" Worker="{Binding ElementName=worker}"/>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+        <PizzaNetDialogs:LoginDialog Name="loginDialog" OverlayOn="{Binding ElementName=allContent}" ShowSignUp="False"/>
+    </Grid>
 </Window>

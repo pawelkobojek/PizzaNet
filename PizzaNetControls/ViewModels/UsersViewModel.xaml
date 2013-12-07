@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="PizzaNetControls.ViewModels.UsersViewModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Column="1"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Stretch"
+                                  Background="#ffa0a0a0" 
+                                  ShowsPreview="True"
+                                  Width="1"/>
+
+        <ListView x:Name="listUsers" ItemsSource="{Binding UsersView.UsersCollection}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding User.Id}" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding User.Name}" />
+                    <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding User.Phone}" />
+                    <GridViewColumn Header="Address" DisplayMemberBinding="{Binding User.Address}" />
+                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding User.Email}" />
+                    <GridViewColumn Header="Rights" DisplayMemberBinding="{Binding User.Rights}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Column="2">
+            <TextBlock Text="Panel" Margin="10" FontSize="16"/>
+            <StackPanel Margin="20, 20, 20, 5">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type DockPanel}">
+                        <Setter Property="Margin" Value="0, 0, 0, 5"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="DockPanel.Dock" Value="Right"/>
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="DockPanel.Dock" Value="Right"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Width" Value="100"/>
+                    </Style>
+                </StackPanel.Resources>
+                <DockPanel>
+                    <TextBlock Text="Id:"/>
+                    <TextBox IsReadOnly="True"
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.UserId}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Name:"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Name}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Phone:"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Phone}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Address:"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Address}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Email:"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Email}"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock Text="Rights:"/>
+                    <ComboBox ItemsSource="{Binding UsersView.Rights}"
+                            SelectedValue="{Binding ElementName=listUsers, Path=SelectedItem.User.Rights}"/>
+                </DockPanel>
+            </StackPanel>
+            <StackPanel Margin="0, 20, 0, 0">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Width" Value="150"/>
+                        <Setter Property="Margin" Value="0, 5, 0, 0"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Click="ButtonAddUser_Click">Add user</Button>
+                <Button Click="ButtonRemoveUser_Click">Remove user</Button>
+                <Button Click="ButtonSaveChanges_Click">Save changes</Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

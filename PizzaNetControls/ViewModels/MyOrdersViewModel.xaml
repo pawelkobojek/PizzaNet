@@ -5,9 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="700" d:DesignWidth="1000">
     <UserControl.Resources>
         <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
+        <PizzaNetConverters:OrderDetailsIdConverter x:Key="orderDetailsIdConverter"/>
+        <PizzaNetConverters:OrderDetailsToPriceConverter x:Key="orderDetailsToPriceConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -55,9 +57,14 @@
             </StackPanel>
             <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
             <ListView x:Name="pizzasListView" Margin="20, 5, 20, 20" 
-                                  ItemsSource="{Binding MyOrdersView.Pizzas}" 
-                                  />
-            <!--SelectionChanged="pizzasListView_SelectionChanged"-->
+                                  ItemsSource="{Binding MyOrdersView.Pizzas}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Pizza Id" DisplayMemberBinding="{Binding OrderDetail.OrderDetailID, Converter={StaticResource ResourceKey=orderDetailsIdConverter}}"/>
+                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding OrderDetail, Converter={StaticResource ResourceKey=orderDetailsToPriceConverter}}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </DockPanel>
         <DockPanel Grid.Column="2" LastChildFill="True">
             <TextBlock Text="Ingredients" Margin="10" FontSize="16" DockPanel.Dock="Top"/>

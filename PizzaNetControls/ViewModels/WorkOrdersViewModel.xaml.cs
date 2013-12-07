@@ -39,7 +39,7 @@ namespace PizzaNetControls.ViewModels
             if (!initialized)
             {
                 this.WorkOrdersView = new WorkOrdersView(Worker);
-                WorkOrdersView.RefreshOrders();
+                //MODIFIED WorkOrdersView.RefreshOrders();
                 initialized = true;
             }
         }

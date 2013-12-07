@@ -5,11 +5,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:PizzaNetWorkers="clr-namespace:PizzaNetControls.Workers"
         xmlns:PizzaNetDialogs="clr-namespace:PizzaNetControls.Dialogs"
+        xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
         mc:Ignorable="d"
         Height="220"
         Width="300"
         Background="White">
-    <!--PizzaNetDialogs:ModalDialog-->
+    <UserControl.Resources>
+        <PizzaNetConverters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+    </UserControl.Resources>
     <Border BorderThickness="1" BorderBrush="Gray">
         <Grid>
             <Grid.RowDefinitions>
@@ -65,7 +68,7 @@
                         <TextBlock Text="Password:"/>
                         <PasswordBox/>
                     </DockPanel>
-                    <TextBlock Margin="0,5,0,0" HorizontalAlignment="Center" FontSize="9">
+                    <TextBlock Margin="0,5,0,0" HorizontalAlignment="Center" FontSize="9" Visibility="{Binding ShowSignUp, Converter={StaticResource ResourceKey=boolToVisibilityConverter}}">
                         <Hyperlink Command="{Binding SignUpCommand}" 
                                    CommandParameter="{Binding}">
                             You don't have an account? Sign up for free!

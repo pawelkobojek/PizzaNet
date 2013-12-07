@@ -53,5 +53,15 @@ namespace PizzaNetControls.Common
             }
             return result;
         }
+
+        public static double CalculatePrice(this OrderDetail orderDetail)
+        {
+            double result = 3 * orderDetail.Size.SizeValue;
+            foreach (var i in orderDetail.Ingredients)
+            {
+                result += (double)i.Quantity * (double)i.Ingredient.PricePerUnit * orderDetail.Size.SizeValue;
+            }
+            return result;
+        }
     }
 }
