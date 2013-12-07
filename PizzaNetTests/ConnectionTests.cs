@@ -5,7 +5,9 @@ using PizzaNetCommon.DTOs;
 using PizzaNetCommon.Queries;
 using PizzaNetCommon.Requests;
 using PizzaNetDataModel.Model;
+using PizzaNetTests.Mocks;
 using PizzaNetWorkClient.WCFClientInfrastructure;
+using PizzaService.Assemblers;
 
 namespace PizzaNetTests
 {
@@ -92,6 +94,89 @@ namespace PizzaNetTests
                         }
                     });
             }
+        }
+
+        [TestMethod]
+        public void SetOrderStateTest()
+        {
+            using (var ch = new WorkChannel(ADDRESS))
+            {
+                InAutoRollbackTransaction(uof =>
+                    {
+                        //Order order = new Order
+                        //{
+                        //    Address = "TestAddress",
+                        //    CustomerPhone = 123,
+                        //    Date = DateTime.Now,
+                        //    OrderDetails = null,
+                        //    User = new User { Rights = 1, Phone = 1, Password = "asd", Name = "asD", Email = "2332", Address = "lol" }
+                        //};
+
+                        //order.State = uof.Db.States.Find(State.NEW);
+
+                        //uof.Db.Orders.Insert(order);
+                        //uof.Db.Commit();
+                        //uof.Db.ObjectContext().DetachAll();
+
+                        OrderDTO dtoOrder = ch.GetOrders().Data[0];
+                        dtoOrder.State.StateValue = State.IN_REALISATION;
+
+                        ch.SetOrderState(new UpdateRequest<OrderDTO> { Data = dtoOrder });
+
+                        OrderDTO o = ch.GetOrders().Data[0];
+
+                        Assert.IsTrue(o.State.StateValue == State.IN_REALISATION);
+
+                        dtoOrder.State.StateValue = State.NEW;
+                        ch.SetOrderState(new UpdateRequest<OrderDTO> { Data = dtoOrder });
+                        Assert.IsTrue(dtoOrder.State.StateValue == State.NEW);
+                    });
+            }
+        }
+
+        [TestMethod]
+        public void UpdateIngredientTest()
+        {
+            using (var ch = new WorkChannel(ADDRESS))
+            {
+                IList<StockIngredientDTO> ings = ch.GetIngredients().Data;
+                List<StockIngredientDTO> toUpdate = new List<StockIngredientDTO>();
+                string Name1 = ings[0].Name;
+                string Name2 = ings[1].Name;
+                ings[0].Name = "UPDATED1";
+                ings[1].Name = "UPDATED2";
+                toUpdate.Add(ings[0]);
+                toUpdate.Add(ings[1]);
+                ch.UpdateIngredient(new UpdateRequest<IList<StockIngredientDTO>> { Data = toUpdate });
+
+                IList<StockIngredientDTO> newIngs = ch.GetIngredients().Data;
+                Assert.IsTrue(newIngs[0].Name == ings[0].Name);
+                Assert.IsTrue(newIngs[1].Name == ings[1].Name);
+
+                toUpdate.Clear();
+
+                newIngs[0].Name = Name1;
+                newIngs[1].Name = Name2;
+                toUpdate.Add(newIngs[0]);
+                toUpdate.Add(newIngs[1]);
+
+                ch.UpdateIngredient(new UpdateRequest<IList<StockIngredientDTO>> { Data = toUpdate });
+            }
+            //ServiceMock mock = new ServiceMock();
+
+            //IList<StockIngredientDTO> ings = mock.GetIngredients().Data;
+            //List<StockIngredientDTO> toUpdate = new List<StockIngredientDTO>();
+            //ings[0].Name = "UPDATED1";
+            //ings[1].Name = "UPDATED2";
+            //toUpdate.Add(ings[0]);
+            //toUpdate.Add(ings[1]);
+
+            //mock.UpdateIngredient(new UpdateRequest<IList<StockIngredientDTO>>
+            //{
+            //    Data = toUpdate
+            //});
+
+
         }
     }
 }

@@ -8,7 +8,7 @@ namespace PizzaNetCommon.DTOs
 {
     public class OrderDTO
     {
-//        public int OrderID { get; set; }
+        public int OrderID { get; set; }
         public DateTime Date { get; set; }
         public int CustomerPhone { get; set; }
         public string Address { get; set; }

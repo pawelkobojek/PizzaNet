@@ -25,5 +25,17 @@ namespace PizzaService.Assemblers
             return ingDto;
         }
 
+        public void UpdateIngredient(Ingredient ing, StockIngredientDTO dto)
+        {
+            if(ing.IngredientID!=dto.IngredientID)
+                return;
+
+            ing.ExtraWeight = dto.ExtraWeight;
+            ing.Name = dto.Name;
+            ing.NormalWeight = dto.NormalWeight;
+            ing.PricePerUnit = dto.PricePerUnit;
+            ing.StockQuantity = dto.StockQuantity;
+        }
+
     }
 }

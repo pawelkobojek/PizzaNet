@@ -13,6 +13,7 @@ namespace PizzaService.Assemblers
         {
             OrderDTO oDto = new OrderDTO
             {
+                OrderID = o.OrderID,
                 Address = o.Address,
                 CustomerPhone = o.CustomerPhone,
                 Date = o.Date,
@@ -39,6 +40,11 @@ namespace PizzaService.Assemblers
 
 
             return oDto;
+        }
+
+        public void UpdateEntity(Order order, OrderDTO orderDTO)
+        {
+            order.StateID = orderDTO.State.StateID;
         }
     }
 }

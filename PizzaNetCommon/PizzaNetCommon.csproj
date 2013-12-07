@@ -47,12 +47,16 @@
     <Compile Include="DTOs\OrderDTO.cs" />
     <Compile Include="DTOs\RecipeDTO.cs" />
     <Compile Include="DTOs\StateDTO.cs" />
+    <Compile Include="DTOs\UserDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\OrdersQuery.cs" />
     <Compile Include="Queries\QueryBase.cs" />
     <Compile Include="Requests\ListResponse.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
+    <Compile Include="Requests\RequestBase.cs" />
+    <Compile Include="Requests\SingleItemResponse.cs" />
     <Compile Include="Requests\TrioResponse.cs" />
+    <Compile Include="Requests\UpdateRequest.cs" />
     <Compile Include="ServiceProxyBase.cs" />
     <Compile Include="Services\IPizzaService.cs" />
     <Compile Include="DTOs\SizeDTO.cs" />

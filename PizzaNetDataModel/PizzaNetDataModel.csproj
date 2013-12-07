@@ -56,6 +56,7 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\User.cs" />
     <Compile Include="Monitors\IMonitor.cs" />
     <Compile Include="Monitors\IngredientMonitor.cs" />
     <Compile Include="Model\Entity.cs" />
@@ -74,7 +75,9 @@
     <Compile Include="Repository\PizzaUnitOfWork.cs" />
     <Compile Include="Repository\RecipeRepository.cs" />
     <Compile Include="Repository\SizeRepository.cs" />
+    <Compile Include="Repository\StateRepository.cs" />
     <Compile Include="Repository\TransactionUnitOfWork.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PizzaNetCommon\PizzaNetCommon.csproj">

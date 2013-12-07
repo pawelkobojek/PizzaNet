@@ -22,6 +22,8 @@ namespace PizzaService
         private RecipeAssembler recipeAssembler = new RecipeAssembler();
         private SizeAssembler sizeAssembler = new SizeAssembler();
         private OrderAssembler orderAssembler = new OrderAssembler();
+        private UserAssembler userAssembler = new UserAssembler();
+        private StateAssembler stateAssembler = new StateAssembler();
 
         private PizzaUnitOfWork db = new PizzaUnitOfWork();
 
@@ -80,6 +82,53 @@ namespace PizzaService
             {
                 throw new FaultException(e.Message);
             }
+        }
+
+
+        public ListResponse<UserDTO> GetUsers()
+        {
+            return db.inTransaction(uof =>
+                {
+                    return ListResponse.Create(uof.Db.Users.FindAll().ToList()
+                        .Select(userAssembler.ToSimpleDto).ToList());
+                });
+        }
+
+        public void SetOrderState(UpdateRequest<OrderDTO> request)
+        {
+            db.inTransaction(uof =>
+                {
+                    Order o = uof.Db.Orders.Get(request.Data.OrderID);
+                    State st = uof.Db.States.Find(request.Data.State.StateValue);
+                    o.State = st;
+                    uof.Db.Commit();
+                });
+        }
+
+        public ListResponse<OrderDTO> GetOrders()
+        {
+            return db.inTransaction(uof =>
+                {
+                    return ListResponse.Create(uof.Db.Orders.FindAll().ToList()
+                        .Select(orderAssembler.ToSimpleDto).ToList());
+                });
+        }
+
+
+        public void UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
+        {
+            if (request.Data == null)
+                return;
+
+            db.inTransaction(uof =>
+                {
+                    foreach (var stockItem in request.Data)
+                    {
+                        Ingredient ing = uof.Db.Ingredients.Get(stockItem.IngredientID);
+                        (new IngredientAssembler()).UpdateIngredient(ing, stockItem);
+                    }
+                    uof.Db.Commit();
+                });
         }
     }
 }

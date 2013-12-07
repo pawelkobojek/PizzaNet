@@ -18,7 +18,7 @@ namespace PizzaNetDataModel.Repository
         /// It uses lazy loading. In order to get eagerly loaded data use FindAllEagearly() method.
         /// </summary>
         /// <returns>List of all orders.</returns>
-        IEnumerable<Order> FindAll();
+        IList<Order> FindAll();
         /// <summary>
         /// Retrieves all Orders in the database in a eager manner.
         /// In order to use lazy loading call FindAll() method.
@@ -48,7 +48,7 @@ namespace PizzaNetDataModel.Repository
             db = ctx;
         }
 
-        public IEnumerable<Order> FindAll()
+        public IList<Order> FindAll()
         {
             return db.Orders.ToList();
         }

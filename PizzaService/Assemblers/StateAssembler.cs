@@ -12,5 +12,10 @@ namespace PizzaService.Assemblers
         {
             return new StateDTO { StateID = state.StateID, StateValue = state.StateValue };
         }
+
+        public void UpdateEntity(PizzaNetDataModel.Model.State state, StateDTO stateDTO)
+        {
+            state.StateValue = stateDTO.StateValue;
+        }
     }
 }

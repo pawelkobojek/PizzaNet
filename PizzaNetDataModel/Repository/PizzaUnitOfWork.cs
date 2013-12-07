@@ -21,6 +21,8 @@ namespace PizzaNetDataModel.Repository
         public RecipeRepository Recipies { get; set; }
         public OrderRepository Orders { get; set; }
         public SizeRepository Sizes { get; set; }
+        public StateRepository States { get; set; }
+        public UserRepository Users { get; set; }
 
         public bool RequestRollback { get; set; }
 
@@ -39,6 +41,8 @@ namespace PizzaNetDataModel.Repository
             Recipies = new RecipeRepository(db);
             Orders = new OrderRepository(db);
             Sizes = new SizeRepository(db);
+            States = new StateRepository(db);
+            Users = new UserRepository(db);
         }
 
         public PizzaUnitOfWork(bool reqRollback)

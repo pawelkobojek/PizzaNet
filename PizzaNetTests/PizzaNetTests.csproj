@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="DbTest.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Mocks\ServiceMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PersistanceTests.cs" />
     <Compile Include="AssemblingTests.cs" />

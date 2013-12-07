@@ -33,7 +33,16 @@ namespace PizzaNetTests
             {
                 new OrderDetail{ Size = new Size{SizeValue= Size.MEDIUM}, Ingredients = orings}
             };
-            Order order = new Order { Address = "A", CustomerPhone = 123, Date = DateTime.Now, State = new State { StateValue = State.NEW }, OrderDetails = od };
+            Order order = new Order
+            {
+                Address = "A",
+                CustomerPhone = 123,
+                Date = DateTime.Now,
+                State = new State { StateValue = State.NEW },
+                OrderDetails = od
+                ,
+                User = new User { Address = "A", Email = "A", Name = "B", Password = "B", Phone = 2, Rights = 2 }
+            };
 
             InAutoRollbackTransaction(uof =>
                 {
@@ -206,7 +215,15 @@ namespace PizzaNetTests
 
             InAutoRollbackTransaction(uof =>
             {
-                Order o = new Order { Address = "A", CustomerPhone = 123, Date = DateTime.Now, OrderDetails = new List<OrderDetail>(), State = new State { StateValue = State.DONE } };
+                Order o = new Order
+                {
+                    Address = "A",
+                    CustomerPhone = 123,
+                    Date = DateTime.Now,
+                    OrderDetails = new List<OrderDetail>(),
+                    State = new State { StateValue = State.DONE },
+                    User = new User { Address = "A", Email = "A", Name = "A", Password = "A", Phone = 1, Rights = 1 }
+                };
                 int x = ((List<Order>)uof.Db.Orders.FindAll()).Count;
 
                 uof.Db.Orders.Insert(o);

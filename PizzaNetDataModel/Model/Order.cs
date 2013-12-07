@@ -46,5 +46,10 @@ namespace PizzaNetDataModel.Model
         /// List of ordered pizzas. Contains informations about its ingredients and size.
         /// </summary>
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+
+        [ForeignKey("User")]
+        public int UserID { get; set; }
+
+        public virtual User User { get; set; }
     }
 }

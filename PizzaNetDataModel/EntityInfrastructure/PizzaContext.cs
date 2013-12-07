@@ -17,6 +17,7 @@ namespace PizzaNetDataModel
         public DbSet<Recipe> Recipies { get; set; }
         public DbSet<Size> Sizes { get; set; }
         public DbSet<State> States { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public PizzaContext()
         {
