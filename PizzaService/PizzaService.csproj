@@ -74,8 +74,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assemblers\IngredientAssembler.cs" />
+    <Compile Include="Assemblers\OrderAssembler.cs" />
     <Compile Include="Assemblers\RecipeAssembler.cs" />
     <Compile Include="Assemblers\SizeAssembler.cs" />
+    <Compile Include="Assemblers\StateAssembler.cs" />
     <Compile Include="PizzaService.svc.cs">
       <DependentUpon>PizzaService.svc</DependentUpon>
     </Compile>

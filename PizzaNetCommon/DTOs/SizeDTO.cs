@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PizzaNetCommon.Services
+namespace PizzaNetCommon.DTOs
 {
     public class SizeDTO
     {

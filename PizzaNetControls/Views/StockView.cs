@@ -137,7 +137,7 @@ namespace PizzaNetControls.Views
                 Console.WriteLine("Result is null");
                 return;
             }
-            IList<IngredientDTO> ings = ((ListResponse<IngredientDTO>)e.Result).Data;
+            IList<StockIngredientDTO> ings = ((ListResponse<StockIngredientDTO>)e.Result).Data;
             foreach (var item in ings)
             {
                 Console.WriteLine(item.Name);

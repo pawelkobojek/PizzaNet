@@ -8,6 +8,7 @@ using System.Text;
 using PizzaNetCommon.DTOs;
 using PizzaNetCommon.Requests;
 using PizzaNetCommon.Services;
+using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using PizzaService.Assemblers;
 
@@ -20,10 +21,11 @@ namespace PizzaService
         private IngredientAssembler ingAssembler = new IngredientAssembler();
         private RecipeAssembler recipeAssembler = new RecipeAssembler();
         private SizeAssembler sizeAssembler = new SizeAssembler();
+        private OrderAssembler orderAssembler = new OrderAssembler();
 
         private PizzaUnitOfWork db = new PizzaUnitOfWork();
 
-        public ListResponse<PizzaNetCommon.DTOs.IngredientDTO> GetIngredients()
+        public ListResponse<PizzaNetCommon.DTOs.StockIngredientDTO> GetIngredients()
         {
             try
             {
@@ -40,7 +42,7 @@ namespace PizzaService
             }
         }
 
-        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<IngredientDTO>> IPizzaService.GetRecipeTabData()
+        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> IPizzaService.GetRecipeTabData()
         {
             try
             {
@@ -52,6 +54,25 @@ namespace PizzaService
                         .Select(sizeAssembler.ToSimpleDto)
                         .ToList(), uof.Db.Ingredients.FindAll().ToList()
                         .Select(ingAssembler.ToSimpleDto)
+                        .ToList());
+                });
+            }
+            catch (Exception e)
+            {
+                throw new FaultException(e.Message);
+            }
+        }
+
+        public ListResponse<OrderDTO> GetUndoneOrders()
+        {
+            try
+            {
+                return db.inTransaction(uof =>
+                {
+                    return ListResponse.Create(db.Orders.FindAllEagerlyWhere(o => o.State.StateValue == State.NEW ||
+                        o.State.StateValue == State.IN_REALISATION)
+                        .ToList()
+                        .Select(orderAssembler.ToSimpleDto)
                         .ToList());
                 });
             }

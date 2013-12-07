@@ -32,7 +32,7 @@ namespace PizzaNetDataModel.Repository
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        IEnumerable<Order> FindAllEagerlyWhere(Func<Order, bool> predicate);
+        IList<Order> FindAllEagerlyWhere(Func<Order, bool> predicate);
     }
     
     /// <summary>
@@ -95,13 +95,22 @@ namespace PizzaNetDataModel.Repository
                 .ToList();
         }
 
-        public IEnumerable<Order> FindAllEagerlyWhere(Func<Order, bool> predicate)
+        public IList<Order> FindAllEagerlyWhere(Func<Order, bool> predicate)
         {
             return db.Orders
                 .Include(o => o.OrderDetails.Select(od => od.Ingredients))
                 .Include(o => o.OrderDetails.Select(od => od.Ingredients.Select(ing => ing.Ingredient)))
                 .Include(o => o.OrderDetails.Select(od => od.Size))
                 .Include(o => o.State).Where(predicate)
+                .ToList();
+        }
+
+        public IEnumerable<Order> FindAllEagerlyWhereDTO(Func<PizzaNetCommon.DTOs.OrderDTO, bool> predicate)
+        {
+            return db.Orders
+                .Include(o => o.OrderDetails.Select(od => od.Ingredients))
+                .Include(o => o.OrderDetails.Select(od => od.Ingredients.Select(ing => ing.Ingredient)))
+                .Include(o => o.OrderDetails.Select(od => od.Size))
                 .ToList();
         }
     }

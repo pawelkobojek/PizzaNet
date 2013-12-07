@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PizzaNetCommon.Services;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls
 {

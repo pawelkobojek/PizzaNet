@@ -9,9 +9,9 @@ namespace PizzaService.Assemblers
 {
     public class IngredientAssembler
     {
-        public IngredientDTO ToSimpleDto(Ingredient ing)
+        public StockIngredientDTO ToSimpleDto(Ingredient ing)
         {
-            IngredientDTO ingDto = new IngredientDTO
+            StockIngredientDTO ingDto = new StockIngredientDTO
             {
                 ExtraWeight = ing.ExtraWeight,
                 IngredientID = ing.IngredientID,

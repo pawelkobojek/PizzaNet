@@ -16,7 +16,7 @@ namespace PizzaNetControls.Controls
             this._ingredient = t;
         }
 
-        public StockItem(IngredientDTO t)
+        public StockItem(StockIngredientDTO t)
         {
             this._ingredient = new Ingredient
             {

@@ -76,6 +76,12 @@
     <Compile Include="Repository\SizeRepository.cs" />
     <Compile Include="Repository\TransactionUnitOfWork.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PizzaNetCommon\PizzaNetCommon.csproj">
+      <Project>{3a51264f-f151-4f82-a069-955910229d98}</Project>
+      <Name>PizzaNetCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

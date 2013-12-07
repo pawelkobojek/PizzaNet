@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PizzaNetCommon;
 using PizzaNetCommon.DTOs;
+using PizzaNetCommon.Queries;
 using PizzaNetCommon.Requests;
 using PizzaNetCommon.Services;
 
@@ -17,14 +18,19 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         {
         }
 
-        public ListResponse<IngredientDTO> GetIngredients()
+        public ListResponse<StockIngredientDTO> GetIngredients()
         {
             return Channel.GetIngredients();
         }
 
-        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<IngredientDTO>> GetRecipesTabData()
+        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipesTabData()
         {
             return Channel.GetRecipeTabData();
+        }
+
+        public ListResponse<OrderDTO> GetUndoneOrders()
+        {
+            return Channel.GetUndoneOrders();
         }
     }
 }

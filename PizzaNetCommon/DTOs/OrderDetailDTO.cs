@@ -7,5 +7,8 @@ namespace PizzaNetCommon.DTOs
 {
     public class OrderDetailDTO
     {
+        //public int OrderDetailID { get; set; }
+        public IList<OrderIngredientDTO> Ingredients { get; set; }
+
     }
 }

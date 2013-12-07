@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using PizzaNetCommon.DTOs;
+using PizzaNetCommon.Queries;
 using PizzaNetCommon.Requests;
 
 namespace PizzaNetCommon.Services
@@ -13,9 +14,12 @@ namespace PizzaNetCommon.Services
     public interface IPizzaService
     {
         [OperationContract]
-        ListResponse<IngredientDTO> GetIngredients();
+        ListResponse<StockIngredientDTO> GetIngredients();
 
         [OperationContract]
-        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<IngredientDTO>> GetRecipeTabData();
+        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData();
+
+        [OperationContract]
+        ListResponse<OrderDTO> GetUndoneOrders();
     }
 }

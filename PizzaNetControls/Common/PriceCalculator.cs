@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PizzaNetCommon.Services;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.Common
 {

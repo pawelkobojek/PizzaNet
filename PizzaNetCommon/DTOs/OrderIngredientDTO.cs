@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace PizzaNetCommon.DTOs
 {
-    public class RecipeDTO
+    public class OrderIngredientDTO
     {
-        public int RecipeID { get; set; }
-
+        public double Quantity { get; set; }
+        public int IngredientID { get; set; }
         public string Name { get; set; }
-
-        public IList<StockIngredientDTO> Ingredients { get; set; }
+        public decimal Price { get; set; }
     }
 }

@@ -43,13 +43,13 @@ namespace PizzaNetControls
             Included = included;
         }
 
-        public IngredientsRowWork(IngredientDTO ingredient, bool included)
+        public IngredientsRowWork(StockIngredientDTO ingredient, bool included)
             : this(ingredient)
         {
             Included = included;
         }
 
-        public IngredientsRowWork(IngredientDTO ingredient)
+        public IngredientsRowWork(StockIngredientDTO ingredient)
         {
             Ingredient = new Ingredient
             {
