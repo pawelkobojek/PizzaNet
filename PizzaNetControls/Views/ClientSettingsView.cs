@@ -15,18 +15,20 @@ namespace PizzaNetControls.Views
             
         }
         
-        private ClientConfig _config;
-        public ClientConfig Config
-        {
-            get { return _config; }
-            set { _config = value; NotifyPropertyChanged("Config"); }
-        }
+        // TODO User property
+        
+        //private ClientConfig _config;
+        //public ClientConfig Config
+        //{
+        //    get { return _config; }
+        //    set { _config = value; NotifyPropertyChanged("Config"); }
+        //}
 
         internal void SaveConfig()
         {
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
-                Config.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
+                // MODIFIED Config.Save(ClientConfig.CONFIGNAME, typeof(ClientConfig));
                 return null;
             }, null));
         }
@@ -35,19 +37,12 @@ namespace PizzaNetControls.Views
         {
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
-                return ClientConfig.getConfig();
+                //MODIFIED return ClientConfig.getConfig();
+                return null;
             }, (s, args) =>
             {
-                Config = args.Result as ClientConfig;
+                //MODIFIED Config = args.Result as ClientConfig;
             }));
-        }
-
-        private void NotifyConfigChanged()
-        {
-            NotifyPropertyChanged("Config");
-            foreach (var m in typeof(ClientConfig).GetProperties())
-                if (m.CanWrite)
-                    NotifyPropertyChanged(m.Name);
         }
     }
 }

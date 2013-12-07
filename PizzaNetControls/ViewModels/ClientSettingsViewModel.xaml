@@ -20,15 +20,35 @@
                 <Style TargetType="{x:Type DockPanel}">
                     <Setter Property="Margin" Value="0, 5, -5, 5"/>
                 </Style>
+                <Style TargetType="{x:Type TextBox}">
+                    <Setter Property="DockPanel.Dock" Value="Right"/>
+                    <Setter Property="Width" Value="100"/>
+                    <Setter Property="TextAlignment" Value="Right"/>
+                </Style>
             </StackPanel.Resources>
             <DockPanel>
-                <TextBlock Text="Client address:" Width="145"/>
-                <TextBox DockPanel.Dock="Right" Text="{Binding ClientSettingsView.Config.UserAddress}" Width="100"/>
+                <TextBlock Text="Id:" Width="145"/>
+                <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.UserId}"/>
             </DockPanel>
             <DockPanel>
-                <TextBlock Text="Client phone number:" Width="145"/>
-                <TextBox DockPanel.Dock="Right" Text="{Binding ClientSettingsView.Config.UserPhone}" 
-                                     Width="100" PreviewTextInput="TextBox_PreviewTextInput"/>
+                <TextBlock Text="Name:" Width="145"/>
+                <TextBox Text="{Binding ClientSettingsView.User.Name}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="Phone:" Width="145"/>
+                <TextBox Text="{Binding ClientSettingsView.User.Phone}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="Address:" Width="145"/>
+                <TextBox Text="{Binding ClientSettingsView.User.Address}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="Email:" Width="145"/>
+                <TextBox Text="{Binding ClientSettingsView.User.Email}"/>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="Rights:" Width="145"/>
+                <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.Rights}"/>
             </DockPanel>
             <Button Margin="20" Grid.Column="0" Click="SettingsButtonApply_Click">
                 Apply

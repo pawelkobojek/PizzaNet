@@ -1,4 +1,5 @@
-﻿using PizzaNetControls.Workers;
+﻿using PizzaNetControls.Controls;
+using PizzaNetControls.Workers;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using System;
@@ -29,7 +30,7 @@ namespace PizzaNetControls.Views
             OrdersRefresher.RunWorkerAsync();
         }
 
-        public ObservableCollection<PizzaNetControls.PizzaRow> PizzasCollection { get; set; }
+        public ObservableCollection<PizzaRow> PizzasCollection { get; set; }
         public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
         public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
         private const int TIMER_INTERVAL = 60000;
@@ -205,6 +206,11 @@ namespace PizzaNetControls.Views
             }, (s, a) =>
             {
                 IEnumerable<Order> orders = a.Result as IEnumerable<Order>;
+                if (orders == null)
+                {
+                    MessageBox.Show(REFRESH_FAILED);
+                    return;
+                }
                 bool[] current = new bool[orders.Count()];
                 foreach (var order in orders)
                 {

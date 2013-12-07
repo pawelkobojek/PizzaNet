@@ -67,7 +67,7 @@ namespace PizzaNetControls.Dialogs
             worker.EnqueueTask(new WorkerTask(
                 (args) =>
                 {
-                    System.Threading.Thread.Sleep(2000);
+                    // TODO validate login
                     return true;
                 },handler, null));
         }

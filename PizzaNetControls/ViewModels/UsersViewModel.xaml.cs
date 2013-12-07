@@ -71,6 +71,11 @@ namespace PizzaNetControls.ViewModels
 
         #endregion
 
+        private void ButtonAddUser_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void ButtonRemoveUser_Click(object sender, RoutedEventArgs e)
         {
 

@@ -58,12 +58,14 @@
     </Compile>
     <Compile Include="Configuration\ClientConfig.cs" />
     <Compile Include="Configuration\AbstractConfig.cs" />
+    <Compile Include="Controls\PizzaRow.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToBackgroundConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
     <Compile Include="Converters\IngredientsConverter.cs" />
     <Compile Include="Converters\OrderDetailsIdConverter.cs" />
+    <Compile Include="Converters\OrderDetailsToPriceConverter.cs" />
     <Compile Include="Converters\OrderIdConverter.cs" />
     <Compile Include="Converters\QuantityToBackgroundConverter.cs" />
     <Compile Include="Converters\StateConverter.cs" />
@@ -88,9 +90,6 @@
     </Compile>
     <Compile Include="Common\Pair.cs" />
     <Compile Include="Common\Trio.cs" />
-    <Compile Include="Controls\PizzaRow.xaml.cs">
-      <DependentUpon>PizzaRow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Common\PriceCalculator.cs" />
     <Compile Include="Common\PriceData.cs" />
     <Compile Include="Converters\PriceDataConverter.cs" />
@@ -172,10 +171,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\OrdersRow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\PizzaRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

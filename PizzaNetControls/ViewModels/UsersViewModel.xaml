@@ -51,27 +51,23 @@
                 <DockPanel>
                     <TextBlock Text="Id:"/>
                     <TextBox IsReadOnly="True"
-                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.UserID}"/>
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.UserId}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Name:"/>
-                    <TextBox IsReadOnly="True"
-                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Name}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Name}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Phone:"/>
-                    <TextBox IsReadOnly="True"
-                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Phone}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Phone}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Address:"/>
-                    <TextBox IsReadOnly="True"
-                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Address}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Address}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Email:"/>
-                    <TextBox IsReadOnly="True"
-                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Email}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Email}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Rights:"/>
@@ -86,6 +82,7 @@
                         <Setter Property="Margin" Value="0, 5, 0, 0"/>
                     </Style>
                 </StackPanel.Resources>
+                <Button Click="ButtonAddUser_Click">Add user</Button>
                 <Button Click="ButtonRemoveUser_Click">Remove user</Button>
                 <Button Click="ButtonSaveChanges_Click">Save changes</Button>
             </StackPanel>

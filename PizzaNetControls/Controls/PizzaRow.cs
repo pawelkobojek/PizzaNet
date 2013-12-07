@@ -1,31 +1,18 @@
-﻿using System;
+﻿using PizzaNetDataModel.Model;
+using PizzaNetControls.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using PizzaNetDataModel.Model;
 
-namespace PizzaNetControls
+namespace PizzaNetControls.Controls
 {
-    /// <summary>
-    /// Interaction logic for PizzaRow.xaml
-    /// </summary>
-    public partial class PizzaRow : UserControl, INotifyPropertyChanged
+    public class PizzaRow: INotifyPropertyChanged
     {
         public PizzaRow()
         {
-            InitializeComponent();
-            this.DataContext = this;
         }
 
         public PizzaRow(OrderDetail orderDetail) : this()
@@ -36,13 +23,21 @@ namespace PizzaNetControls
         private OrderDetail _orderDetail = new OrderDetail();
         public OrderDetail OrderDetail
         {
-            get { return _orderDetail; }
-            set { _orderDetail = value; NotifyPropertyChanged("OrderDetail"); }
+            get
+            {
+                return _orderDetail;
+            }
+            set 
+            {
+                _orderDetail = value;
+                NotifyPropertyChanged("OrderDetail");
+            }
         }
-
-        public void NotifyAll()
+        
+        public void Update()
         {
             NotifyPropertyChanged("OrderDetail");
+            NotifyPropertyChanged("PizzaCost");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
