@@ -50,7 +50,6 @@ namespace PizzaService.Assemblers
             ing.Name = dto.Name;
             ing.NormalWeight = dto.NormalWeight;
             ing.PricePerUnit = dto.PricePerUnit;
-            ing.StockQuantity = dto.StockQuantity;
         }
 
     }

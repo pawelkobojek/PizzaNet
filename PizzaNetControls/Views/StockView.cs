@@ -13,6 +13,7 @@ using System.Windows;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaNetCommon.Requests;
 using PizzaNetCommon.DTOs;
+using PizzaNetControls.Configuration;
 
 namespace PizzaNetControls.Views
 {
@@ -23,7 +24,6 @@ namespace PizzaNetControls.Views
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
         private const string TITLE = "PizzaNetWorkClient";
         private const string SAVE_CHANGES_FAILURE = "Save changes failed";
-        private const string ADDRESS = "http://localhost:60499/PizzaService.svc";
 
         public StockView(IWorker worker) : base(worker)
         {
@@ -131,7 +131,7 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var proxy = new WorkChannel(ADDRESS))
+                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
                     {
                         return proxy.GetIngredients(new EmptyRequest { Login = "Admin", Password = "123" });
                     }
@@ -187,13 +187,12 @@ namespace PizzaNetControls.Views
                 {
                     var list       = args[0] as IList<StockIngredientDTO>;
                     var removeList = args[1] as IList<StockIngredientDTO>;
-                    using (var proxy = new WorkChannel(ADDRESS))
+                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
                     {
                         return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<IList<StockIngredientDTO>>()
                         {
-                            // TODO fix user
-                            Login = "Admin",
-                            Password = "123",
+                            Login = ClientConfig.getConfig().Login,
+                            Password = ClientConfig.getConfig().Password,
                             Data = list,
                             DataToRemove = removeList
                         });

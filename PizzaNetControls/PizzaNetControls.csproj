@@ -109,6 +109,7 @@
     <Compile Include="Validation\PasswordEqualRule.cs" />
     <Compile Include="Validation\PasswordHelper.cs" />
     <Compile Include="Validation\PasswordConfig.cs" />
+    <Compile Include="Validation\StringValidation.cs" />
     <Compile Include="ViewModels\ClientMainViewModel.xaml.cs">
       <DependentUpon>ClientMainViewModel.xaml</DependentUpon>
     </Compile>

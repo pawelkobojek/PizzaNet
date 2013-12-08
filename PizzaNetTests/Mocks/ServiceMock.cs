@@ -151,7 +151,7 @@ namespace PizzaNetTests.Mocks
             throw new NotImplementedException();
         }
 
-        public SingleItemResponse<UserDTO> GetUser(RequestBase req)
+        public SingleItemResponse<UserDTO> GetUser(EmptyRequest req)
         {
             throw new NotImplementedException();
         }

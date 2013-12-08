@@ -1,33 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace PizzaNetControls.Configuration
 {
     public class ClientConfig : AbstractConfig
     {
-        public const string CONFIGNAME = "configuration.xml";
+        public static string CONFIGNAME = "configuration.xml";
 
         public ClientConfig()
         {
+            ServerAddress = "http://localhost:60499/PizzaService.svc";
             UserAddress = "";
-            UserPhone = 0;
+            Login = "";
+            Password = "";
+            Phone = 0;
+            Rights = 0;
         }
 
-        public ClientConfig(string userAddress, int userPhone)
-        {
-            UserAddress = userAddress;
-            UserPhone = userPhone;
-        }
-
+        [XmlIgnore]
+        public string Login { get; set; }
+        [XmlIgnore]
+        public string Password { get; set; }
+        [XmlIgnore]
         public string UserAddress { get; set; }
-        public int UserPhone { get; set; }
+        [XmlIgnore]
+        public int Phone { get; set; }
+        [XmlIgnore]
+        public int Rights { get; set; }
+
+        public string ServerAddress { get; set; }
+
+        private static ClientConfig cfg = null;
 
         public static ClientConfig getConfig()
         {
-            ClientConfig cfg;
+            if (cfg != null) return cfg;
             try
             {
                 cfg = (ClientConfig)AbstractConfig.Read(ClientConfig.CONFIGNAME, typeof(ClientConfig));

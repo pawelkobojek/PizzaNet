@@ -38,6 +38,6 @@ namespace PizzaNetCommon.Services
         ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request);
 
         [OperationContract]
-        SingleItemResponse<UserDTO> GetUser(RequestBase req);
+        SingleItemResponse<UserDTO> GetUser(EmptyRequest req);
     }
 }

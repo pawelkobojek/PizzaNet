@@ -52,7 +52,7 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             return Channel.GetUsers(req);
         }
 
-        public SingleItemResponse<UserDTO> GetUser(RequestBase req)
+        public SingleItemResponse<UserDTO> GetUser(EmptyRequest req)
         {
             return Channel.GetUser(req);
         }

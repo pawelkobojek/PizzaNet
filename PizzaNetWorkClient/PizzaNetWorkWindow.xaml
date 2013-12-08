@@ -49,6 +49,9 @@
                 </TabItem>
             </TabControl>
         </DockPanel>
-        <PizzaNetDialogs:LoginDialog Name="loginDialog" OverlayOn="{Binding ElementName=allContent}" ShowSignUp="False"/>
+        <PizzaNetDialogs:LoginDialog Name="loginDialog" 
+                                     OverlayOn="{Binding ElementName=allContent}" 
+                                     ShowSignUp="False"
+                                     MinRightsLevel="2"/>
     </Grid>
 </Window>

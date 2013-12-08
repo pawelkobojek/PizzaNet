@@ -197,13 +197,18 @@ namespace PizzaService
             });
         }
 
-        public SingleItemResponse<UserDTO> GetUser(RequestBase req)
+        private SingleItemResponse<UserDTO> GetUser(RequestBase req)
         {
             User user = db.Users.Find(req.Login);
             if (!PerformValidation(user, req))
                 return null;
 
             return SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
+        }
+
+        public SingleItemResponse<UserDTO> GetUser(EmptyRequest req)
+        {
+            return GetUser((RequestBase)req);
         }
 
         private static bool PerformValidation(User user, RequestBase req)

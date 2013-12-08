@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -138,8 +139,16 @@ namespace PizzaNetControls.ViewModels
 
         private void CheckLastBinding()
         {
-            // TODO implement
+            if (listStock.SelectedIndex < 0) return;
             StockIngredientDTO rc = StockView.StockItemsCollection[listStock.SelectedIndex];
+            NumberFormatInfo nfi = new CultureInfo("en-US", true).NumberFormat;
+            StockView.Modified  |=
+                tbId.Text       != rc.IngredientID.ToString()  ||
+                tbName.Text     != rc.Name.ToString()          ||
+                tbQuantity.Text != rc.StockQuantity.ToString() ||
+                tbNW.Text       != rc.NormalWeight.ToString()  ||
+                tbEW.Text       != rc.ExtraWeight.ToString()   ||
+                tbPU.Text       != rc.PricePerUnit.ToString("0.########",nfi);
         }
     
         public void GotFocusAction()
@@ -160,6 +169,11 @@ namespace PizzaNetControls.ViewModels
                     ) != MessageBoxResult.No;
             }
             else return true;
+        }
+
+        private void TextBoxStockDetails_KeyUp(object sender, KeyEventArgs e)
+        {
+            StockView.Modified = true;
         }
     }
 }

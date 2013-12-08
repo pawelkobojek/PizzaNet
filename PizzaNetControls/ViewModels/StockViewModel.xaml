@@ -26,7 +26,7 @@
                     <GridViewColumn Width="100" Header="Quantity" DisplayMemberBinding="{Binding StockQuantity}" />
                     <GridViewColumn Width="80" Header="Normal" DisplayMemberBinding="{Binding NormalWeight}" />
                     <GridViewColumn Width="80" Header="Extra" DisplayMemberBinding="{Binding ExtraWeight}" />
-                    <GridViewColumn Width="80" Header="Price (pU)" DisplayMemberBinding="{Binding PricePerUnit}" />
+                    <GridViewColumn Width="80" Header="Price (pU)" DisplayMemberBinding="{Binding PricePerUnit, StringFormat='{}{0:0.########}'}" />
                 </GridView>
             </ListView.View>
         </ListView>
@@ -47,38 +47,54 @@
                 </StackPanel.Resources>
                 <DockPanel>
                     <TextBlock Text="Id:"/>
-                    <TextBox IsReadOnly="True" 
-                                         Text="{Binding ElementName=listStock, Path=SelectedItem.IngredientID, NotifyOnSourceUpdated=True}"
-                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
-                                         KeyDown="TextBoxStockDetails_KeyDown"/>
+                    <TextBox Name="tbId" 
+                             IsReadOnly="True" 
+                             Text="{Binding ElementName=listStock, Path=SelectedItem.IngredientID, NotifyOnSourceUpdated=True}"
+                             SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                             KeyDown="TextBoxStockDetails_KeyDown"
+                             KeyUp="TextBoxStockDetails_KeyUp"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Name:"/>
-                    <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Name, NotifyOnSourceUpdated=True}"
-                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
-                                         KeyDown="TextBoxStockDetails_KeyDown"/>
+                    <TextBox Name="tbName" 
+                             SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                             KeyDown="TextBoxStockDetails_KeyDown"
+                             KeyUp="TextBoxStockDetails_KeyUp">
+                        <TextBox.Text>
+                            <Binding ElementName="listStock"
+                                     Path="SelectedItem.Name"
+                                     NotifyOnSourceUpdated="True">
+                                <Binding.ValidationRules>
+                                    <PizzaNetValidation:StringValidation AllowEmpty="False" AllowWhiteSpace="False"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Quantity:"/>
-                    <TextBox IsReadOnly="True"
-                                         SourceUpdated="TextBoxStockDetails_SourceUpdated"
-                                         KeyDown="TextBoxStockDetails_KeyDown">
+                    <TextBox Name="tbQuantity" IsReadOnly="True"
+                             SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                             KeyDown="TextBoxStockDetails_KeyDown"
+                             KeyUp="TextBoxStockDetails_KeyUp">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.StockQuantity" 
-                                                 NotifyOnSourceUpdated="True">
+                                     Path="SelectedItem.StockQuantity" 
+                                     NotifyOnSourceUpdated="True">
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Normal weight:"/>
-                    <TextBox SourceUpdated="TextBoxStockDetails_SourceUpdated"
-                                         KeyDown="TextBoxStockDetails_KeyDown">
+                    <TextBox Name="tbNW" 
+                             SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                             KeyDown="TextBoxStockDetails_KeyDown"
+                             KeyUp="TextBoxStockDetails_KeyUp">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.NormalWeight" 
-                                                 NotifyOnSourceUpdated="True">
+                                     Path="SelectedItem.NormalWeight" 
+                                     NotifyOnSourceUpdated="True">
                                 <Binding.ValidationRules>
                                     <PizzaNetValidation:NumberValidation AllowNegative="False" IntegersOnly="True" AllowZero="False"/>
                                 </Binding.ValidationRules>
@@ -88,12 +104,14 @@
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Extra weight:"/>
-                    <TextBox SourceUpdated="TextBoxStockDetails_SourceUpdated"
-                                         KeyDown="TextBoxStockDetails_KeyDown">
+                    <TextBox Name="tbEW" 
+                             SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                             KeyDown="TextBoxStockDetails_KeyDown"
+                             KeyUp="TextBoxStockDetails_KeyUp">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.ExtraWeight" 
-                                                 NotifyOnSourceUpdated="True">
+                                     Path="SelectedItem.ExtraWeight" 
+                                     NotifyOnSourceUpdated="True">
                                 <Binding.ValidationRules>
                                     <PizzaNetValidation:NumberValidation AllowNegative="False" IntegersOnly="True" AllowZero="False"/>
                                 </Binding.ValidationRules>
@@ -103,12 +121,15 @@
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Price per unit:"/>
-                    <TextBox SourceUpdated="TextBoxStockDetails_SourceUpdated"
-                                         KeyDown="TextBoxStockDetails_KeyDown">
+                    <TextBox Name="tbPU" 
+                             SourceUpdated="TextBoxStockDetails_SourceUpdated"
+                             KeyDown="TextBoxStockDetails_KeyDown"
+                             KeyUp="TextBoxStockDetails_KeyUp">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.PricePerUnit" 
-                                                 NotifyOnSourceUpdated="True">
+                                     Path="SelectedItem.PricePerUnit" 
+                                     NotifyOnSourceUpdated="True"
+                                     StringFormat='{}{0:0.########}'>
                                 <Binding.ValidationRules>
                                     <PizzaNetValidation:NumberValidation AllowNegative="False"/>
                                 </Binding.ValidationRules>
