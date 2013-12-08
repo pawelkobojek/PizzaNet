@@ -22,11 +22,11 @@
         <ListView x:Name="listStock" ItemsSource="{Binding StockView.StockItemsCollection}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="200" Header="Item name" DisplayMemberBinding="{Binding Ingredient.Name}" />
-                    <GridViewColumn Width="100" Header="Quantity" DisplayMemberBinding="{Binding Ingredient.StockQuantity}" />
-                    <GridViewColumn Width="80" Header="Normal" DisplayMemberBinding="{Binding Ingredient.NormalWeight}" />
-                    <GridViewColumn Width="80" Header="Extra" DisplayMemberBinding="{Binding Ingredient.ExtraWeight}" />
-                    <GridViewColumn Width="80" Header="Price (pU)" DisplayMemberBinding="{Binding Ingredient.PricePerUnit}" />
+                    <GridViewColumn Width="200" Header="Item name" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Width="100" Header="Quantity" DisplayMemberBinding="{Binding StockQuantity}" />
+                    <GridViewColumn Width="80" Header="Normal" DisplayMemberBinding="{Binding NormalWeight}" />
+                    <GridViewColumn Width="80" Header="Extra" DisplayMemberBinding="{Binding ExtraWeight}" />
+                    <GridViewColumn Width="80" Header="Price (pU)" DisplayMemberBinding="{Binding PricePerUnit}" />
                 </GridView>
             </ListView.View>
         </ListView>
@@ -48,13 +48,13 @@
                 <DockPanel>
                     <TextBlock Text="Id:"/>
                     <TextBox IsReadOnly="True" 
-                                         Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.IngredientID, NotifyOnSourceUpdated=True}"
+                                         Text="{Binding ElementName=listStock, Path=SelectedItem.IngredientID, NotifyOnSourceUpdated=True}"
                                          SourceUpdated="TextBoxStockDetails_SourceUpdated"
                                          KeyDown="TextBoxStockDetails_KeyDown"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Name:"/>
-                    <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Ingredient.Name, NotifyOnSourceUpdated=True}"
+                    <TextBox Text="{Binding ElementName=listStock, Path=SelectedItem.Name, NotifyOnSourceUpdated=True}"
                                          SourceUpdated="TextBoxStockDetails_SourceUpdated"
                                          KeyDown="TextBoxStockDetails_KeyDown"/>
                 </DockPanel>
@@ -65,7 +65,7 @@
                                          KeyDown="TextBoxStockDetails_KeyDown">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.Ingredient.StockQuantity" 
+                                                 Path="SelectedItem.StockQuantity" 
                                                  NotifyOnSourceUpdated="True">
                             </Binding>
                         </TextBox.Text>
@@ -77,7 +77,7 @@
                                          KeyDown="TextBoxStockDetails_KeyDown">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.Ingredient.NormalWeight" 
+                                                 Path="SelectedItem.NormalWeight" 
                                                  NotifyOnSourceUpdated="True">
                                 <Binding.ValidationRules>
                                     <PizzaNetValidation:NumberValidation AllowNegative="False" IntegersOnly="True" AllowZero="False"/>
@@ -92,7 +92,7 @@
                                          KeyDown="TextBoxStockDetails_KeyDown">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.Ingredient.ExtraWeight" 
+                                                 Path="SelectedItem.ExtraWeight" 
                                                  NotifyOnSourceUpdated="True">
                                 <Binding.ValidationRules>
                                     <PizzaNetValidation:NumberValidation AllowNegative="False" IntegersOnly="True" AllowZero="False"/>
@@ -107,7 +107,7 @@
                                          KeyDown="TextBoxStockDetails_KeyDown">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
-                                                 Path="SelectedItem.Ingredient.PricePerUnit" 
+                                                 Path="SelectedItem.PricePerUnit" 
                                                  NotifyOnSourceUpdated="True">
                                 <Binding.ValidationRules>
                                     <PizzaNetValidation:NumberValidation AllowNegative="False"/>
@@ -127,6 +127,7 @@
                 <Button Click="ButtonOrderSupplies_Click">Order supplies</Button>
                 <Button Click="ButtonAddIngredient_Click">Add new ingredient</Button>
                 <Button Click="ButtonRemoveIngredient_Click">Remove ingredient</Button>
+                <Button Click="ButtonSaveChanges_Click">Save changes</Button>
             </StackPanel>
         </StackPanel>
     </Grid>

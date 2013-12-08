@@ -14,7 +14,11 @@ namespace PizzaNetWorkClient
             InitializeComponent();
             this.DataContext = this;
             this.worker.Lock = this.tabControl;
+            LastSelected = OrdersTab;
         }
+
+        public TabItem LastSelected { get; set; }
+        public bool IsSelectionChanging { get; set; }
 
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
@@ -34,22 +38,47 @@ namespace PizzaNetWorkClient
             if (!(e.OriginalSource is TabControl) || !this.IsLoaded)
                 return;
 
+            if (IsSelectionChanging)
+            {
+                IsSelectionChanging = false;
+                return;
+            }
+
+            if (LastSelected==StockTab)
+            {
+                if (!stockViewModel.LostFocusAction())
+                {
+                    IsSelectionChanging = true;
+                    tabControl.SelectedIndex = 1;
+                    e.Handled = true;
+                    return;
+                }
+            }
+
             if (StockTab.IsSelected)
             {
-                stockViewModel.StockView.RefreshStockItems();
+                stockViewModel.GotFocusAction();
+                LastSelected = StockTab;
             }
 
             if (OrdersTab.IsSelected)
             {
-                ordersViewModel.WorkOrdersView.RefreshCurrentOrders();
+                //TODO uncomment refresh ordersViewModel.WorkOrdersView.RefreshCurrentOrders();
+                LastSelected = OrdersTab;
             }
 
             if (RecipiesTab.IsSelected)
             {
-                recipiesViewModel.RecipiesView.RefreshRecipies();
+                //TODO uncomment refresh recipiesViewModel.RecipiesView.RefreshRecipies();
+                LastSelected = RecipiesTab;
+            }
+
+            if (UsersTab.IsSelected)
+            {
+                //TODO probably some loading data
+                LastSelected = UsersTab;
             }
         }
-
     }
 }
 

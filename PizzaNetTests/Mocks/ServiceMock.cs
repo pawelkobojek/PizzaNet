@@ -128,10 +128,10 @@ namespace PizzaNetTests.Mocks
 
         private IngredientAssembler ingredientAssembler = new IngredientAssembler();
 
-        public void UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
         {
             if (request.Data == null)
-                return;
+                return null;
 
             db.inTransaction(uof =>
             {
@@ -142,8 +142,9 @@ namespace PizzaNetTests.Mocks
                     ingredientAssembler.UpdateIngredient(ing, stockItem);
                 }
             });
+            // TODO fix return value
+            return null;
         }
-
 
         public ListResponse<UserDTO> GetUsers(EmptyRequest req)
         {
@@ -152,6 +153,12 @@ namespace PizzaNetTests.Mocks
 
         public SingleItemResponse<UserDTO> GetUser(RequestBase req)
         {
+            throw new NotImplementedException();
+        }
+
+        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request)
+        {
+            // TODO implement mock
             throw new NotImplementedException();
         }
     }

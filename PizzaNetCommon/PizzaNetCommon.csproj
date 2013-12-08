@@ -57,6 +57,7 @@
     <Compile Include="Requests\RequestBase.cs" />
     <Compile Include="Requests\SingleItemResponse.cs" />
     <Compile Include="Requests\TrioResponse.cs" />
+    <Compile Include="Requests\UpdateOrRemoveRequest.cs" />
     <Compile Include="Requests\UpdateRequest.cs" />
     <Compile Include="ServiceProxyBase.cs" />
     <Compile Include="Services\IPizzaService.cs" />

@@ -9,6 +9,7 @@ using PizzaNetWorkClient;
 using System.Transactions;
 using PizzaNetControls;
 using PizzaNetControls.Controls;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetTests
 {
@@ -182,25 +183,19 @@ namespace PizzaNetTests
         [TestMethod]
         public void Ingredient_DeleteTest()
         {
-            Ingredient ing = new Ingredient { StockQuantity = 1, PricePerUnit = 0.1M, NormalWeight = 1, Name = "ING", ExtraWeight = 2, Recipies = new List<Recipe>() };
-            StockItem st = new StockItem(ing);
+            StockIngredientDTO st = new StockIngredientDTO { StockQuantity = 1, PricePerUnit = 0.1M, NormalWeight = 1, Name = "ING", ExtraWeight = 2, IsPartOfRecipe=false };
             Assert.IsNotNull(removeStockItemIngredient(st));
-
-            ing.Recipies = new List<Recipe>
-                    {
-                        new Recipe{ Name="R"}
-                    };
-
+            st.IsPartOfRecipe = true;
             Assert.IsNull(removeStockItemIngredient(st));
 
         }
 
-        public StockItem removeStockItemIngredient(params object[] args)
+        public StockIngredientDTO removeStockItemIngredient(params object[] args)
         {
-            StockItem toRemove = args[0] as StockItem;
+            StockIngredientDTO toRemove = args[0] as StockIngredientDTO;
 
             if (toRemove == null) return null;
-            if (toRemove.Ingredient.Recipies.Count != 0)
+            if (toRemove.IsPartOfRecipe)
             {
                 return null;
             }

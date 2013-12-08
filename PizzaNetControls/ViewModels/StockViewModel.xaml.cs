@@ -1,4 +1,5 @@
-﻿using PizzaNetControls.Controls;
+﻿using PizzaNetCommon.DTOs;
+using PizzaNetControls.Controls;
 using PizzaNetControls.Dialogs;
 using PizzaNetControls.Views;
 using PizzaNetControls.Workers;
@@ -53,6 +54,8 @@ namespace PizzaNetControls.ViewModels
             set { _vo = value; NotifyPropertyChanged("StockView"); }
         }
 
+        private bool IsSelectionChanging { get; set; }
+
         public IWorker Worker
         {
             get { return (IWorker)GetValue(WorkerProperty); }
@@ -89,7 +92,7 @@ namespace PizzaNetControls.ViewModels
             ObservableCollection<Ingredient> ings = new ObservableCollection<Ingredient>();
             foreach (var item in StockView.StockItemsCollection)
             {
-                ings.Add(item.Ingredient);
+                //TODO fix ings.Add(item.Ingredient);
             }
             var parent = VisualTreeHelper.GetParent(this);
             while (!(parent is Window))
@@ -101,22 +104,29 @@ namespace PizzaNetControls.ViewModels
             StockView.RefreshStockItems();
         }
 
+        private void ButtonSaveChanges_Click(object sender, RoutedEventArgs e)
+        {
+			_vo.SaveChanges();
+        }
+
         private void TextBoxStockDetails_SourceUpdated(object sender, DataTransferEventArgs e)
         {
             if (listStock.SelectedIndex < 0) return;
-            _vo.UpdateStockItem(listStock.SelectedIndex);
+            //MODIFIED _vo.UpdateStockItem(listStock.SelectedIndex);
+            StockView.Modified = true;
         }
 
         private void TextBoxStockDetails_KeyDown(object sender, KeyEventArgs e)
         {
+            StockView.Modified = true;
             var txtb = sender as TextBox;
             if (txtb == null) return;
             if (listStock.SelectedIndex < 0) return;
-            StockItem rc = StockView.StockItemsCollection[listStock.SelectedIndex];
+            StockIngredientDTO rc = StockView.StockItemsCollection[listStock.SelectedIndex];
             if (e.Key == Key.Return)
             {
                 BindingExpression exp = txtb.GetBindingExpression(TextBox.TextProperty);
-                Ingredient ingr = exp.ResolvedSource as Ingredient;
+                StockIngredientDTO ingr = exp.ResolvedSource as StockIngredientDTO;
                 if (ingr == null) return;
                 PropertyInfo pi = ingr.GetType().GetProperty(exp.ResolvedSourcePropertyName);
                 string target = pi.GetValue(ingr).ToString();
@@ -124,6 +134,32 @@ namespace PizzaNetControls.ViewModels
                     exp.UpdateSource();
                 else exp.ValidateWithoutUpdate();
             }
+        }
+
+        private void CheckLastBinding()
+        {
+            // TODO implement
+            StockIngredientDTO rc = StockView.StockItemsCollection[listStock.SelectedIndex];
+        }
+    
+        public void GotFocusAction()
+        {
+            StockView.RefreshStockItems();
+        }
+        public bool LostFocusAction()
+        {
+            CheckLastBinding();
+            if (StockView.Modified)
+            {
+                return MessageBox.Show
+                    (
+                        "You have unsaved changes. Do you want to discard them?",
+                        "PizzaNetWork",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Exclamation
+                    ) != MessageBoxResult.No;
+            }
+            else return true;
         }
     }
 }

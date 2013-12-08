@@ -25,6 +25,22 @@ namespace PizzaService.Assemblers
             return ingDto;
         }
 
+        public Ingredient ToEntityWithEmptyRecipies(StockIngredientDTO ing)
+        {
+            Ingredient ingDto = new Ingredient
+            {
+                ExtraWeight = ing.ExtraWeight,
+                IngredientID = ing.IngredientID,
+                Name = ing.Name,
+                NormalWeight = ing.NormalWeight,
+                PricePerUnit = ing.PricePerUnit,
+                StockQuantity = ing.StockQuantity,
+                Recipies = new List<Recipe>()
+            };
+
+            return ingDto;
+        }
+
         public void UpdateIngredient(Ingredient ing, StockIngredientDTO dto)
         {
             if(ing.IngredientID!=dto.IngredientID)

@@ -137,23 +137,64 @@ namespace PizzaService
         }
 
 
-        public void UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
         {
             if (request.Data == null)
-                return;
+                return null;
 
-            db.inTransaction(uof =>
+            return db.inTransaction(uof =>
                 {
                     if (!HasRights(GetUser(request).Data, 2))
-                        return;
+                        return null;
 
                     foreach (var stockItem in request.Data)
                     {
                         Ingredient ing = uof.Db.Ingredients.Get(stockItem.IngredientID);
-                        (new IngredientAssembler()).UpdateIngredient(ing, stockItem);
+                        if (ing != null)
+                            ingAssembler.UpdateIngredient(ing, stockItem);
+                        else uof.Db.Ingredients.Insert(ingAssembler.ToEntityWithEmptyRecipies(stockItem));
                     }
                     uof.Db.Commit();
+                    return ListResponse.Create(uof.Db.Ingredients.FindAll().ToList()
+                        .Select(ingAssembler.ToSimpleDto)
+                        .ToList());
                 });
+        }
+
+        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request)
+        {
+            if (request.Data == null && request.DataToRemove == null)
+                return null;
+
+            return db.inTransaction(uof =>
+            {
+                if (!HasRights(GetUser(request).Data, 2))
+                    return null;
+
+                if (request.Data != null)
+                {
+                    foreach (var stockItem in request.Data)
+                    {
+                        Ingredient ing = uof.Db.Ingredients.Get(stockItem.IngredientID);
+                        if (ing != null)
+                            ingAssembler.UpdateIngredient(ing, stockItem);
+                        else uof.Db.Ingredients.Insert(ingAssembler.ToEntityWithEmptyRecipies(stockItem));
+                    }
+                }
+                if (request.DataToRemove != null)
+                {
+                    foreach (var stockItem in request.DataToRemove)
+                    {
+                        Ingredient ing = uof.Db.Ingredients.Get(stockItem.IngredientID);
+                        if (ing != null)
+                            uof.Db.Ingredients.Delete(ing);
+                    }
+                }
+                uof.Db.Commit();
+                return ListResponse.Create(uof.Db.Ingredients.FindAll().ToList()
+                    .Select(ingAssembler.ToSimpleDto)
+                    .ToList());
+            });
         }
 
         public SingleItemResponse<UserDTO> GetUser(RequestBase req)
@@ -169,5 +210,6 @@ namespace PizzaService
         {
             return (user.Email == req.Login && user.Password == req.Password);
         }
+
     }
 }

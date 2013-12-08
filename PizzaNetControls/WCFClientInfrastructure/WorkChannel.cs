@@ -52,14 +52,19 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             return Channel.GetUsers(req);
         }
 
-        public void UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
-        {
-            Channel.UpdateIngredient(request);
-        }
-
         public SingleItemResponse<UserDTO> GetUser(RequestBase req)
         {
             return Channel.GetUser(req);
+        }
+
+        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
+        {
+            return Channel.UpdateIngredient(request);
+        }
+
+        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request)
+        {
+            return Channel.UpdateOrRemoveIngredient(request);
         }
     }
 }

@@ -32,7 +32,10 @@ namespace PizzaNetCommon.Services
         void SetOrderState(UpdateRequest<OrderDTO> request);
 
         [OperationContract]
-        void UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request);
+        ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request);
+
+        [OperationContract]
+        ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request);
 
         [OperationContract]
         SingleItemResponse<UserDTO> GetUser(RequestBase req);

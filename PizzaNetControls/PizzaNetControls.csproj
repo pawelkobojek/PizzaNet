@@ -98,7 +98,6 @@
     <Compile Include="Controls\RecipeControl.xaml.cs">
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\StockItem.cs" />
     <Compile Include="Common\Updater.cs" />
     <Compile Include="Dialogs\SignUpWindow.xaml.cs">
       <DependentUpon>SignUpWindow.xaml</DependentUpon>

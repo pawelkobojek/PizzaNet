@@ -38,7 +38,7 @@
                 <TabItem Name="OrdersTab" Header="Orders">
                     <PizzaNetViewModels:WorkOrdersViewModel Name="ordersViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
-                <TabItem Name="StockTab" Header="Stock" >
+                <TabItem Name="StockTab" Header="Stock">
                     <PizzaNetViewModels:StockViewModel Name="stockViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
                 <TabItem Name="RecipiesTab" Header="Recipies">

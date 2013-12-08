@@ -18,14 +18,18 @@ namespace PizzaNetControls.Views
 {
     public class StockView : BaseView
     {
-        public ObservableCollection<StockItem> StockItemsCollection { get; set; }
+        public ObservableCollection<StockIngredientDTO> StockItemsCollection { get; set; }
+        private List<StockIngredientDTO> RemovedStockItemsList { get; set; }
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
         private const string TITLE = "PizzaNetWorkClient";
+        private const string SAVE_CHANGES_FAILURE = "Save changes failed";
         private const string ADDRESS = "http://localhost:60499/PizzaService.svc";
 
         public StockView(IWorker worker) : base(worker)
         {
-            this.StockItemsCollection = new ObservableCollection<StockItem>();
+            this.StockItemsCollection = new ObservableCollection<StockIngredientDTO>();
+            this.RemovedStockItemsList = new List<StockIngredientDTO>();
+            ResetIds();
         }
 
         private void showError(string message)
@@ -33,71 +37,95 @@ namespace PizzaNetControls.Views
             Utils.showError(TITLE, message);
         }
 
+        public bool Modified { get; set; }
+
+        private int _nId;
+        private int NextId()
+        {
+            if (_nId == -1) throw new Exception("Added ingredients count exceeded maximum");
+            return _nId++;
+        }
+        private void ResetIds()
+        {
+            _nId = int.MinValue;
+        }
+
         internal void AddIngredient()
         {
-            Worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                using (var db = new PizzaUnitOfWork())
-                {
-                    return db.inTransaction(uof =>
-                    {
-                        Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, Recipies = new List<Recipe>() };
-                        uof.Db.Ingredients.Insert(ing);
-                        uof.Db.Commit();
-                        Console.WriteLine("Commited " + ing.Name);
-                        return ing;
-                    });
-                }
-            }, (s, a) =>
-            {
-                Ingredient ing = a.Result as Ingredient;
-                if (ing == null)
-                {
-                    Console.WriteLine("WARNING: Trying to add null ingredient!");
-                    return;
-                }
-                StockItemsCollection.Add(new StockItem(ing));
-                Console.WriteLine("Added " + ing.Name);
-            }));
+            // MODIFIED
+            //Worker.EnqueueTask(new WorkerTask((args) =>
+            //{
+            //    using (var db = new PizzaUnitOfWork())
+            //    {
+            //        return db.inTransaction(uof =>
+            //        {
+            //            Ingredient ing = new Ingredient { Name = "New Ingredient", StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, Recipies = new List<Recipe>() };
+            //            uof.Db.Ingredients.Insert(ing);
+            //            uof.Db.Commit();
+            //            Console.WriteLine("Commited " + ing.Name);
+            //            return ing;
+            //        });
+            //    }
+            //}, (s, a) =>
+            //{
+            //    Ingredient ing = a.Result as Ingredient;
+            //    if (ing == null)
+            //    {
+            //        Console.WriteLine("WARNING: Trying to add null ingredient!");
+            //        return;
+            //    }
+            //    StockItemsCollection.Add(new StockItem(ing));
+            //    Console.WriteLine("Added " + ing.Name);
+            //}));
+            int nextId = NextId();
+            string newName = "New Ingredient" + ((int.MinValue-nextId-1 == -1) ? "" : String.Format(" {0}", -(int.MinValue-nextId-1)));
+            StockItemsCollection.Add(new StockIngredientDTO { IngredientID=nextId, Name = newName, StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, IsPartOfRecipe=false });
+            Modified = true;
         }
 
         internal void RemoveIngredient(int index)
         {
-            Worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                using (var db = new PizzaUnitOfWork())
-                {
-                    return db.inTransaction(uof =>
-                    {
-                        StockItem toRemove = args[0] as StockItem;
-                        if (toRemove == null) return null;
-                        if (toRemove.Ingredient.Recipies.Count != 0)
-                        {
-                            return null;
-                        }
-                        uof.Db.Ingredients.Delete(toRemove.Ingredient);
+            // MODIFIED
+            //Worker.EnqueueTask(new WorkerTask((args) =>
+            //{
+            //    using (var db = new PizzaUnitOfWork())
+            //    {
+            //        return db.inTransaction(uof =>
+            //        {
+            //            StockItem toRemove = args[0] as StockItem;
+            //            if (toRemove == null) return null;
+            //            if (toRemove.Ingredient.Recipies.Count != 0)
+            //            {
+            //                return null;
+            //            }
+            //            uof.Db.Ingredients.Delete(toRemove.Ingredient);
 
-                        uof.Db.Commit();
-                        return toRemove;
-                    });
-                }
-            }, (s, args) =>
-            {
-                StockItem toRemove = args.Result as StockItem;
-                if (toRemove == null)
-                {
-                    //Console.WriteLine("WARNING: Trying to remove null stock item!");
-                    MessageBox.Show(ING_REMOVE_IMPOSSIBLE);
-                    return;
-                }
-                StockItemsCollection.Remove(toRemove);
-                Console.WriteLine("Removed " + toRemove.Ingredient.Name);
-            }, StockItemsCollection[index]));
+            //            uof.Db.Commit();
+            //            return toRemove;
+            //        });
+            //    }
+            //}, (s, args) =>
+            //{
+            //    StockItem toRemove = args.Result as StockItem;
+            //    if (toRemove == null)
+            //    {
+            //        //Console.WriteLine("WARNING: Trying to remove null stock item!");
+            //        MessageBox.Show(ING_REMOVE_IMPOSSIBLE);
+            //        return;
+            //    }
+            //    StockItemsCollection.Remove(toRemove);
+            //    Console.WriteLine("Removed " + toRemove.Ingredient.Name);
+            //}, StockItemsCollection[index]));
+            RemovedStockItemsList.Add(StockItemsCollection[index]);
+            StockItemsCollection.RemoveAt(index);
+            Modified = true;
         }
 
         public void RefreshStockItems()
         {
+            Modified = false;
             StockItemsCollection.Clear();
+            RemovedStockItemsList.Clear();
 
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
@@ -138,13 +166,62 @@ namespace PizzaNetControls.Views
                 return;
             }
             IList<StockIngredientDTO> ings = ((ListResponse<StockIngredientDTO>)e.Result).Data;
-            foreach (var item in ings)
+            RewriteStockItems(ings);
+        }
+
+        private void RewriteStockItems(IList<StockIngredientDTO> list)
+        {
+            StockItemsCollection.Clear();
+            foreach (var item in list)
             {
                 Console.WriteLine(item.Name);
-                StockItemsCollection.Add(new StockItem(item));
+                StockItemsCollection.Add(item);
             }
         }
 
+        internal void SaveChanges()
+        {
+            Worker.EnqueueTask(new WorkerTask((args) =>
+            {
+                try
+                {
+                    var list       = args[0] as IList<StockIngredientDTO>;
+                    var removeList = args[1] as IList<StockIngredientDTO>;
+                    using (var proxy = new WorkChannel(ADDRESS))
+                    {
+                        return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<IList<StockIngredientDTO>>()
+                        {
+                            // TODO fix user
+                            Login = "Admin",
+                            Password = "123",
+                            Data = list,
+                            DataToRemove = removeList
+                        });
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.Message);
+                    return null;
+                }
+            }, (s,e) =>
+            {
+                var result = e.Result as ListResponse<StockIngredientDTO>;
+                if (result == null)
+                {
+                    showError(SAVE_CHANGES_FAILURE);
+                    return;
+                }
+                RewriteStockItems(result.Data);
+                RemovedStockItemsList.Clear();
+                Modified = false;
+                ResetIds();
+            }, StockItemsCollection.ToList(), RemovedStockItemsList));
+        }
+
+        #region unused
+        /* MODIFIED
+         no longer used
         internal void UpdateStockItem(int index)
         {
             StockItem ingr = StockItemsCollection[index];
@@ -197,6 +274,7 @@ namespace PizzaNetControls.Views
                     }
                 }
             }, ingr.Ingredient));
-        }
+        }*/
+        #endregion
     }
 }
