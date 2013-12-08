@@ -2,9 +2,15 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:clr="clr-namespace:System;assembly=mscorlib"
+             xmlns:PizzaNetValidation="clr-namespace:PizzaNetControls.Validation"
+             xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <PizzaNetConverters:IsStringEmptyConverter x:Key="isStringEmptyConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -64,17 +70,42 @@
         <StackPanel Margin="30" Grid.Column="1" Grid.Row="0">
             <DockPanel>
                 <TextBlock Text="Current password:"/>
-                <PasswordBox Name="currentPasswordInput"/>
+                <PasswordBox Name="currentPasswordInput"
+                             PizzaNetValidation:PasswordHelper.Attach="True">
+                    <PizzaNetValidation:PasswordHelper.Password>
+                        <Binding NotifyOnValidationError="True"
+                                 Path="Password"
+                                 Mode="TwoWay">
+                        </Binding>
+                    </PizzaNetValidation:PasswordHelper.Password>
+                </PasswordBox>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="New password:"/>
-                <PasswordBox Name="newPasswordInput"/>
+                <PasswordBox Name="newPasswordInput"
+                             PizzaNetValidation:PasswordHelper.Attach="True">
+                    <PizzaNetValidation:PasswordHelper.Password>
+                        <Binding Path="NewPassword" Mode="TwoWay"/>
+                    </PizzaNetValidation:PasswordHelper.Password>
+                </PasswordBox>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Repeat new password:"/>
-                <PasswordBox Name="newPasswordRepeatInput"/>
+                <PasswordBox Name="newPasswordRepeatInput">
+                    <PizzaNetValidation:PasswordHelper.Password>
+                        <Binding Path="PasswordRepeated"
+                                 Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <PizzaNetValidation:PasswordEqualRule>
+                                    <PizzaNetValidation:PasswordEqualRule.PasswordConfig>
+                                        <PizzaNetValidation:PasswordConfig x:Name="repeatedPasswordConfig" AllowEmpty="True"/>
+                                    </PizzaNetValidation:PasswordEqualRule.PasswordConfig>
+                                </PizzaNetValidation:PasswordEqualRule>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </PizzaNetValidation:PasswordHelper.Password>
+                </PasswordBox>
             </DockPanel>
-
             <Button Margin="20" Grid.Column="1" Click="SettingsButtonSavePassword_Click">
                 Save password
             </Button>

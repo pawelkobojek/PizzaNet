@@ -1,4 +1,5 @@
-﻿using PizzaNetControls.Views;
+﻿using PizzaNetControls.Validation;
+using PizzaNetControls.Views;
 using PizzaNetControls.Workers;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace PizzaNetControls.ViewModels
             this.DataContext = this;
             InitializeComponent();
             this.Loaded += ClientSettingsViewModel_Loaded;
+            this.repeatedPasswordConfig.SetTarget(typeof(ClientSettingsViewModel), this, "NewPassword");
         }
 
         bool initialized = false;
@@ -54,6 +56,37 @@ namespace PizzaNetControls.ViewModels
             get { return (IWorker)GetValue(WorkerProperty); }
             set { SetValue(WorkerProperty, value); }
         }
+
+        #region passwords
+        //TODO przenieść obsługę haseł do ClientSettingsView
+        private string _cpass="password";
+        public string CurrentPassword
+        {
+            get { return _cpass; }
+            set { _cpass = value; NotifyPropertyChanged("CurrentPassword"); }
+        }
+
+        private string _pass;
+        public string Password 
+        {
+            get { return _pass; }
+            set { _pass = value; NotifyPropertyChanged("Password"); }
+        }
+
+        private string _passn;
+        public string NewPassword
+        {
+            get { return _passn; }
+            set { _passn = value; NotifyPropertyChanged("NewPassword"); }
+        }
+
+        private string _passr;
+        public string PasswordRepeated
+        {
+            get { return _passr; }
+            set { _passr = value; NotifyPropertyChanged("PasswordRepeated"); }
+        }
+        #endregion
 
         public static readonly DependencyProperty WorkerProperty =
             DependencyProperty.Register("Worker", typeof(IWorker), typeof(ClientSettingsViewModel), new UIPropertyMetadata());
