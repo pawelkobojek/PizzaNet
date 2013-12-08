@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PizzaNetCommon.Requests;
 using PizzaNetDataModel;
+using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 
 
@@ -16,10 +18,25 @@ namespace PizzaNetTests
     {
         protected PizzaUnitOfWork db;
 
+        protected User admin;
+        protected User emp;
+        protected User customer;
+
+        protected EmptyRequest adminRequest;
+        protected EmptyRequest empRequest;
+        protected EmptyRequest customerRequest;
+
         [TestInitialize]
         public void Initialize()
         {
             db = new PizzaUnitOfWork();
+            admin = db.Users.Find("Admin");
+            emp = db.Users.Find("Employee");
+            customer = db.Users.Find("Customer");
+
+            adminRequest = new EmptyRequest { Login = admin.Email, Password = admin.Password };
+            empRequest = new EmptyRequest { Login = emp.Email, Password = emp.Password };
+            customerRequest = new EmptyRequest { Login = customer.Email, Password = customer.Password };
         }
 
         [TestCleanup]

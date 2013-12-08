@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading.Tasks;
+using PizzaNetCommon.Queries;
 
 namespace PizzaNetCommon.Requests
 {
     [DataContract]
-    public abstract class RequestBase
+    public class EmptyRequest : RequestBase
     {
-        [DataMember]
-        public string Login { get; set; }
-        [DataMember]
-        public string Password { get; set; }
+
     }
 }

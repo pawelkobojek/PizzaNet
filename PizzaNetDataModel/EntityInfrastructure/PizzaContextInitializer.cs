@@ -41,8 +41,12 @@ namespace PizzaNetDataModel
             const int EXTRA_W = 700;
             const int STOCK_QUANTITY = 10000;
 
-            User admin = new User { Address = "", Email = "Admin@admin.a", Name = "Admin", Phone = 1, Rights = 3 };
+            User admin = new User { Address = "", Email = "Admin", Name = "Admin", Phone = 1, Rights = 3, Password="123" };
+            User employee = new User { Address = "EmployeeAddress", Email = "Employee", Name = "Pulasky", Phone = 2552, Rights = 2, Password="323"};
+            User customer = new User { Address = "CustomerAddress", Email = "Customer", Name = "Max", Phone = 4242, Rights = 1, Password="1998" };
             context.Users.Add(admin);
+            context.Users.Add(employee);
+            context.Users.Add(customer);
 
             List<Ingredient> ingredients = new List<Ingredient>
             {

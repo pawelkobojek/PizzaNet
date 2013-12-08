@@ -14,24 +14,27 @@ namespace PizzaNetCommon.Services
     public interface IPizzaService
     {
         [OperationContract]
-        ListResponse<StockIngredientDTO> GetIngredients();
+        ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req);
 
         [OperationContract]
-        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData();
+        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData(EmptyRequest req);
 
         [OperationContract]
-        ListResponse<OrderDTO> GetOrders();
+        ListResponse<OrderDTO> GetOrders(EmptyRequest req);
 
         [OperationContract]
-        ListResponse<OrderDTO> GetUndoneOrders();
+        ListResponse<OrderDTO> GetUndoneOrders(EmptyRequest req);
 
         [OperationContract]
-        ListResponse<UserDTO> GetUsers();
+        ListResponse<UserDTO> GetUsers(EmptyRequest req);
 
         [OperationContract]
         void SetOrderState(UpdateRequest<OrderDTO> request);
 
         [OperationContract]
         void UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request);
+
+        [OperationContract]
+        SingleItemResponse<UserDTO> GetUser(RequestBase req);
     }
 }

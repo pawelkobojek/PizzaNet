@@ -9,6 +9,7 @@ namespace PizzaNetDataModel.Repository
 {
     public interface IUserRepository : IRepository<User, int>
     {
+        User Find(string login);
         IList<User> FindAll();
     }
 
@@ -49,6 +50,11 @@ namespace PizzaNetDataModel.Repository
         public void Delete(User entity)
         {
             db.Users.Remove(entity);
+        }
+
+        public User Find(string p)
+        {
+            return db.Users.Where(u => u.Email == p).First();
         }
     }
 }

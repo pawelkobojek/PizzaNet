@@ -22,19 +22,19 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         {
         }
 
-        public ListResponse<StockIngredientDTO> GetIngredients()
+        public ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req)
         {
-            return Channel.GetIngredients();
+            return Channel.GetIngredients(req);
         }
 
-        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData()
+        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData(EmptyRequest req)
         {
-            return Channel.GetRecipeTabData();
+            return Channel.GetRecipeTabData(req);
         }
 
-        public ListResponse<OrderDTO> GetUndoneOrders()
+        public ListResponse<OrderDTO> GetUndoneOrders(EmptyRequest req)
         {
-            return Channel.GetUndoneOrders();
+            return Channel.GetUndoneOrders(req);
         }
 
         public void SetOrderState(UpdateRequest<OrderDTO> request)
@@ -42,19 +42,24 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             Channel.SetOrderState(request);
         }
 
-        public ListResponse<OrderDTO> GetOrders()
+        public ListResponse<OrderDTO> GetOrders(EmptyRequest req)
         {
-            return Channel.GetOrders();
+            return Channel.GetOrders(req);
         }
 
-        public ListResponse<UserDTO> GetUsers()
+        public ListResponse<UserDTO> GetUsers(EmptyRequest req)
         {
-            return Channel.GetUsers();
+            return Channel.GetUsers(req);
         }
 
         public void UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
         {
             Channel.UpdateIngredient(request);
+        }
+
+        public SingleItemResponse<UserDTO> GetUser(RequestBase req)
+        {
+            return Channel.GetUser(req);
         }
     }
 }

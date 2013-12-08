@@ -10,5 +10,9 @@ namespace PizzaNetCommon.Queries
     [DataContract]
     public abstract class QueryBase
     {
+        [DataMember]
+        public string Login { get; set; }
+        [DataMember]
+        public string Password { get; set; }
     }
 }

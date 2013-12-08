@@ -16,7 +16,7 @@ namespace PizzaNetTests.Mocks
     {
         private readonly PizzaUnitOfWork db = new PizzaUnitOfWork();
 
-        public ListResponse<StockIngredientDTO> GetIngredients()
+        public ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req)
         {
             return ListResponse.Create(new List<StockIngredientDTO>
                 {
@@ -25,7 +25,7 @@ namespace PizzaNetTests.Mocks
                 });
         }
 
-        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData()
+        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData(EmptyRequest req)
         {
             return TrioResponse.Create(
                 new List<RecipeDTO>
@@ -52,7 +52,7 @@ namespace PizzaNetTests.Mocks
             });
         }
 
-        public ListResponse<OrderDTO> GetOrders()
+        public ListResponse<OrderDTO> GetOrders(EmptyRequest req)
         {
             return ListResponse.Create(new List<OrderDTO>
             {
@@ -99,14 +99,14 @@ namespace PizzaNetTests.Mocks
             });
         }
 
-        public ListResponse<OrderDTO> GetUndoneOrders()
+        public ListResponse<OrderDTO> GetUndoneOrders(EmptyRequest req)
         {
-            return ListResponse.Create(GetOrders().Data.Where(o => o.State.StateValue == State.NEW ||
+            return ListResponse.Create(GetOrders(req).Data.Where(o => o.State.StateValue == State.NEW ||
                 o.State.StateValue == State.IN_REALISATION)
                 .ToList());
         }
 
-        public ListResponse<UserDTO> GetUsers()
+        public ListResponse<UserDTO> GetUsers(RequestBase req)
         {
             return ListResponse.Create(new List<UserDTO>
             {
@@ -142,6 +142,17 @@ namespace PizzaNetTests.Mocks
                     ingredientAssembler.UpdateIngredient(ing, stockItem);
                 }
             });
+        }
+
+
+        public ListResponse<UserDTO> GetUsers(EmptyRequest req)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SingleItemResponse<UserDTO> GetUser(RequestBase req)
+        {
+            throw new NotImplementedException();
         }
     }
 }

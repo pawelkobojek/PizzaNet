@@ -105,7 +105,7 @@ namespace PizzaNetControls.Views
                 {
                     using (var proxy = new WorkChannel(ADDRESS))
                     {
-                        return proxy.GetIngredients();
+                        return proxy.GetIngredients(new EmptyRequest { Login = "Admin", Password = "123" });
                     }
                     //using (var db = new PizzaUnitOfWork())
                     //{

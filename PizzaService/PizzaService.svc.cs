@@ -27,12 +27,20 @@ namespace PizzaService
 
         private PizzaUnitOfWork db = new PizzaUnitOfWork();
 
-        public ListResponse<PizzaNetCommon.DTOs.StockIngredientDTO> GetIngredients()
+        private bool HasRights(UserDTO userDTO, int p)
+        {
+            return userDTO != null && userDTO.Rights >= p;
+        }
+
+        public ListResponse<PizzaNetCommon.DTOs.StockIngredientDTO> GetIngredients(EmptyRequest req)
         {
             try
             {
                 return db.inTransaction(uof =>
                     {
+                        if (!HasRights(GetUser(req).Data, 2))
+                            return null;
+
                         return ListResponse.Create(uof.Db.Ingredients.FindAll().ToList()
                             .Select(ingAssembler.ToSimpleDto)
                             .ToList());
@@ -44,12 +52,15 @@ namespace PizzaService
             }
         }
 
-        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> IPizzaService.GetRecipeTabData()
+        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> IPizzaService.GetRecipeTabData(EmptyRequest req)
         {
             try
             {
                 return db.inTransaction(uof =>
                 {
+                    if (!HasRights(GetUser(req).Data, 1))
+                        return null;
+
                     return TrioResponse.Create(uof.Db.Recipies.FindAll().ToList()
                         .Select(recipeAssembler.ToSimpleDto)
                         .ToList(), uof.Db.Sizes.FindAll().ToList()
@@ -65,12 +76,15 @@ namespace PizzaService
             }
         }
 
-        public ListResponse<OrderDTO> GetUndoneOrders()
+        public ListResponse<OrderDTO> GetUndoneOrders(EmptyRequest req)
         {
             try
             {
                 return db.inTransaction(uof =>
                 {
+                    if (GetUser(req).Data == null)
+                        return null;
+
                     return ListResponse.Create(db.Orders.FindAllEagerlyWhere(o => o.State.StateValue == State.NEW ||
                         o.State.StateValue == State.IN_REALISATION)
                         .ToList()
@@ -85,10 +99,13 @@ namespace PizzaService
         }
 
 
-        public ListResponse<UserDTO> GetUsers()
+        public ListResponse<UserDTO> GetUsers(EmptyRequest req)
         {
             return db.inTransaction(uof =>
                 {
+                    if (!HasRights(GetUser(req).Data, 3))
+                        return null;
+
                     return ListResponse.Create(uof.Db.Users.FindAll().ToList()
                         .Select(userAssembler.ToSimpleDto).ToList());
                 });
@@ -98,6 +115,8 @@ namespace PizzaService
         {
             db.inTransaction(uof =>
                 {
+                    if (!HasRights(GetUser(request).Data, 2))
+                        return;
                     Order o = uof.Db.Orders.Get(request.Data.OrderID);
                     State st = uof.Db.States.Find(request.Data.State.StateValue);
                     o.State = st;
@@ -105,10 +124,13 @@ namespace PizzaService
                 });
         }
 
-        public ListResponse<OrderDTO> GetOrders()
+        public ListResponse<OrderDTO> GetOrders(EmptyRequest req)
         {
             return db.inTransaction(uof =>
                 {
+                    if (!HasRights(GetUser(req).Data, 2))
+                        return null;
+
                     return ListResponse.Create(uof.Db.Orders.FindAll().ToList()
                         .Select(orderAssembler.ToSimpleDto).ToList());
                 });
@@ -122,6 +144,9 @@ namespace PizzaService
 
             db.inTransaction(uof =>
                 {
+                    if (!HasRights(GetUser(request).Data, 2))
+                        return;
+
                     foreach (var stockItem in request.Data)
                     {
                         Ingredient ing = uof.Db.Ingredients.Get(stockItem.IngredientID);
@@ -129,6 +154,20 @@ namespace PizzaService
                     }
                     uof.Db.Commit();
                 });
+        }
+
+        public SingleItemResponse<UserDTO> GetUser(RequestBase req)
+        {
+            User user = db.Users.Find(req.Login);
+            if (!PerformValidation(user, req))
+                return null;
+
+            return SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
+        }
+
+        private static bool PerformValidation(User user, RequestBase req)
+        {
+            return (user.Email == req.Login && user.Password == req.Password);
         }
     }
 }
