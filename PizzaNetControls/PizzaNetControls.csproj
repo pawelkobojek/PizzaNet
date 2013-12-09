@@ -63,6 +63,7 @@
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToBackgroundConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\IntModifierConverter.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
     <Compile Include="Converters\IngredientsConverter.cs" />
     <Compile Include="Converters\IsStringEmptyConverter.cs" />
@@ -100,6 +101,9 @@
       <DependentUpon>RecipeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Updater.cs" />
+    <Compile Include="Dialogs\OrderIngredientsDialog.xaml.cs">
+      <DependentUpon>OrderIngredientsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SignUpWindow.xaml.cs">
       <DependentUpon>SignUpWindow.xaml</DependentUpon>
     </Compile>
@@ -187,6 +191,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RecipeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\OrderIngredientsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

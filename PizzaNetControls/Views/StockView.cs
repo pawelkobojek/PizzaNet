@@ -14,6 +14,7 @@ using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaNetCommon.Requests;
 using PizzaNetCommon.DTOs;
 using PizzaNetControls.Configuration;
+using PizzaNetControls.Dialogs;
 
 namespace PizzaNetControls.Views
 {
@@ -276,5 +277,26 @@ namespace PizzaNetControls.Views
             }, ingr.Ingredient));
         }*/
         #endregion
+
+        internal void OrderSupplies()
+        {
+            // MODIFIED
+            //ObservableCollection<Ingredient> ings = new ObservableCollection<Ingredient>();
+            //foreach (var item in StockView.StockItemsCollection)
+            //{
+            //    ings.Add(item.Ingredient);
+            //}
+            //var parent = VisualTreeHelper.GetParent(this);
+            //while (!(parent is Window))
+            //{
+            //    parent = VisualTreeHelper.GetParent(parent);
+            //}
+            //OrderIngredientForm form = new OrderIngredientForm((Window)parent, ings);
+            //form.ShowDialog();
+            //StockView.RefreshStockItems();
+            var dlg = new OrderIngredientsDialog();
+            dlg.SetData(StockItemsCollection);
+            dlg.Show();
+        }
     }
 }
