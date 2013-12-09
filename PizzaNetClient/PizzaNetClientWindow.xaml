@@ -35,13 +35,14 @@
                     <PizzaNetViewModels:ClientMainViewModel Name="clientMainViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
                 <TabItem Name="OrdersTab" Header="My orders">
-                    <PizzaNetViewModels:MyOrdersViewModel Name="myOrdersViewModel"/>
+                    <PizzaNetViewModels:MyOrdersViewModel Name="myOrdersViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
                 <TabItem Header="Settings">
                     <PizzaNetViewModels:ClientSettingsViewModel Name="settingsViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
             </TabControl>
         </Grid>
-        <PizzaNetDialogs:LoginDialog Name="loginDialog" OverlayOn="{Binding ElementName=allContent}"/>
+        <PizzaNetDialogs:LoginDialog Name="loginDialog" OverlayOn="{Binding ElementName=allContent}"
+                                     MinRightsLevel="1"/>
     </Grid>
 </Window>

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetControls.Workers;
 
 namespace PizzaNetControls.ViewModels
 {
@@ -24,9 +25,31 @@ namespace PizzaNetControls.ViewModels
     {
         public MyOrdersViewModel()
         {
-            InitializeComponent();
             this.DataContext = this;
+            InitializeComponent();
+            this.Loaded += MyOrdersViewModel_Loaded;
         }
+
+        bool initialize = false;
+        void MyOrdersViewModel_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+            if (!initialize)
+            {
+                this.MyOrdersView = new MyOrdersView(Worker);
+                initialize = true;
+            }
+        }
+
+        public IWorker Worker
+        {
+            get { return (IWorker)GetValue(WorkerProperty); }
+            set { SetValue(WorkerProperty, value); }
+        }
+
+        public static readonly DependencyProperty WorkerProperty =
+            DependencyProperty.Register("Worker", typeof(IWorker), typeof(MyOrdersViewModel), new UIPropertyMetadata());
 
         private MyOrdersView _vo;
         public MyOrdersView MyOrdersView
@@ -50,6 +73,11 @@ namespace PizzaNetControls.ViewModels
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public void GotFocusAction()
+        {
+            MyOrdersView.RefreshCurrentOrders();
         }
     }
 }

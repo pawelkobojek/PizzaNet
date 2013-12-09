@@ -67,6 +67,9 @@ namespace PizzaNetClient
             {
                 settingsViewModel.ClientSettingsView.Load();
             }
+
+            if (OrdersTab.IsSelected)
+                myOrdersViewModel.GotFocusAction();
         }
     }
 }

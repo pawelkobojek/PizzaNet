@@ -66,5 +66,11 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         {
             return Channel.UpdateOrRemoveIngredient(request);
         }
+
+
+        public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
+        {
+            return Channel.GetOrdersForUser(req);
+        }
     }
 }

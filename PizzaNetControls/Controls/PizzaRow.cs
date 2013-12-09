@@ -6,18 +6,25 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.Controls
 {
-    public class PizzaRow: INotifyPropertyChanged
+    public class PizzaRow : INotifyPropertyChanged
     {
         public PizzaRow()
         {
         }
 
-        public PizzaRow(OrderDetail orderDetail) : this()
+        public PizzaRow(OrderDetail orderDetail)
+            : this()
         {
             this._orderDetail = orderDetail;
+        }
+
+        public PizzaRow(PizzaNetCommon.DTOs.OrderDetailDTO od)
+        {
+            this.od = od;
         }
 
         private OrderDetail _orderDetail = new OrderDetail();
@@ -27,13 +34,13 @@ namespace PizzaNetControls.Controls
             {
                 return _orderDetail;
             }
-            set 
+            set
             {
                 _orderDetail = value;
                 NotifyPropertyChanged("OrderDetail");
             }
         }
-        
+
         public void Update()
         {
             NotifyPropertyChanged("OrderDetail");
@@ -41,6 +48,15 @@ namespace PizzaNetControls.Controls
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private OrderDetailDTO od;
+        public OrderDetailDTO OrderDetailDTO
+        {
+            get { return od; }
+            set
+            {
+                od = value; NotifyPropertyChanged("OrderDetailDTO");
+            }
+        }
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

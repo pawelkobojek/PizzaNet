@@ -217,5 +217,16 @@ namespace PizzaService
             return (user.Email == req.Login && user.Password == req.Password);
         }
 
+        public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
+        {
+            return db.inTransaction(uow =>
+                {
+                    if (!HasRights(GetUser(req).Data, 1))
+                        return null;
+
+                    return ListResponse.Create(uow.Db.Orders.FindAllEagerlyWhere(o => o.User.Email == req.Login)
+                        .ToList().Select(orderAssembler.ToSimpleDto).ToList());
+                });
+        }
     }
 }

@@ -161,5 +161,11 @@ namespace PizzaNetTests.Mocks
             // TODO implement mock
             throw new NotImplementedException();
         }
+
+
+        public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

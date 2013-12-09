@@ -39,5 +39,8 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         SingleItemResponse<UserDTO> GetUser(EmptyRequest req);
+
+        [OperationContract]
+        ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req);
     }
 }

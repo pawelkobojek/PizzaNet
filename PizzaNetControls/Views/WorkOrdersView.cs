@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.Views
 {
@@ -19,7 +20,7 @@ namespace PizzaNetControls.Views
         public WorkOrdersView(IWorker worker) : base(worker)
         {
             this.PizzasCollection = new ObservableCollection<PizzaRow>();
-            this.IngredientsCollection = new ObservableCollection<OrderIngredient>();
+            this.IngredientsCollection = new ObservableCollection<OrderIngredientDTO>();
             this.OrdersCollection = new ObservableCollection<OrdersRow>();
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
             view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
@@ -32,7 +33,7 @@ namespace PizzaNetControls.Views
 
         public ObservableCollection<PizzaRow> PizzasCollection { get; set; }
         public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
-        public ObservableCollection<OrderIngredient> IngredientsCollection { get; set; }
+        public ObservableCollection<OrderIngredientDTO> IngredientsCollection { get; set; }
         private const int TIMER_INTERVAL = 60000;
         public BackgroundWorker OrdersRefresher {get; private set;}
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
@@ -76,7 +77,7 @@ namespace PizzaNetControls.Views
             //}
 
             OrdersRow or = OrdersCollection[index];
-            foreach (var od in or.Order.OrderDetails)
+            foreach (var od in or.OrderDTO.OrderDetailsDTO)
             {
                 PizzasCollection.Add(new PizzaRow(od));
             }
@@ -99,7 +100,7 @@ namespace PizzaNetControls.Views
             //    }
             //}
             PizzaRow pr = PizzasCollection[index];
-            foreach (var ingr in pr.OrderDetail.Ingredients)
+            foreach (var ingr in pr.OrderDetailDTO.Ingredients)
             {
                 IngredientsCollection.Add(ingr);
             }

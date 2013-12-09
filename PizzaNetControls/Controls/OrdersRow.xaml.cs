@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls
 {
@@ -28,9 +29,15 @@ namespace PizzaNetControls
             this.DataContext = this;
         }
 
-        public OrdersRow(Order order) : this()
+        public OrdersRow(Order order)
+            : this()
         {
             this._order = order;
+        }
+
+        public OrdersRow(OrderDTO order)
+        {
+            this.orderDto = order;
         }
 
         private Order _order = new Order() { State = new State() };
@@ -53,6 +60,17 @@ namespace PizzaNetControls
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private OrderDTO orderDto;
+        public OrderDTO OrderDTO
+        {
+            get { return orderDto; }
+            set
+            {
+                orderDto = value; NotifyPropertyChanged("OrderDTO");
+            }
+        }
+
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

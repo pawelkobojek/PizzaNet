@@ -11,15 +11,15 @@
         <DockPanel.Style>
             <Style TargetType="DockPanel">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding Path=Order.State.StateValue}" Value="0">
+                    <DataTrigger Binding="{Binding Path=OrderDTO.State.StateValue}" Value="0">
                         <Setter Property="Background" Value="#aaff6026"/>
                     </DataTrigger>
 
-                    <DataTrigger Binding="{Binding Path=Order.State.StateValue}" Value="1">
+                    <DataTrigger Binding="{Binding Path=OrderDTO.State.StateValue}" Value="1">
                         <Setter Property="Background" Value="#aaffea4c"/>
                     </DataTrigger>
 
-                    <DataTrigger Binding="{Binding Path=Order.State.StateValue}" Value="2">
+                    <DataTrigger Binding="{Binding Path=OrderDTO.State.StateValue}" Value="2">
                         <Setter Property="Background" Value="#aabdff4c"/>
                     </DataTrigger>
                 </Style.Triggers>
@@ -28,6 +28,6 @@
         <DockPanel.Resources>
             <pizzaNetConverters:OrderIdConverter x:Key="idConverter"/>
         </DockPanel.Resources>
-        <TextBlock Text="{Binding Path=Order.OrderID, Converter={StaticResource ResourceKey=idConverter}}"/>
+        <TextBlock Text="{Binding Path=OrderDTO.OrderID, Converter={StaticResource ResourceKey=idConverter}}"/>
     </DockPanel>
 </UserControl>

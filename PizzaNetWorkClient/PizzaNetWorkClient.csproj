@@ -80,7 +80,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MyX509Validator.cs" />
+    <Compile Include="CustomX509Validator.cs" />
     <Compile Include="PizzaNetWorkWindow.xaml.cs">
       <DependentUpon>PizzaNetWorkWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

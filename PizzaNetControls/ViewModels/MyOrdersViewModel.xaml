@@ -25,7 +25,7 @@
         <DockPanel Grid.Column="0" Grid.RowSpan="2" LastChildFill="True">
             <TextBlock Text="Orders" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
             <ListView Margin="10, 0, 10, 20" x:Name="ordersListView"
-                                 ItemsSource="{Binding MyOrdersView.Orders}" 
+                                 ItemsSource="{Binding MyOrdersView.OrdersCollection}" 
                                  HorizontalContentAlignment="Stretch"
                                  
                                  />
