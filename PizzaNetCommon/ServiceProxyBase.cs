@@ -5,6 +5,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
+using PizzaNetCommon.Services;
 
 namespace PizzaNetCommon
 {
@@ -12,7 +13,7 @@ namespace PizzaNetCommon
     {
         private readonly string endPointAddress;
         private readonly object _syncRoot = new object();
-        private IChannelFactory<T> channelFactory;
+        private ChannelFactory<T> channelFactory;
         private T channel;
         private bool disposed = false;
 
@@ -45,8 +46,12 @@ namespace PizzaNetCommon
                 if (channel != null)
                     return;
 
-                var endPoint = new EndpointAddress(endPointAddress);
-                channelFactory = new ChannelFactory<T>(new BasicHttpBinding());
+                EndpointIdentity identity = EndpointIdentity.CreateDnsIdentity("MyServerCert");
+                var endPoint = new EndpointAddress(new Uri(this.endPointAddress), identity);
+                channelFactory = new ChannelFactory<T>("PizzaServiceSecure");
+                channelFactory.Credentials.UserName.UserName = "Admin";
+                channelFactory.Credentials.UserName.Password = "123";
+
                 channel = channelFactory.CreateChannel(endPoint);
             }
         }

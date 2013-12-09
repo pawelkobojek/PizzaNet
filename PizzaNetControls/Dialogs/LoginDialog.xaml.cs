@@ -94,22 +94,24 @@ namespace PizzaNetControls.Dialogs
             this.Hide();
         }
 
+        //private WorkChannel proxy = new WorkChannel("http://localhost:60499/PizzaService.svc");
         private void ValidateLogin(WorkerTask.WorkFinishedHandler handler, string login, string password)
         {
             worker.EnqueueTask(new WorkerTask(
                 (args) =>
                 {
+                    WorkChannel proxy = new WorkChannel("http://localhost:60499/PizzaService.svc");
                     var log = args[0] as string;
                     var pass = args[1] as string;
                     var cfg = args[2] as ClientConfig;
                     try
                     {
-                        using(var proxy = new WorkChannel(cfg.ServerAddress))
-                        {
+                        //using(var proxy = new WorkChannel(cfg.ServerAddress))
+                        //{
                             var result = proxy.GetUser(new EmptyRequest() { Login = log, Password = pass });
                             if (result == null) return null;
                             return result.Data;
-                        }
+                        //}
                     }
                     catch(Exception exc)
                     {

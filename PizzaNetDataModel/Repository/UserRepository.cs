@@ -54,7 +54,7 @@ namespace PizzaNetDataModel.Repository
 
         public User Find(string p)
         {
-            return db.Users.Where(u => u.Email == p).First();
+            return db.Users.SingleOrDefault(u => u.Email == p);
         }
     }
 }

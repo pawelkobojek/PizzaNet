@@ -10,7 +10,9 @@ namespace PizzaNetControls.Configuration
 
         public ClientConfig()
         {
-            ServerAddress = "http://localhost:60499/PizzaService.svc";
+            ServerAddress = 
+                "http://localhost:60499/PizzaService.svc";
+            //"https://localhost:44300/PizzaService.svc";
             User = new UserDTO();
         }
 

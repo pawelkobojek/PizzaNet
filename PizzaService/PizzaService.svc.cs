@@ -16,6 +16,7 @@ namespace PizzaService
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Single, InstanceContextMode = InstanceContextMode.PerSession, IncludeExceptionDetailInFaults = true)]
     public class PizzaService : ServiceBase, IPizzaService
     {
         private IngredientAssembler ingAssembler = new IngredientAssembler();
@@ -200,7 +201,7 @@ namespace PizzaService
         private SingleItemResponse<UserDTO> GetUser(RequestBase req)
         {
             User user = db.Users.Find(req.Login);
-            if (!PerformValidation(user, req))
+            if (user == null || !PerformValidation(user, req))
                 return null;
 
             return SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
