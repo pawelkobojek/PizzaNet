@@ -1,0 +1,54 @@
+﻿<Window x:Class="PizzaNetControls.Dialogs.OrderIngredientsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:PizzaNetDialogs="clr-namespace:PizzaNetControls.Dialogs"
+        xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
+        Title="Order supplies" Height="600" Width="400" 
+        WindowStyle="ToolWindow" 
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <PizzaNetConverters:IntModifierConverter x:Key="intModifier" Modifier="-10"/>
+    </Window.Resources>
+    <Grid>
+        <Grid Name="content">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <ListView Grid.Row="0" ItemsSource="{Binding Data}" BorderThickness="1">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Header="Id" Width="auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding IngredientID}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Name" Width="auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Order value" Width="200">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding OrderValue}" TextAlignment="Right" 
+                                                 Width="180"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Grid.Row="1" Margin="10" Width="auto" MaxWidth="200">
+                Order
+            </Button>
+        </Grid>
+        <PizzaNetDialogs:WorkerDialog OverlayOn="{Binding ElementName=content}"/>
+    </Grid>
+</Window>

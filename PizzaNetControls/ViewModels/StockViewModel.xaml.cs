@@ -89,20 +89,7 @@ namespace PizzaNetControls.ViewModels
 
         private void ButtonOrderSupplies_Click(object sender, RoutedEventArgs e)
         {
-            // TODO modify OrderIngredientForm
-            ObservableCollection<Ingredient> ings = new ObservableCollection<Ingredient>();
-            foreach (var item in StockView.StockItemsCollection)
-            {
-                //TODO fix ings.Add(item.Ingredient);
-            }
-            var parent = VisualTreeHelper.GetParent(this);
-            while (!(parent is Window))
-            {
-                parent = VisualTreeHelper.GetParent(parent);
-            }
-            OrderIngredientForm form = new OrderIngredientForm((Window)parent, ings);
-            form.ShowDialog();
-            StockView.RefreshStockItems();
+            this.StockView.OrderSupplies();
         }
 
         private void ButtonSaveChanges_Click(object sender, RoutedEventArgs e)

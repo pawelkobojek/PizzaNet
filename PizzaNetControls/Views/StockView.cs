@@ -14,6 +14,7 @@ using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaNetCommon.Requests;
 using PizzaNetCommon.DTOs;
 using PizzaNetControls.Configuration;
+using PizzaNetControls.Dialogs;
 
 namespace PizzaNetControls.Views
 {
@@ -131,9 +132,10 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    var cfg = ClientConfig.getConfig();
+                    using (var proxy = new WorkChannel(cfg.ServerAddress))
                     {
-                        return proxy.GetIngredients(new EmptyRequest { Login = "Admin", Password = "123" });
+                        return proxy.GetIngredients(new EmptyRequest { Login = cfg.User.Email, Password = cfg.User.Password });
                     }
                     //using (var db = new PizzaUnitOfWork())
                     //{
@@ -192,7 +194,7 @@ namespace PizzaNetControls.Views
                         return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<IList<StockIngredientDTO>>()
                         {
                             Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().Password,
+                            Password = ClientConfig.getConfig().User.Password,
                             Data = list,
                             DataToRemove = removeList
                         });
@@ -275,5 +277,26 @@ namespace PizzaNetControls.Views
             }, ingr.Ingredient));
         }*/
         #endregion
+
+        internal void OrderSupplies()
+        {
+            // MODIFIED
+            //ObservableCollection<Ingredient> ings = new ObservableCollection<Ingredient>();
+            //foreach (var item in StockView.StockItemsCollection)
+            //{
+            //    ings.Add(item.Ingredient);
+            //}
+            //var parent = VisualTreeHelper.GetParent(this);
+            //while (!(parent is Window))
+            //{
+            //    parent = VisualTreeHelper.GetParent(parent);
+            //}
+            //OrderIngredientForm form = new OrderIngredientForm((Window)parent, ings);
+            //form.ShowDialog();
+            //StockView.RefreshStockItems();
+            var dlg = new OrderIngredientsDialog();
+            dlg.SetData(StockItemsCollection);
+            dlg.Show();
+        }
     }
 }
