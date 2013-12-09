@@ -131,9 +131,10 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    var cfg = ClientConfig.getConfig();
+                    using (var proxy = new WorkChannel(cfg.ServerAddress))
                     {
-                        return proxy.GetIngredients(new EmptyRequest { Login = "Admin", Password = "123" });
+                        return proxy.GetIngredients(new EmptyRequest { Login = cfg.User.Email, Password = cfg.User.Password });
                     }
                     //using (var db = new PizzaUnitOfWork())
                     //{
@@ -192,7 +193,7 @@ namespace PizzaNetControls.Views
                         return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<IList<StockIngredientDTO>>()
                         {
                             Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().Password,
+                            Password = ClientConfig.getConfig().User.Password,
                             Data = list,
                             DataToRemove = removeList
                         });

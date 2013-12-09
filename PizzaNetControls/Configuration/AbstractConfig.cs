@@ -10,7 +10,7 @@ namespace PizzaNetControls.Configuration
 {
     public abstract class AbstractConfig
     {
-        public void Save(string filename, Type type)
+        public virtual void Save(string filename, Type type)
         {
             using (StreamWriter sw = new StreamWriter(filename))
             {

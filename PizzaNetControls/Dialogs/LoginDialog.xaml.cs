@@ -67,9 +67,10 @@ namespace PizzaNetControls.Dialogs
                 UserDTO res = o.Result as UserDTO;
                 if (res!=null)
                 {
-                    ClientConfig cfg = ClientConfig.getConfig();
-                    cfg.User = res;
-                    cfg.Password = passwordInput.Password;
+                    ClientConfig cfg = ClientConfig.getConfig(res.Email);
+                    cfg.User = User.FromUserDTO(res);
+                    cfg.User.Password = passwordInput.Password;
+                    cfg.Save();
                     if (cfg.User.Rights<MinRightsLevel)
                     {
                         Utils.showError(TITLE, RIGHTS_LEVEL_FAILURE);
