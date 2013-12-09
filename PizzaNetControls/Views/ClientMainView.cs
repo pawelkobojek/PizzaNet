@@ -91,8 +91,8 @@ namespace PizzaNetControls.Views
 
                             uof.Db.Orders.Insert(new Order()
                             {
-                                Address = cfg.UserAddress,
-                                CustomerPhone = cfg.Phone,
+                                Address = cfg.User.Address,
+                                CustomerPhone = cfg.User.Phone,
                                 Date = DateTime.Now,
                                 OrderDetails = det,
                                 State = new State() { StateValue = State.NEW }

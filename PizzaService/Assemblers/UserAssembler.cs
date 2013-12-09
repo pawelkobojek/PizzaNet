@@ -15,6 +15,7 @@ namespace PizzaService.Assemblers
             {
                 Email = user.Email,
                 Name = user.Name,
+                Address = user.Address,
                 Phone = user.Phone,
                 Rights = user.Rights,
                 UserID = user.UserID

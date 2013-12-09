@@ -44,7 +44,7 @@
                 </DockPanel>
             </Grid>
             <Separator Grid.Row="1"/>
-            <Grid Margin="20" Grid.Row="2">
+            <Grid Margin="20" Grid.Row="2" Name="content">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
@@ -90,7 +90,7 @@
                             <Setter Property="Margin" Value="10"/>
                         </Style>
                     </Grid.Resources>
-                    <Button Click="ButtonLogin_Click" Grid.Column="0">
+                    <Button Click="ButtonLogin_Click" Grid.Column="0" IsDefault="True">
                         Login
                     </Button>
                     <Button Click="ButtonCancel_Click" Grid.Column="1">

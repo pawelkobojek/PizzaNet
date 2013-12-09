@@ -30,8 +30,16 @@ namespace PizzaNetControls.Dialogs
         {
             InitializeComponent();
             this.DataContext = this;
+            this.worker.Lock = content;
+            this.Loaded += LoginDialog_Loaded;
 
             SignUpCommand = new SignUpCommand();
+        }
+
+        void LoginDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            FocusManager.SetFocusedElement(this, emailInput);
+            Keyboard.Focus(emailInput);
         }
 
         public SignUpCommand SignUpCommand { get; private set; }
@@ -60,11 +68,9 @@ namespace PizzaNetControls.Dialogs
                 if (res!=null)
                 {
                     ClientConfig cfg = ClientConfig.getConfig();
-                    cfg.Login = res.Email;
+                    cfg.User = res;
                     cfg.Password = passwordInput.Password;
-                    cfg.Phone = res.Phone;
-                    cfg.Rights = res.Rights;
-                    if (cfg.Rights<MinRightsLevel)
+                    if (cfg.User.Rights<MinRightsLevel)
                     {
                         Utils.showError(TITLE, RIGHTS_LEVEL_FAILURE);
                         return;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PizzaNetCommon.DTOs;
+using System;
 using System.Xml.Serialization;
 
 namespace PizzaNetControls.Configuration
@@ -10,23 +11,13 @@ namespace PizzaNetControls.Configuration
         public ClientConfig()
         {
             ServerAddress = "http://localhost:60499/PizzaService.svc";
-            UserAddress = "";
-            Login = "";
-            Password = "";
-            Phone = 0;
-            Rights = 0;
+            User = new UserDTO();
         }
 
         [XmlIgnore]
-        public string Login { get; set; }
+        public UserDTO User { get; set; }
         [XmlIgnore]
         public string Password { get; set; }
-        [XmlIgnore]
-        public string UserAddress { get; set; }
-        [XmlIgnore]
-        public int Phone { get; set; }
-        [XmlIgnore]
-        public int Rights { get; set; }
 
         public string ServerAddress { get; set; }
 

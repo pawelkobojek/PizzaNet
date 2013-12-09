@@ -1,6 +1,7 @@
 ﻿using PizzaNetControls.Dialogs;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace PizzaNetWorkClient
 {
@@ -22,6 +23,7 @@ namespace PizzaNetWorkClient
 
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
+            FocusManager.SetFocusedElement(this, loginDialog);
             loginDialog.ModalDialogHidden += loginDialog_ModalDialogHidden;
             loginDialog.Show();
         }

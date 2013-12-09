@@ -191,7 +191,7 @@ namespace PizzaNetControls.Views
                     {
                         return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<IList<StockIngredientDTO>>()
                         {
-                            Login = ClientConfig.getConfig().Login,
+                            Login = ClientConfig.getConfig().User.Email,
                             Password = ClientConfig.getConfig().Password,
                             Data = list,
                             DataToRemove = removeList
