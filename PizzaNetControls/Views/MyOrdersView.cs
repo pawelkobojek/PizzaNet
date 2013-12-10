@@ -86,15 +86,21 @@ namespace PizzaNetControls.Views
                     MessageBox.Show(REFRESH_FAILED);
                     return;
                 }
-                bool[] current = new bool[orders.Count()];
-                foreach (var order in orders)
+                foreach (var item in orders)
                 {
-                    Console.WriteLine("Order#" + order.OrderID);
-                    Console.WriteLine("Order state value: " + order.State.StateValue);
-                    OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
-                    if (row != null) row.OrderDTO = order;
-                    else OrdersCollection.Add(new OrdersRow(order));
+                    OrdersCollection.Add(new OrdersRow(item));
                 }
+
+                //TODO odkomentować poniższe, zakomentować powyższe
+                //bool[] current = new bool[orders.Count()];
+                //foreach (var order in orders)
+                //{
+                //    Console.WriteLine("Order#" + order.OrderID);
+                //    Console.WriteLine("Order state value: " + order.State.StateValue);
+                //    OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
+                //    if (row != null) row.OrderDTO = order;
+                //    else OrdersCollection.Add(new OrdersRow(order));
+                //}
             }));
         }
 
