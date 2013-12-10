@@ -20,15 +20,17 @@ namespace PizzaNetControls.Views
 {
     public class StockView : BaseView
     {
-        public ObservableCollection<StockIngredientDTO> StockItemsCollection { get; set; }
+        public NotifiedObservableCollection<StockIngredientDTO> StockItemsCollection { get; set; }
         private List<StockIngredientDTO> RemovedStockItemsList { get; set; }
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
         private const string TITLE = "PizzaNetWorkClient";
         private const string SAVE_CHANGES_FAILURE = "Save changes failed";
 
+        public event EventHandler<EventArgs> SuppliesOrdered;
+
         public StockView(IWorker worker) : base(worker)
         {
-            this.StockItemsCollection = new ObservableCollection<StockIngredientDTO>();
+            this.StockItemsCollection = new NotifiedObservableCollection<StockIngredientDTO>();
             this.RemovedStockItemsList = new List<StockIngredientDTO>();
             ResetIds();
         }
@@ -294,9 +296,37 @@ namespace PizzaNetControls.Views
             //OrderIngredientForm form = new OrderIngredientForm((Window)parent, ings);
             //form.ShowDialog();
             //StockView.RefreshStockItems();
+            if (Modified)
+            {
+                if (!showSaveChangesDialog()) return;
+                RefreshStockItems();
+            }
             var dlg = new OrderIngredientsDialog();
             dlg.SetData(StockItemsCollection);
-            dlg.Show();
+            dlg.ShowDialog();
+            foreach (var item in dlg.Data)
+            {
+                var ing = StockItemsCollection.First((i) =>
+                {
+                    return i.IngredientID == item.IngredientID;
+                });
+                ing.StockQuantity = item.StockQuantity;
+            }
+            StockItemsCollection.NotifyCollectionChanged();
+            if (SuppliesOrdered != null)
+                SuppliesOrdered(this, new EventArgs());
+        }
+
+        public bool showSaveChangesDialog()
+        {
+            return MessageBox.Show
+                    (
+                        "You have unsaved changes. Do you want to discard them?",
+                        "PizzaNetWork",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Exclamation,
+                        MessageBoxResult.No
+                    ) != MessageBoxResult.No;
         }
     }
 }

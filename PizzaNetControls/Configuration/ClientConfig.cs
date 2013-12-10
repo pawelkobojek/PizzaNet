@@ -100,7 +100,15 @@ namespace PizzaNetControls.Configuration
         public override void Save(string filename, Type type)
         {
             XmlDocument doc = new XmlDocument();
-            doc.Load(filename);
+            try
+            {
+                doc.Load(filename);
+            }
+            catch(Exception)
+            {
+                base.Save(filename, type);
+                return;
+            }
             XmlNode ccfg = doc.SelectSingleNode("//ClientConfig");
             List<XmlNode> nodesToRemove = new List<XmlNode>();
             List<XmlNode> nodesToInsert = new List<XmlNode>();
@@ -129,7 +137,7 @@ namespace PizzaNetControls.Configuration
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
-            throw new NotImplementedException();
+            writer.WriteElementString("ServerAddress",ServerAddress);
         }
     }
 }

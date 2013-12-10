@@ -5,7 +5,6 @@ using PizzaNetCommon.DTOs;
 using PizzaNetCommon.Queries;
 using PizzaNetCommon.Requests;
 using PizzaNetDataModel.Model;
-using PizzaNetTests.Mocks;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaService.Assemblers;
 

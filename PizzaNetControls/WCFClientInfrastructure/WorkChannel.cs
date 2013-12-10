@@ -72,5 +72,11 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         {
             return Channel.GetOrdersForUser(req);
         }
+
+
+        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<IList<OrderSuppliesDTO>> request)
+        {
+            return Channel.OrderSupplies(request);
+        }
     }
 }

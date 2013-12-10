@@ -44,8 +44,15 @@ namespace PizzaNetControls.ViewModels
             if (!initialized)
             {
                 this.StockView = new StockView(Worker);
+                this.StockView.SuppliesOrdered += StockView_SuppliesOrdered;
                 initialized = true;
             }
+        }
+
+        void StockView_SuppliesOrdered(object sender, EventArgs e)
+        {
+            if (listStock.SelectedIndex < 0) return;
+            tbQuantity.Text = StockView.StockItemsCollection[listStock.SelectedIndex].StockQuantity.ToString();
         }
 
         private StockView _vo;
@@ -132,7 +139,6 @@ namespace PizzaNetControls.ViewModels
             StockView.Modified  |=
                 tbId.Text       != rc.IngredientID.ToString()  ||
                 tbName.Text     != rc.Name.ToString()          ||
-                tbQuantity.Text != rc.StockQuantity.ToString() ||
                 tbNW.Text       != rc.NormalWeight.ToString()  ||
                 tbEW.Text       != rc.ExtraWeight.ToString()   ||
                 tbPU.Text       != rc.PricePerUnit.ToString("0.########",nfi);
@@ -146,15 +152,7 @@ namespace PizzaNetControls.ViewModels
         {
             CheckLastBinding();
             if (StockView.Modified)
-            {
-                return MessageBox.Show
-                    (
-                        "You have unsaved changes. Do you want to discard them?",
-                        "PizzaNetWork",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Exclamation
-                    ) != MessageBoxResult.No;
-            }
+                return StockView.showSaveChangesDialog();
             else return true;
         }
 
