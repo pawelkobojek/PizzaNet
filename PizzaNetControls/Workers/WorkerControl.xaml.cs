@@ -56,6 +56,8 @@ namespace PizzaNetControls.Workers
                 this.spinner.Visibility = System.Windows.Visibility.Hidden;
                 if (this.Lock != null)
                     this.Lock.IsEnabled = true;
+                if (AllWorkDone != null)
+                    AllWorkDone(this, new EventArgs());
             }
             else nextTask();
         }

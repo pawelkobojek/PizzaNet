@@ -228,5 +228,25 @@ namespace PizzaService
                         .ToList().Select(orderAssembler.ToSimpleDto).ToList());
                 });
         }
+
+        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<IList<OrderSuppliesDTO>> request)
+        {
+            return db.inTransaction(uow =>
+            {
+                if (!HasRights(GetUser(request).Data, 2))
+                    return null;
+
+                foreach(var os in request.Data)
+                {
+                    Ingredient ing = uow.Db.Ingredients.Get(os.IngredientID);
+                    if (ing == null) return null;
+                    ing.StockQuantity += os.OrderValue;
+                }
+
+                uow.Db.Commit();
+
+                return ListResponse.Create(uow.Db.Ingredients.FindAll().ToList().Select(ingAssembler.ToOrderSuppliesDTO).ToList());
+            });
+        }
     }
 }

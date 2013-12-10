@@ -73,10 +73,7 @@
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Quantity:"/>
-                    <TextBox Name="tbQuantity" IsReadOnly="True"
-                             SourceUpdated="TextBoxStockDetails_SourceUpdated"
-                             KeyDown="TextBoxStockDetails_KeyDown"
-                             KeyUp="TextBoxStockDetails_KeyUp">
+                    <TextBox Name="tbQuantity" IsReadOnly="True">
                         <TextBox.Text>
                             <Binding ElementName="listStock" 
                                      Path="SelectedItem.StockQuantity" 

@@ -41,6 +41,17 @@ namespace PizzaService.Assemblers
             return ingDto;
         }
 
+        public OrderSuppliesDTO ToOrderSuppliesDTO(Ingredient ing)
+        {
+            return new OrderSuppliesDTO()
+            {
+                IngredientID = ing.IngredientID,
+                Name = ing.Name,
+                StockQuantity = ing.StockQuantity,
+                OrderValue = 0
+            };
+        }
+
         public void UpdateIngredient(Ingredient ing, StockIngredientDTO dto)
         {
             if(ing.IngredientID!=dto.IngredientID)

@@ -1,4 +1,8 @@
 ﻿using PizzaNetCommon.DTOs;
+using PizzaNetCommon.Requests;
+using PizzaNetControls.Common;
+using PizzaNetControls.Configuration;
+using PizzaNetWorkClient.WCFClientInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,35 +29,60 @@ namespace PizzaNetControls.Dialogs
         {
             InitializeComponent();
             this.DataContext = this;
-            this.Loaded += OrderIngredientsDialog_Loaded;
             Data = new ObservableCollection<OrderSuppliesDTO>();
-            Data.Clear();
         }
-
-        void OrderIngredientsDialog_Loaded(object sender, RoutedEventArgs e)
-        {
-            FillData(dataToSet);
-        }
-
-        private IEnumerable<StockIngredientDTO> dataToSet;
 
         public void SetData(IEnumerable<StockIngredientDTO> list)
         {
-            dataToSet = list;
-        }
-
-        private void FillData(IEnumerable<StockIngredientDTO> list)
-        {
-            Data.Clear();
             foreach (var v in list)
                 Data.Add(new OrderSuppliesDTO()
                 {
                     IngredientID = v.IngredientID,
+                    StockQuantity = v.StockQuantity,
                     Name = v.Name,
                     OrderValue = 0
                 });
         }
 
         public ObservableCollection<OrderSuppliesDTO> Data { get; set; }
+        private const string ORDER_FAILURE = "Ordering supplies failed";
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            worker.EnqueueTask(new Workers.WorkerTask((args) =>
+                {
+                    var list = args[0] as IList<OrderSuppliesDTO>;
+                    try
+                    {
+                        var cfg = ClientConfig.getConfig();
+                        using(var proxy = new WorkChannel(cfg.ServerAddress))
+                        {
+                            return proxy.OrderSupplies(new UpdateRequest<IList<OrderSuppliesDTO>>()
+                            {
+                                Data = list,
+                                Login = cfg.User.Email,
+                                Password = cfg.User.Password
+                            });
+                        }
+                    }
+                    catch(Exception exc)
+                    {
+                        Console.WriteLine(exc.Message);
+                        return null;
+                    }
+                },
+                (s,ex) =>
+                {
+                    var res = ex.Result as ListResponse<OrderSuppliesDTO>;
+                    if (res==null)
+                    {
+                        Utils.showError("PizzaNetWorkClient", ORDER_FAILURE);
+                        return;
+                    }
+                    Data.Clear();
+                    foreach(var item in res.Data)
+                        Data.Add(item);
+                }, Data.ToList()));
+        }
     }
 }
