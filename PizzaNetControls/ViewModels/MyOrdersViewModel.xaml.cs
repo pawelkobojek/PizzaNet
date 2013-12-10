@@ -79,5 +79,20 @@ namespace PizzaNetControls.ViewModels
         {
             MyOrdersView.RefreshCurrentOrders();
         }
+
+        private void ordersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ordersListView.SelectedIndex < 0)
+                return;
+            MyOrdersView.OrderSelectionChanged(ordersListView.SelectedIndex);
+        }
+
+        private void ingredientsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (pizzasListView.SelectedIndex < 0)
+                return;
+
+            MyOrdersView.PizzaSelectionChanged(pizzasListView.SelectedIndex);
+        }
     }
 }

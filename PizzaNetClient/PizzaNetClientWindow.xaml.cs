@@ -37,7 +37,7 @@ namespace PizzaNetClient
 
             this.worker.Lock = this.contentControl;
         }
-        
+
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
             loginDialog.ModalDialogHidden += loginDialog_ModalDialogHidden;
@@ -46,9 +46,9 @@ namespace PizzaNetClient
 
         void loginDialog_ModalDialogHidden(object sender, ModalDialog.ModalDialogEventArgs e)
         {
-            if (!loginDialog.DialogResult) 
+            if (!loginDialog.DialogResult)
                 this.Close();
-            clientMainViewModel.ClientMainView.Load();
+            //clientMainViewModel.ClientMainView.Load();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -60,9 +60,12 @@ namespace PizzaNetClient
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-          
+
         private void contentControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (!(e.OriginalSource is TabControl) || !this.IsLoaded)
+                return;
+
             if (contentControl.SelectedIndex == 2)
             {
                 settingsViewModel.ClientSettingsView.Load();

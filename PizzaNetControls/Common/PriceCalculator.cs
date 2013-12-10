@@ -54,19 +54,20 @@ namespace PizzaNetControls.Common
             return result;
         }
 
-        public static double CalculatePrice(this OrderDetail orderDetail)
+        public static double CalculatePrice(this OrderDetailDTO orderDetail)
         {
+
             double result = 3 * orderDetail.Size.SizeValue;
             foreach (var i in orderDetail.Ingredients)
             {
-                result += (double)i.Quantity * (double)i.Ingredient.PricePerUnit * orderDetail.Size.SizeValue;
+                result += (double)i.Quantity * (double)i.Price * orderDetail.Size.SizeValue;
             }
             return result;
         }
-        public static double CalculatePrice(this Order order)
+        public static double CalculatePrice(this OrderDTO order)
         {
             double result = 0;
-            foreach (var od in order.OrderDetails)
+            foreach (var od in order.OrderDetailsDTO)
                 result += od.CalculatePrice();
             return result;
         }

@@ -10,7 +10,7 @@
         <PizzaNetConverters:StateConverter x:Key="stateConverter"/>
         <PizzaNetConverters:OrderDetailsIdConverter x:Key="orderDetailsIdConverter"/>
         <PizzaNetConverters:OrderDetailsToPriceConverter x:Key="orderDetailsToPriceConverter"/>
-        <PizzaNetConverters:OrderDetailsToPriceConverter x:Key="orderToPriceConverter"/>
+        <PizzaNetConverters:OrderToPriceConverter x:Key="orderToPriceConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -27,9 +27,8 @@
             <ListView Margin="10, 0, 10, 20" x:Name="ordersListView"
                                  ItemsSource="{Binding MyOrdersView.OrdersCollection}" 
                                  HorizontalContentAlignment="Stretch"
-                                 
+                                 SelectionChanged="ordersListView_SelectionChanged"
                                  />
-            <!--SelectionChanged="ordersListView_SelectionChanged"-->
         </DockPanel>
         <DockPanel Grid.Column="1" LastChildFill="True" Margin="10, 0, 5, 0">
             <TextBlock Text="Details" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
@@ -62,7 +61,8 @@
             </StackPanel>
             <TextBlock Text="Pizzas" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
             <ListView x:Name="pizzasListView" Margin="20, 5, 20, 20" 
-                                  ItemsSource="{Binding MyOrdersView.Pizzas}">
+                                  ItemsSource="{Binding MyOrdersView.PizzasCollection}"
+                                            SelectionChanged="ingredientsListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Pizza Id" DisplayMemberBinding="{Binding OrderDetail.OrderDetailID, Converter={StaticResource ResourceKey=orderDetailsIdConverter}}"/>
@@ -74,11 +74,11 @@
         <DockPanel Grid.Column="2" LastChildFill="True">
             <TextBlock Text="Ingredients" Margin="10" FontSize="16" DockPanel.Dock="Top"/>
             <ListView Margin="10, 0, 10, 20" x:Name="ingredientsListView"
-                                 ItemsSource="{Binding MyOrdersView.Ingredients}" 
+                                 ItemsSource="{Binding MyOrdersView.IngredientsCollection}" 
                                  HorizontalContentAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Ingredient.Name}"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
                         <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}"/>
                     </GridView>
                 </ListView.View>

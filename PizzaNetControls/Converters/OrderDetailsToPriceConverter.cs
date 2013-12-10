@@ -6,15 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.Converters
 {
-    [ValueConversion(typeof(OrderDetail), typeof(String))]
+    [ValueConversion(typeof(OrderDetailDTO), typeof(String))]
     public class OrderDetailsToPriceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            OrderDetail obj = value as OrderDetail;
+            OrderDetailDTO obj = value as OrderDetailDTO;
             if (obj == null) return null;
             return PriceCalculator.CalculatePrice(obj).ToString("F2");
         }

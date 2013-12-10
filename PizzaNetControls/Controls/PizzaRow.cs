@@ -16,19 +16,14 @@ namespace PizzaNetControls.Controls
         {
         }
 
-        public PizzaRow(OrderDetail orderDetail)
+        public PizzaRow(OrderDetailDTO orderDetail)
             : this()
         {
-            this._orderDetail = orderDetail;
+            this.OrderDetail = orderDetail;
         }
 
-        public PizzaRow(PizzaNetCommon.DTOs.OrderDetailDTO od)
-        {
-            this.od = od;
-        }
-
-        private OrderDetail _orderDetail = new OrderDetail();
-        public OrderDetail OrderDetail
+        private OrderDetailDTO _orderDetail = new OrderDetailDTO();
+        public OrderDetailDTO OrderDetail
         {
             get
             {
@@ -48,15 +43,7 @@ namespace PizzaNetControls.Controls
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private OrderDetailDTO od;
-        public OrderDetailDTO OrderDetailDTO
-        {
-            get { return od; }
-            set
-            {
-                od = value; NotifyPropertyChanged("OrderDetailDTO");
-            }
-        }
+
         private void NotifyPropertyChanged(String propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

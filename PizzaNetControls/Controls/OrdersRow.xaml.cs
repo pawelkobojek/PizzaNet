@@ -29,19 +29,14 @@ namespace PizzaNetControls
             this.DataContext = this;
         }
 
-        public OrdersRow(Order order)
+        public OrdersRow(OrderDTO order)
             : this()
         {
-            this._order = order;
+            this.Order = order;
         }
 
-        public OrdersRow(OrderDTO order)
-        {
-            this.orderDto = order;
-        }
-
-        private Order _order = new Order() { State = new State() };
-        public Order Order
+        private OrderDTO _order = new OrderDTO() { State = new StateDTO() };
+        public OrderDTO Order
         {
             get { return _order; }
             set { _order = value; NotifyPropertyChanged("Order"); }
@@ -55,21 +50,11 @@ namespace PizzaNetControls
         private void NotifyOrderChanged()
         {
             NotifyPropertyChanged("Order");
-            foreach (var p in typeof(Order).GetProperties())
+            foreach (var p in typeof(OrderDTO).GetProperties())
                 NotifyPropertyChanged(p.Name);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private OrderDTO orderDto;
-        public OrderDTO OrderDTO
-        {
-            get { return orderDto; }
-            set
-            {
-                orderDto = value; NotifyPropertyChanged("OrderDTO");
-            }
-        }
 
         private void NotifyPropertyChanged(String propertyName)
         {

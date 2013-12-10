@@ -35,7 +35,7 @@ namespace PizzaService.Assemblers
                         Quantity = ing.Quantity
                     });
                 }
-                oDto.OrderDetailsDTO.Add(new OrderDetailDTO { Ingredients = oIngDtos });
+                oDto.OrderDetailsDTO.Add(new OrderDetailDTO { Ingredients = oIngDtos, Size = new SizeDTO { SizeValue = od.Size.SizeValue } });
             }
 
 

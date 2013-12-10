@@ -17,7 +17,8 @@ namespace PizzaNetControls.Views
 {
     public class WorkOrdersView : BaseView
     {
-        public WorkOrdersView(IWorker worker) : base(worker)
+        public WorkOrdersView(IWorker worker)
+            : base(worker)
         {
             this.PizzasCollection = new ObservableCollection<PizzaRow>();
             this.IngredientsCollection = new ObservableCollection<OrderIngredientDTO>();
@@ -35,7 +36,7 @@ namespace PizzaNetControls.Views
         public ObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
         public ObservableCollection<OrderIngredientDTO> IngredientsCollection { get; set; }
         private const int TIMER_INTERVAL = 60000;
-        public BackgroundWorker OrdersRefresher {get; private set;}
+        public BackgroundWorker OrdersRefresher { get; private set; }
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
         private const string REFRESH_FAILED = "Refreshing orders failed!";
 
@@ -76,11 +77,11 @@ namespace PizzaNetControls.Views
             //    }
             //}
 
-            OrdersRow or = OrdersCollection[index];
-            foreach (var od in or.OrderDTO.OrderDetailsDTO)
-            {
-                PizzasCollection.Add(new PizzaRow(od));
-            }
+            //OrdersRow or = OrdersCollection[index];
+            //foreach (var od in or.OrderDTO.OrderDetailsDTO)
+            //{
+            //    PizzasCollection.Add(new PizzaRow(od));
+            //}
         }
 
         internal void ChangePizzaSelection(int index)
@@ -99,52 +100,55 @@ namespace PizzaNetControls.Views
             //        }
             //    }
             //}
-            PizzaRow pr = PizzasCollection[index];
-            foreach (var ingr in pr.OrderDetailDTO.Ingredients)
-            {
-                IngredientsCollection.Add(ingr);
-            }
+            //PizzaRow pr = PizzasCollection[index];
+            //foreach (var ingr in pr.OrderDetailDTO.Ingredients)
+            //{
+            //    IngredientsCollection.Add(ingr);
+            //}
         }
 
         internal void SetOrderInRealization(OrdersRow o)
         {
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
+                return null;
                 using (var db = new PizzaUnitOfWork())
                 {
 
-                    return db.inTransaction(uof =>
+                    //return db.inTransaction(uof =>
+                    db.inTransaction(uof =>
                     {
-                        try
-                        {
-                            List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
-                            foreach (var od in o.Order.OrderDetails)
-                            {
-                                foreach (var odIng in od.Ingredients)
-                                {
-                                    orderIngredients.Add(odIng);
-                                }
-                            }
-                            foreach (var odIng in orderIngredients)
-                            {
-                                Ingredient i = uof.Db.Ingredients.Get(odIng.Ingredient.IngredientID);
+                        return;
+                        //try
+                        //{
+                        //    List<OrderIngredient> orderIngredients = new List<OrderIngredient>();
+                        //    foreach (var od in o.Order.OrderDetails)
+                        //    {
+                        //        foreach (var odIng in od.Ingredients)
+                        //        {
+                        //            orderIngredients.Add(odIng);
+                        //        }
+                        //    }
+                        //    foreach (var odIng in orderIngredients)
+                        //    {
+                        //        Ingredient i = uof.Db.Ingredients.Get(odIng.Ingredient.IngredientID);
 
-                                if (i.StockQuantity - odIng.Quantity < 0)
-                                {
-                                    MessageBox.Show(ORDER_IMPOSSIBLE);
-                                    return false;
-                                }
+                        //        if (i.StockQuantity - odIng.Quantity < 0)
+                        //        {
+                        //            MessageBox.Show(ORDER_IMPOSSIBLE);
+                        //            return false;
+                        //        }
 
-                                i.StockQuantity -= odIng.Quantity;
-                            }
-                            uof.Db.Commit();
-                        }
-                        catch (Exception exc)
-                        {
-                            Console.WriteLine(exc);
-                            return false;
-                        }
-                        return true;
+                        //        i.StockQuantity -= odIng.Quantity;
+                        //    }
+                        //    uof.Db.Commit();
+                        //}
+                        //catch (Exception exc)
+                        //{
+                        //    Console.WriteLine(exc);
+                        //    return false;
+                        //}
+                        //return true;
                     });
                 }
             }, (a, s) =>
@@ -176,7 +180,7 @@ namespace PizzaNetControls.Views
             (s, a) =>
             {
                 RefreshCurrentOrders();
-                or.Order.State = state;
+                //or.Order.State = state;
                 or.Update();
                 // TODO zwalone sortowanie po zmianie stanu, nie uaktualnia się
             }));
@@ -215,9 +219,9 @@ namespace PizzaNetControls.Views
                 bool[] current = new bool[orders.Count()];
                 foreach (var order in orders)
                 {
-                    OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
-                    if (row != null) row.Order = order;
-                    else OrdersCollection.Add(new OrdersRow(order));
+                    //OrdersRow row = OrdersCollection.FirstOrDefault(r => { return r.Order.OrderID == order.OrderID; });
+                    //if (row != null) row.Order = order;
+                    //else OrdersCollection.Add(new OrdersRow(order));
                 }
             }));
         }
@@ -284,10 +288,10 @@ namespace PizzaNetControls.Views
                     MessageBox.Show(REFRESH_FAILED);
                     return;
                 }
-                foreach (var order in orders)
-                {
-                    OrdersCollection.Add(new OrdersRow(order));
-                }
+                //foreach (var order in orders)
+                //{
+                //    OrdersCollection.Add(new OrdersRow(order));
+                //}
             }));
         }
 
