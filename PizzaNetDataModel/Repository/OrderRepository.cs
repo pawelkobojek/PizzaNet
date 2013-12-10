@@ -60,7 +60,7 @@ namespace PizzaNetDataModel.Repository
 
         public Order Get(int id)
         {
-            return db.Orders.Where(o => o.OrderID == id).First();
+            return db.Orders.Where(o => o.OrderID == id).FirstOrDefault();
         }
 
         public void Insert(Order entity)

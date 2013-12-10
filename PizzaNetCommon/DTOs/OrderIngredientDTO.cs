@@ -8,9 +8,11 @@ namespace PizzaNetCommon.DTOs
 {
     public class OrderIngredientDTO
     {
-        public double Quantity { get; set; }
+        public int Quantity { get; set; }
         public int IngredientID { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
+        public int ExtraWeight { get; set; }
+        public int NormalWeight { get; set; }
     }
 }

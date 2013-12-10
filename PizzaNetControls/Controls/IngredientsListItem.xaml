@@ -8,6 +8,6 @@
     <DockPanel>
         <TextBlock DockPanel.Dock="Right" Text="g"/>
         <TextBlock Text="{Binding Weight}" DockPanel.Dock="Right"/>
-        <TextBlock Text="{Binding OrderIngredient.Ingredient.Name}" DockPanel.Dock="Left"/>
+        <TextBlock Text="{Binding OrderIngredient.Name}" DockPanel.Dock="Left"/>
     </DockPanel>
 </UserControl>

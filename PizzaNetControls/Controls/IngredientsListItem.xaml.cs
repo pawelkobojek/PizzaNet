@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls
 {
@@ -27,13 +28,13 @@ namespace PizzaNetControls
             InitializeComponent();
             this.DataContext = this;
         }
-        public IngredientsListItem(PizzaNetDataModel.Model.Size size)
+        public IngredientsListItem(SizeDTO size)
         {
             this.Size = size;
         }
 
-        private OrderIngredient _ingr;
-        public OrderIngredient OrderIngredient
+        private OrderIngredientDTO _ingr;
+        public OrderIngredientDTO OrderIngredient
         {
             get { return _ingr; }
             set { _ingr = value; NotifyPropertyChanged("OrderIngredient"); NotifyPropertyChanged("Weight"); }
@@ -54,8 +55,8 @@ namespace PizzaNetControls
             }
         }
 
-        private PizzaNetDataModel.Model.Size _size;
-        public PizzaNetDataModel.Model.Size Size 
+        private SizeDTO _size;
+        public SizeDTO Size 
         {
             get { return _size; }
             set { _size = value; NotifyPropertyChanged("Size"); NotifyPropertyChanged("Weight"); }

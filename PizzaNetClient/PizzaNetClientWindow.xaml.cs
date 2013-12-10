@@ -48,7 +48,9 @@ namespace PizzaNetClient
         {
             if (!loginDialog.DialogResult)
                 this.Close();
+
             //clientMainViewModel.ClientMainView.Load();
+            clientMainViewModel.GotFocusAction();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -69,6 +71,11 @@ namespace PizzaNetClient
             if (contentControl.SelectedIndex == 2)
             {
                 settingsViewModel.ClientSettingsView.Load();
+            }
+
+            if (MainTab.IsSelected)
+            {
+                clientMainViewModel.GotFocusAction();
             }
 
             if (OrdersTab.IsSelected)

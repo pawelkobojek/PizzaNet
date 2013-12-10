@@ -15,11 +15,11 @@ namespace PizzaService.Assemblers
 
             if (r.Ingredients != null)
             {
-                List<StockIngredientDTO> ingDtos = new List<StockIngredientDTO>();
+                IList<OrderIngredientDTO> ingDtos = new List<OrderIngredientDTO>();
 
                 foreach (var ing in r.Ingredients)
                 {
-                    ingDtos.Add(new IngredientAssembler().ToSimpleDto(ing));
+                    ingDtos.Add(new IngredientAssembler().ToOrderIngredientDto(ing));
                 }
                 rDto.Ingredients = ingDtos;
             }

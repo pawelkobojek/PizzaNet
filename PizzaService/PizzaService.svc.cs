@@ -27,6 +27,7 @@ namespace PizzaService
         private StateAssembler stateAssembler = new StateAssembler();
 
         private PizzaUnitOfWork db = new PizzaUnitOfWork();
+        private const string NOT_ENOUGH_INGS_MSG = "Not enough Ingredients in stock!";
 
         private bool HasRights(UserDTO userDTO, int p)
         {
@@ -53,7 +54,7 @@ namespace PizzaService
             }
         }
 
-        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> IPizzaService.GetRecipeTabData(EmptyRequest req)
+        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req)
         {
             try
             {
@@ -67,7 +68,7 @@ namespace PizzaService
                         .ToList(), uof.Db.Sizes.FindAll().ToList()
                         .Select(sizeAssembler.ToSimpleDto)
                         .ToList(), uof.Db.Ingredients.FindAll().ToList()
-                        .Select(ingAssembler.ToSimpleDto)
+                        .Select(ingAssembler.ToOrderIngredientDto)
                         .ToList());
                 });
             }
@@ -120,6 +121,22 @@ namespace PizzaService
                         return;
                     Order o = uof.Db.Orders.Get(request.Data.OrderID);
                     State st = uof.Db.States.Find(request.Data.State.StateValue);
+                    if (request.Data.State.StateValue == State.IN_REALISATION)
+                    {
+                        foreach (var orderDet in request.Data.OrderDetailsDTO)
+                        {
+                            foreach (var ingr in orderDet.Ingredients)
+                            {
+                                Ingredient ing = uof.Db.Ingredients.Get(ingr.IngredientID);
+                                if (ing == null) return;
+                                if (ing.StockQuantity - ingr.Quantity < 0)
+                                {
+                                    throw new FaultException(NOT_ENOUGH_INGS_MSG);
+                                }
+                                ing.StockQuantity -= ingr.Quantity;
+                            }
+                        }
+                    }
                     o.State = st;
                     uof.Db.Commit();
                 });
@@ -136,7 +153,6 @@ namespace PizzaService
                         .Select(orderAssembler.ToSimpleDto).ToList());
                 });
         }
-
 
         public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
         {
@@ -236,7 +252,7 @@ namespace PizzaService
                 if (!HasRights(GetUser(request).Data, 2))
                     return null;
 
-                foreach(var os in request.Data)
+                foreach (var os in request.Data)
                 {
                     Ingredient ing = uow.Db.Ingredients.Get(os.IngredientID);
                     if (ing == null) return null;
@@ -248,5 +264,89 @@ namespace PizzaService
                 return ListResponse.Create(uow.Db.Ingredients.FindAll().ToList().Select(ingAssembler.ToOrderSuppliesDTO).ToList());
             });
         }
+
+
+        public void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> request)
+        {
+            db.inTransaction(uow =>
+                {
+                    if (!HasRights(GetUser(request).Data, 2))
+                        return;
+
+                    Order o = db.Orders.Get(request.DataToRemove.OrderID);
+                    db.Orders.Delete(o);
+
+                    uow.Db.Commit();
+                });
+        }
+
+
+        public void MakeOrder(UpdateRequest<OrderDTO> req)
+        {
+            db.inTransaction(uow =>
+                {
+                    UserDTO userDto = GetUser(req).Data;
+                    if (!HasRights(userDto, 1))
+                        return;
+
+                    User user = uow.Db.Users.Get(userDto.UserID);
+                    OrderDTO o = req.Data;
+                    State st = uow.Db.States.Find(State.NEW);
+
+
+                    List<OrderDetail> od = new List<OrderDetail>();
+                    foreach (var ordDto in o.OrderDetailsDTO)
+                    {
+                        List<OrderIngredient> oIngs = new List<OrderIngredient>();
+                        foreach (var oIng in ordDto.Ingredients)
+                        {
+                            oIngs.Add(new OrderIngredient
+                            {
+                                Ingredient = uow.Db.Ingredients.Get(oIng.IngredientID),
+                                Quantity = oIng.Quantity
+                            });
+                        }
+                        od.Add(new OrderDetail
+                        {
+                            Size = uow.Db.Sizes.Get(ordDto.Size.SizeID),
+                            Ingredients = oIngs
+                        });
+                    }
+                    Order order = new Order
+                    {
+                        Address = o.Address,
+                        CustomerPhone = o.CustomerPhone,
+                        Date = o.Date,
+                        OrderID = o.OrderID,
+                        User = user,
+                        State = st,
+                        UserID = user.UserID,
+                        OrderDetails = od
+                    };
+
+                    uow.Db.Orders.Insert(order);
+                });
+        }
+
+        //private List<OrderDetail> mergeIngredients(List<OrderDetailDTO> det, IEnumerable<OrderIngredientDTO> ing)
+        //{
+        //    foreach (var d in det)
+        //        foreach (var i in d.Ingredients)
+        //        {
+        //            Ingredient s = ing.FirstOrDefault((e) => { return e.IngredientID == i.Ingredient.IngredientID; });
+        //            if (s == null) throw new Exception("Inconsistien data");
+        //            i.Ingredient = s;
+        //        }
+        //    return det;
+        //}
+        //private List<OrderDetail> mergeSizes(List<OrderDetailDTO> det, IEnumerable<SizeDTO> sizes)
+        //{
+        //    foreach (var d in det)
+        //    {
+        //        d.Size = sizes.FirstOrDefault((e) => { return e.SizeValue == d.Size.SizeValue; });
+        //        if (d.Size == null) throw new Exception("Inconsistien data");
+        //    }
+        //    return det;
+        //}
     }
 }

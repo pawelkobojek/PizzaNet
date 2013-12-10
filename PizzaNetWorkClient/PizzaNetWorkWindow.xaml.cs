@@ -32,7 +32,7 @@ namespace PizzaNetWorkClient
         {
             if (!loginDialog.DialogResult)
                 this.Close();
-            // TODO uncomment ordersViewModel.WorkOrdersView.Load();
+            ordersViewModel.GotFocusAction();
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -46,6 +46,17 @@ namespace PizzaNetWorkClient
                 return;
             }
 
+            if (LastSelected == OrdersTab)
+            {
+                if (!ordersViewModel.LostFocusAction())
+                {
+                    IsSelectionChanging = true;
+                    tabControl.SelectedIndex = 0;
+                    e.Handled = true;
+                    return;
+                }
+            }
+
             if (LastSelected==StockTab)
             {
                 if (!stockViewModel.LostFocusAction())
@@ -55,17 +66,19 @@ namespace PizzaNetWorkClient
                     e.Handled = true;
                     return;
                 }
+
             }
 
             if (StockTab.IsSelected)
             {
+
                 stockViewModel.GotFocusAction();
                 LastSelected = StockTab;
             }
 
             if (OrdersTab.IsSelected)
             {
-                //TODO uncomment refresh ordersViewModel.WorkOrdersView.RefreshCurrentOrders();
+                ordersViewModel.GotFocusAction();
                 LastSelected = OrdersTab;
             }
 

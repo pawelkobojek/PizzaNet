@@ -31,7 +31,7 @@
             </DockPanel>
             <Separator  Grid.Row="1"/>
             <TabControl Grid.Row="2" Name="contentControl" SelectionChanged="contentControl_SelectionChanged">
-                <TabItem Header="Main">
+                <TabItem Name="MainTab"  Header="Main">
                     <PizzaNetViewModels:ClientMainViewModel Name="clientMainViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
                 <TabItem Name="OrdersTab" Header="My orders">

@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls
 {
@@ -30,7 +31,7 @@ namespace PizzaNetControls
             this.IngredientsCollection = new ObservableCollection<IngredientsListItem>();
         }
 
-        public IngredientsList(OrderDetail od) : this()
+        public IngredientsList(OrderDetailDTO od) : this()
         {
             OrderDetail = od;
             foreach(var item in od.Ingredients)
@@ -51,8 +52,8 @@ namespace PizzaNetControls
 
         public ObservableCollection<IngredientsListItem> IngredientsCollection { get; set; }
 
-        private OrderDetail _od;
-        public OrderDetail OrderDetail
+        private OrderDetailDTO _od;
+        public OrderDetailDTO OrderDetail
         {
             get { return _od; }
             set { _od = value; NotifyPropertyChanged("OrderDetail"); }

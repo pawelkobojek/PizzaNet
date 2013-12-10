@@ -9,12 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using PizzaNetWorkClient.WCFClientInfrastructure;
+using PizzaNetControls.Configuration;
+using PizzaNetCommon.Requests;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.Views
 {
     public class RecipiesView : BaseView
     {
-        public RecipiesView(IWorker worker) : base(worker)
+        public RecipiesView(IWorker worker)
+            : base(worker)
         {
             this.IngredientsRowsCollection = new ObservableCollection<IngredientsRowWork>();
             this.RecipesCollection = new ObservableCollection<RecipeControl>();
@@ -33,48 +38,49 @@ namespace PizzaNetControls.Views
 
         internal void UpdateRecipe(int index)
         {
-            RecipeControl rc = RecipesCollection[index];
-            Worker.EnqueueTask(new WorkerTask(args =>
-            {
-                var recipe = args[0] as Recipe;
-                Recipe result = null;
-                if (recipe == null) return false;
-                string newName = recipe.Name;
-                try
-                {
-                    using (var ctx = new PizzaUnitOfWork())
-                    {
-                        var res = ctx.Recipies.FindEagerly(recipe.RecipeID);
-                        if (res == null || res.Count() != 1) return false;
-                        result = res.First();
-                        result.Name = newName;
-                        ctx.Commit();
-                    }
-                    return result;
-                }
-                catch (Exception exc)
-                {
-                    return exc;
-                }
-            }, (s, args) =>
-            {
-                var exc = args.Result as Exception;
-                if (exc != null)
-                {
-                    showError("Can't change recipe name!");
-                }
-                else
-                {
-                    var bl = args.Result as bool?;
-                    if (bl != null) showError("Unknown error occured!");
-                    else
-                    {
-                        var rec = args.Result as Recipe;
-                        if (rec == null) return;
-                        rc.Recipe = rec;
-                    }
-                }
-            }, rc.Recipe));
+            //TODO
+            //RecipeControl rc = RecipesCollection[index];
+            //Worker.EnqueueTask(new WorkerTask(args =>
+            //{
+            //    var recipe = args[0] as Recipe;
+            //    Recipe result = null;
+            //    if (recipe == null) return false;
+            //    string newName = recipe.Name;
+            //    try
+            //    {
+            //        using (var ctx = new PizzaUnitOfWork())
+            //        {
+            //            var res = ctx.Recipies.FindEagerly(recipe.RecipeID);
+            //            if (res == null || res.Count() != 1) return false;
+            //            result = res.First();
+            //            result.Name = newName;
+            //            ctx.Commit();
+            //        }
+            //        return result;
+            //    }
+            //    catch (Exception exc)
+            //    {
+            //        return exc;
+            //    }
+            //}, (s, args) =>
+            //{
+            //    var exc = args.Result as Exception;
+            //    if (exc != null)
+            //    {
+            //        showError("Can't change recipe name!");
+            //    }
+            //    else
+            //    {
+            //        var bl = args.Result as bool?;
+            //        if (bl != null) showError("Unknown error occured!");
+            //        else
+            //        {
+            //            var rec = args.Result as Recipe;
+            //            if (rec == null) return;
+            //            rc.Recipe = rec;
+            //        }
+            //    }
+            //}, rc.Recipe));
         }
 
         internal void ChangeRecipeSelection(int index)
@@ -110,53 +116,62 @@ namespace PizzaNetControls.Views
             //{
             //    RefreshRecipies();
             //}));
-            Recipe r = RecipesCollection[index].Recipe;
-            Worker.EnqueueTask(new WorkerTask((args) =>
-            {
-                using (var db = new PizzaUnitOfWork())
-                {
-                    db.inTransaction(uof =>
-                    {
-                        Recipe rec = db.Recipies.Get(r.RecipeID);
-                        db.Recipies.Delete(rec);
-                        db.Commit();
-                        Console.WriteLine("Recipe " + rec.Name + " removed.");
-                    });
-                    return null;
-                }
-            }, (s, args) =>
-            {
-                RefreshRecipies();
-            }));
+            //Recipe r = RecipesCollection[index].Recipe;
+            //Worker.EnqueueTask(new WorkerTask((args) =>
+            //{
+            //    using (var db = new PizzaUnitOfWork())
+            //    {
+            //        db.inTransaction(uof =>
+            //        {
+            //            Recipe rec = db.Recipies.Get(r.RecipeID);
+            //            db.Recipies.Delete(rec);
+            //            db.Commit();
+            //            Console.WriteLine("Recipe " + rec.Name + " removed.");
+            //        });
+            //        return null;
+            //    }
+            //}, (s, args) =>
+            //{
+            //    RefreshRecipies();
+            //}));
         }
 
         public void RefreshRecipies()
         {
+            //TODO
             RecipesCollection.Clear();
             IngredientsRowsCollection.Clear();
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
                 try
                 {
-                    using (var db = new PizzaUnitOfWork())
+                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
                     {
-                        return db.inTransaction(uof =>
+                        return proxy.GetRecipeTabData(new EmptyRequest
                         {
-                            Console.WriteLine("LoadDataStart");
-                            var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
-                            {
-                                First = db.Recipies.FindAllEagerly(),
-                                Second = db.Sizes.FindAll().ToArray(),
-                                Third = db.Ingredients.FindAll()
-                            };
-
-                            Console.WriteLine("after query");
-
-                            Console.WriteLine("Result is null: {0}", result == null);
-
-                            return result;
+                            Login = ClientConfig.getConfig().User.Email,
+                            Password = ClientConfig.getConfig().User.Password
                         });
                     }
+                    //        using (var db = new PizzaUnitOfWork())
+                    //        {
+                    //            return db.inTransaction(uof =>
+                    //            {
+                    //                Console.WriteLine("LoadDataStart");
+                    //                var result = new Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>
+                    //                {
+                    //                    First = db.Recipies.FindAllEagerly(),
+                    //                    Second = db.Sizes.FindAll().ToArray(),
+                    //                    Third = db.Ingredients.FindAll()
+                    //                };
+
+                    //                Console.WriteLine("after query");
+
+                    //                Console.WriteLine("Result is null: {0}", result == null);
+
+                    //                return result;
+                    //            });
+                    //        }
                 }
                 catch (Exception exc)
                 {
@@ -165,7 +180,8 @@ namespace PizzaNetControls.Views
                 }
             }, (s, args) =>
             {
-                var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
+                var result = args.Result as TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>>;
+                //    var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Size[], IEnumerable<Ingredient>>;
                 if (result == null)
                 {
                     Console.WriteLine("Result is null");
@@ -175,9 +191,8 @@ namespace PizzaNetControls.Views
                 {
                     var rc = new RecipeControl();
                     rc.Recipe = item;
-                    rc.RecalculatePrices(result.Second);
+                    rc.RecalculatePrices(result.Second.ToArray());
                     RecipesCollection.Add(rc);
-                    Console.WriteLine(item.Name);
                 }
                 foreach (var item in result.Third)
                 {
@@ -185,114 +200,130 @@ namespace PizzaNetControls.Views
                     row.ButtonIncludeChanged += row_PropertyChanged;
                     IngredientsRowsCollection.Add(row);
                 }
+                //    foreach (var item in result.First)
+                //    {
+                //        var rc = new RecipeControl();
+                //        rc.Recipe = item;
+                //        rc.RecalculatePrices(result.Second.ToArray());
+                //        RecipesCollection.Add(rc);
+                //        Console.WriteLine(item.Name);
+                //    }
+                //    foreach (var item in result.Third)
+                //    {
+                //        var row = new IngredientsRowWork(item, false);
+                //        row.ButtonIncludeChanged += row_PropertyChanged;
+                //        IngredientsRowsCollection.Add(row);
+                //    }
             }));
         }
 
         void row_PropertyChanged(object sender, EventArgs e)
         {
-            if (SelectedRecipe < 0) return;
-            var rc = RecipesCollection[SelectedRecipe];
-            var row = sender as IngredientsRowWork;
-            if (row == null) return;
-            Worker.EnqueueTask(new WorkerTask(args =>
-            {
-                var rw = args[0] as IngredientsRowWork;
-                if (rw == null) return null;
-                var rec = args[1] as RecipeControl;
-                if (rec == null) return null;
-                try
-                {
-                    PizzaNetDataModel.Model.Size[] sizes = null;
-                    using (var ctx = new PizzaUnitOfWork())
-                    {
-                        return ctx.inTransaction(uof =>
-                        {
-                            var recipe = uof.Db.Recipies.FindEagerly(rec.Recipe.RecipeID);
-                            if (recipe.Count() != 1) throw new Exception("Incosistent data");
-                            rec.Recipe = recipe.First();
+            //TODO ZROBIC
+            //if (SelectedRecipe < 0) return;
+            //var rc = RecipesCollection[SelectedRecipe];
+            //var row = sender as IngredientsRowWork;
+            //if (row == null) return;
+            //Worker.EnqueueTask(new WorkerTask(args =>
+            //{
+            //    var rw = args[0] as IngredientsRowWork;
+            //    if (rw == null) return null;
+            //    var rec = args[1] as RecipeControl;
+            //    if (rec == null) return null;
+            //    try
+            //    {
+            //        PizzaNetDataModel.Model.Size[] sizes = null;
+            //        using (var ctx = new PizzaUnitOfWork())
+            //        {
+            //            return ctx.inTransaction(uof =>
+            //            {
+            //                var recipe = uof.Db.Recipies.FindEagerly(rec.Recipe.RecipeID);
+            //                if (recipe.Count() != 1) throw new Exception("Incosistent data");
+            //                rec.Recipe = recipe.First();
 
-                            var ingredient = uof.Db.Ingredients.Find(rw.Ingredient.IngredientID);
-                            if (ingredient.Count() != 1) throw new Exception("Incosistent data");
-                            rw.Ingredient = ingredient.First();
+            //                var ingredient = uof.Db.Ingredients.Find(rw.Ingredient.IngredientID);
+            //                if (ingredient.Count() != 1) throw new Exception("Incosistent data");
+            //                rw.Ingredient = ingredient.First();
 
-                            if (rec.Recipe.Ingredients.Contains(rw.Ingredient))
-                            {
-                                rec.Recipe.Ingredients.Remove(rw.Ingredient);
-                            }
-                            else
-                            {
-                                rec.Recipe.Ingredients.Add(rw.Ingredient);
-                            }
-                            sizes = uof.Db.Sizes.FindAll().ToArray();
-                            uof.Db.Commit();
+            //                if (rec.Recipe.Ingredients.Contains(rw.Ingredient))
+            //                {
+            //                    rec.Recipe.Ingredients.Remove(rw.Ingredient);
+            //                }
+            //                else
+            //                {
+            //                    rec.Recipe.Ingredients.Add(rw.Ingredient);
+            //                }
+            //                sizes = uof.Db.Sizes.FindAll().ToArray();
+            //                uof.Db.Commit();
 
-                            return new Pair<RecipeControl, PizzaNetDataModel.Model.Size[]> { First = rec, Second = sizes };
-                        });
-                    }
-                }
-                catch (Exception exc)
-                {
-                    return exc;
-                }
-            },
-            (s, args) =>
-            {
-                var exc = args.Result as Exception;
-                if (exc == null)
-                {
-                    var res = args.Result as Pair<RecipeControl, PizzaNetDataModel.Model.Size[]>;
-                    if (res == null)
-                        showError("Unknown error");
-                    res.First.Update(res.Second);
-                    return;
-                }
-                else showError(exc.Message);
-            },
-            row, rc));
+            //                return new Pair<RecipeControl, PizzaNetDataModel.Model.Size[]> { First = rec, Second = sizes };
+            //            });
+            //        }
+            //    }
+            //    catch (Exception exc)
+            //    {
+            //        return exc;
+            //    }
+            //},
+            //(s, args) =>
+            //{
+            //    var exc = args.Result as Exception;
+            //    if (exc == null)
+            //    {
+            //        var res = args.Result as Pair<RecipeControl, PizzaNetDataModel.Model.Size[]>;
+            //        if (res == null)
+            //            showError("Unknown error");
+            //        res.First.Update(res.Second);
+            //        return;
+            //    }
+            //    else showError(exc.Message);
+            //},
+            //row, rc));
         }
 
         internal void AddRecipe()
         {
-            Worker.EnqueueTask(new WorkerTask(args =>
-            {
-                try
-                {
-                    Recipe r = null;
-                    using (var ctx = new PizzaUnitOfWork())
-                    {
-                        ctx.inTransaction(uof =>
-                        {
-                            r = new Recipe { Name = "New recipe", Ingredients = new List<Ingredient>() };
-                            uof.Db.Recipies.Insert(r);
-                            uof.Db.Commit();
-                        });
-                    }
-                    return r;
-                }
-                catch (Exception exc)
-                {
-                    return exc;
-                }
-            },
-                (s, a) =>
-                {
-                    Exception exc = a.Result as Exception;
-                    if (exc != null)
-                    {
-                        showError("Can't add recipe!");
-                        return;
-                    }
-                    else
-                    {
-                        Recipe r = a.Result as Recipe;
-                        if (r == null)
-                        {
-                            showError("Unknown error occured!");
-                            return;
-                        }
-                        else RecipesCollection.Add(new RecipeControl() { Recipe = r });
-                    }
-                }));
+            //TODO
+            //Worker.EnqueueTask(new WorkerTask(args =>
+            //{
+            //    try
+            //    {
+            //        Recipe r = null;
+            //        using (var ctx = new PizzaUnitOfWork())
+            //        {
+            //            ctx.inTransaction(uof =>
+            //            {
+            //                r = new Recipe { Name = "New recipe", Ingredients = new List<Ingredient>() };
+            //                uof.Db.Recipies.Insert(r);
+            //                uof.Db.Commit();
+            //            });
+            //        }
+            //        return r;
+            //    }
+            //    catch (Exception exc)
+            //    {
+            //        return exc;
+            //    }
+            //},
+            //    (s, a) =>
+            //    {
+            //        Exception exc = a.Result as Exception;
+            //        if (exc != null)
+            //        {
+            //            showError("Can't add recipe!");
+            //            return;
+            //        }
+            //        else
+            //        {
+            //            Recipe r = a.Result as Recipe;
+            //            if (r == null)
+            //            {
+            //                showError("Unknown error occured!");
+            //                return;
+            //            }
+            //            else RecipesCollection.Add(new RecipeControl() { Recipe = r });
+            //        }
+            //    }));
         }
     }
 }

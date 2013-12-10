@@ -27,7 +27,7 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             return Channel.GetIngredients(req);
         }
 
-        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData(EmptyRequest req)
+        public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req)
         {
             return Channel.GetRecipeTabData(req);
         }
@@ -77,6 +77,18 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<IList<OrderSuppliesDTO>> request)
         {
             return Channel.OrderSupplies(request);
+        }
+
+
+        public void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> request)
+        {
+            Channel.RemoveOrder(request);
+        }
+
+
+        public void MakeOrder(UpdateRequest<OrderDTO> req)
+        {
+            Channel.MakeOrder(req);
         }
     }
 }

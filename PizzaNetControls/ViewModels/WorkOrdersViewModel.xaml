@@ -93,7 +93,7 @@
                                  HorizontalContentAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Ingredient.Name}"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
                         <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}"/>
                     </GridView>
                 </ListView.View>

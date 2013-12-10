@@ -101,5 +101,17 @@ namespace PizzaNetControls.ViewModels
             if (ordersListView.SelectedIndex < 0) return;
             _vo.RemoveOrder(ordersListView.SelectedIndex);
         }
+
+        public void GotFocusAction()
+        {
+            this._vo.SetAutoRefresh(true);
+            this._vo.RefreshCurrentOrders();
+        }
+
+        public bool LostFocusAction()
+        {
+            this._vo.SetAutoRefresh(false);
+            return true;
+        }
     }
 }

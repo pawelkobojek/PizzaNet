@@ -32,7 +32,9 @@ namespace PizzaService.Assemblers
                         IngredientID = ing.IngredientID,
                         Name = ing.Ingredient.Name,
                         Price = ing.Ingredient.PricePerUnit,
-                        Quantity = ing.Quantity
+                        Quantity = ing.Quantity,
+                        ExtraWeight = ing.Ingredient.ExtraWeight,
+                        NormalWeight = ing.Ingredient.NormalWeight
                     });
                 }
                 oDto.OrderDetailsDTO.Add(new OrderDetailDTO { Ingredients = oIngDtos, Size = new SizeDTO { SizeValue = od.Size.SizeValue } });

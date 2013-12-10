@@ -30,14 +30,14 @@ namespace PizzaNetControls
             this.DataContext = this;
         }
 
-        public IngredientsRowWork(Ingredient ingredient)
+        public IngredientsRowWork(OrderIngredientDTO ingredient)
             : this()
         {
             Ingredient = ingredient;
             Included = false;
         }
 
-        public IngredientsRowWork(Ingredient ingredient, bool included)
+        public IngredientsRowWork(OrderIngredientDTO ingredient, bool included)
             : this(ingredient)
         {
             Included = included;
@@ -51,10 +51,10 @@ namespace PizzaNetControls
 
         public IngredientsRowWork(StockIngredientDTO ingredient)
         {
-            Ingredient = new Ingredient
+            Ingredient = new OrderIngredientDTO
             {
-                StockQuantity = ingredient.StockQuantity,
-                PricePerUnit = ingredient.PricePerUnit,
+                Quantity = ingredient.NormalWeight,
+                Price = ingredient.PricePerUnit,
                 NormalWeight = ingredient.NormalWeight,
                 Name = ingredient.Name,
                 IngredientID = ingredient.IngredientID,
@@ -63,8 +63,8 @@ namespace PizzaNetControls
             Included = false;
         }
 
-        private Ingredient _ingredient;
-        public Ingredient Ingredient
+        private OrderIngredientDTO _ingredient;
+        public OrderIngredientDTO Ingredient
         {
             get { return _ingredient; }
             set

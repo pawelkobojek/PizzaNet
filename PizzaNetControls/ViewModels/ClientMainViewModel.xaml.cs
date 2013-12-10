@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls.ViewModels
 {
@@ -85,7 +86,7 @@ namespace PizzaNetControls.ViewModels
         {
             RadioButton rb = sender as RadioButton;
             if (rb == null) return;
-            var value = rb.Tag as PizzaNetDataModel.Model.Size;
+            var value = rb.Tag as SizeDTO;
             if (value != null)
                 _vo.ChangeCurrentSize(value);
         }
@@ -105,6 +106,16 @@ namespace PizzaNetControls.ViewModels
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public void GotFocusAction()
+        {
+            ClientMainView.RefreshRecipes();
+        }
+
+        public bool LostFocusAction()
+        {
+            return true;
         }
     }
 }

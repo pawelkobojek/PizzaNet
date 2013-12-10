@@ -17,7 +17,7 @@ namespace PizzaNetCommon.Services
         ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req);
 
         [OperationContract]
-        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<StockIngredientDTO>> GetRecipeTabData(EmptyRequest req);
+        TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req);
 
         [OperationContract]
         ListResponse<OrderDTO> GetOrders(EmptyRequest req);
@@ -45,5 +45,11 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req);
+
+        [OperationContract]
+        void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> request);
+
+        [OperationContract]
+        void MakeOrder(UpdateRequest<OrderDTO> req);
     }
 }

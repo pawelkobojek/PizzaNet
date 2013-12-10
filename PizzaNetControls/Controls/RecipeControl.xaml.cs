@@ -41,8 +41,8 @@ namespace PizzaNetControls
             }
         }
 
-        private Recipe _recipe;
-        public Recipe Recipe
+        private RecipeDTO _recipe;
+        public RecipeDTO Recipe
         {
             get { return _recipe; }
             set { 
@@ -58,17 +58,12 @@ namespace PizzaNetControls
             private set { _prices = value; NotifyPropertyChanged("Prices"); }
         }
 
-        public void RecalculatePrices(PizzaNetDataModel.Model.Size[] sizes)
-        {
-            Prices = PriceCalculator.GetPrices(Recipe, sizes);
-        }
-
         public void RecalculatePrices(SizeDTO[] sizes)
         {
             Prices = PriceCalculator.GetPrices(Recipe, sizes);
         }
 
-        public void Update(PizzaNetDataModel.Model.Size[] sizes)
+        public void Update(SizeDTO[] sizes)
         {
             NotifyPropertyChanged("Recipe");
             RecalculatePrices(sizes);

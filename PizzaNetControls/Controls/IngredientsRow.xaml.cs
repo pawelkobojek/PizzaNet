@@ -15,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetControls.Controls;
+using PizzaNetCommon.DTOs;
 
 namespace PizzaNetControls
 {
@@ -37,32 +39,33 @@ namespace PizzaNetControls
                 updateButtons();
         }
 
-        public IngredientsRow(Ingredient ingredient)
+        public IngredientsRow(OrderIngredientDTO ingredient)
             : this()
         {
             Ingredient = ingredient;
             CurrentQuantity = 0;
         }
 
-        public IngredientsRow(Ingredient ingredient, int currentQuantity)
+        public IngredientsRow(OrderIngredientDTO ingredient, int currentQuantity)
             : this(ingredient)
         {
             CurrentQuantity = currentQuantity;
         }
 
-        public IngredientsRow(Ingredient ingredient, int currentQuantity, PizzaNetDataModel.Model.Size size) : this(ingredient, currentQuantity)
+        public IngredientsRow(OrderIngredientDTO ingredient, int currentQuantity, SizeDTO size)
+            : this(ingredient, currentQuantity)
         {
             this.CurrentSize = size;
         }
 
-        private Ingredient _ingredient;
-        public Ingredient Ingredient
+        private OrderIngredientDTO _ingredient;
+        public OrderIngredientDTO Ingredient
         {
             get { return _ingredient; }
             set
             {
                 _ingredient = value;
-                BackgroundParameter = new Pair<int, int>() { First = _currentQuantity, Second = Ingredient.ExtraWeight }; 
+                BackgroundParameter = new Pair<int, int>() { First = _currentQuantity, Second = Ingredient.ExtraWeight };
                 NotifyPropertyChanged("Ingredient");
             }
         }
@@ -74,7 +77,7 @@ namespace PizzaNetControls
             set
             {
                 _currentQuantity = value;
-                BackgroundParameter = new Pair<int, int>() { First=_currentQuantity, Second=Ingredient.ExtraWeight};
+                BackgroundParameter = new Pair<int, int>() { First = _currentQuantity, Second = Ingredient.ExtraWeight };
                 NotifyPropertyChanged("CurrentQuantity");
                 NotifyPropertyChanged("CurrentWeight");
             }
@@ -88,8 +91,8 @@ namespace PizzaNetControls
             }
         }
 
-        private PizzaNetDataModel.Model.Size _currentSize;
-        public PizzaNetDataModel.Model.Size CurrentSize
+        private SizeDTO _currentSize;
+        public SizeDTO CurrentSize
         {
             get { return _currentSize; }
             set

@@ -19,10 +19,23 @@ namespace PizzaService.Assemblers
                 NormalWeight = ing.NormalWeight,
                 PricePerUnit = ing.PricePerUnit,
                 StockQuantity = ing.StockQuantity,
-                IsPartOfRecipe = ing.Recipies!=null
+                IsPartOfRecipe = ing.Recipies != null
             };
 
             return ingDto;
+        }
+
+        public OrderIngredientDTO ToOrderIngredientDto(Ingredient ing)
+        {
+            return new OrderIngredientDTO
+            {
+                Name = ing.Name,
+                IngredientID = ing.IngredientID,
+                NormalWeight = ing.NormalWeight,
+                ExtraWeight = ing.ExtraWeight,
+                Price = ing.PricePerUnit,
+                Quantity = ing.StockQuantity
+            };
         }
 
         public Ingredient ToEntityWithEmptyRecipies(StockIngredientDTO ing)
@@ -54,7 +67,7 @@ namespace PizzaService.Assemblers
 
         public void UpdateIngredient(Ingredient ing, StockIngredientDTO dto)
         {
-            if(ing.IngredientID!=dto.IngredientID)
+            if (ing.IngredientID != dto.IngredientID)
                 return;
 
             ing.ExtraWeight = dto.ExtraWeight;
