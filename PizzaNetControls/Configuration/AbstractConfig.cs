@@ -21,6 +21,7 @@ namespace PizzaNetControls.Configuration
 
         public static object Read(string filename, Type type)
         {
+            return type.GetConstructor(new Type[0]).Invoke(new object[0]);
             using (StreamReader sw = new StreamReader(filename))
             {
                 XmlSerializer xmls = new XmlSerializer(type);

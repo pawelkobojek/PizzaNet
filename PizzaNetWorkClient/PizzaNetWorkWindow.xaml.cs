@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Net;
 
 namespace PizzaNetWorkClient
 {
@@ -12,6 +13,7 @@ namespace PizzaNetWorkClient
     {
         public PizzaNetWorkWindow()
         {
+            ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => { return true; };
             InitializeComponent();
             this.DataContext = this;
             this.worker.Lock = this.tabControl;
@@ -57,7 +59,7 @@ namespace PizzaNetWorkClient
                 }
             }
 
-            if (LastSelected==StockTab)
+            if (LastSelected == StockTab)
             {
                 if (!stockViewModel.LostFocusAction())
                 {
@@ -84,7 +86,7 @@ namespace PizzaNetWorkClient
 
             if (RecipiesTab.IsSelected)
             {
-                //TODO uncomment refresh recipiesViewModel.RecipiesView.RefreshRecipies();
+                recipiesViewModel.RecipiesView.RefreshRecipies();
                 LastSelected = RecipiesTab;
             }
 

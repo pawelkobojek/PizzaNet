@@ -47,12 +47,12 @@ namespace PizzaNetCommon
                     return;
 
                 EndpointIdentity identity = EndpointIdentity.CreateDnsIdentity("MyServerCert");
-                var endPoint = new EndpointAddress(new Uri(this.endPointAddress), identity);
+                //var endPoint = new EndpointAddress(new Uri(this.endPointAddress), identity);
                 channelFactory = new ChannelFactory<T>("PizzaServiceSecure");
                 channelFactory.Credentials.UserName.UserName = "Admin";
                 channelFactory.Credentials.UserName.Password = "123";
 
-                channel = channelFactory.CreateChannel(endPoint);
+                channel = channelFactory.CreateChannel();
             }
         }
 

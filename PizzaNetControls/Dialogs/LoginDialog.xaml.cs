@@ -106,7 +106,7 @@ namespace PizzaNetControls.Dialogs
                     var cfg = args[2] as ClientConfig;
                     try
                     {
-                        //using (var proxy = new WorkChannel(cfg.ServerAddress))
+                        using (var proxy = new WorkChannel(cfg.ServerAddress))
                         {
                             var result = proxy.GetUser(new EmptyRequest() { Login = log, Password = pass });
                             if (result == null) return null;
