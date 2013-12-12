@@ -90,5 +90,17 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         {
             Channel.MakeOrder(req);
         }
+
+
+        public void InsertRecipe(UpdateRequest<RecipeDTO> req)
+        {
+            Channel.InsertRecipe(req);
+        }
+
+
+        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<IList<RecipeDTO>> req)
+        {
+            return Channel.UpdateOrRmoveRecipe(req);
+        }
     }
 }

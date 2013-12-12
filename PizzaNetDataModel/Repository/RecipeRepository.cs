@@ -66,6 +66,11 @@ namespace PizzaNetDataModel.Repository
             db.Recipies.Attach(entity);
         }
 
+        public void Update(Recipe entity)
+        {
+            db.Recipies.Attach(entity);
+        }
+
         public void Delete(Recipe entity)
         {
             db.Recipies.Remove(entity);

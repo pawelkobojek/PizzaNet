@@ -15,6 +15,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.DTOs;
+using System.Reflection;
+using System.Globalization;
 
 namespace PizzaNetControls.ViewModels
 {
@@ -73,17 +76,71 @@ namespace PizzaNetControls.ViewModels
 
         private void ButtonAddUser_Click(object sender, RoutedEventArgs e)
         {
-
+            UsersView.AddUser();
         }
 
         private void ButtonRemoveUser_Click(object sender, RoutedEventArgs e)
         {
+            if (listUsers.SelectedIndex < 0)
+                return;
 
+            UsersView.RemoveUser(listUsers.SelectedIndex);
         }
 
         private void ButtonSaveChanges_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void GotFocusAction()
+        {
+            UsersView.RefreshUsers();
+        }
+
+        public bool LostFocusAction()
+        {
+            return true;
+        }
+
+        private void TextBoxStockDetails_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (listUsers.SelectedIndex < 0) return;
+            //MODIFIED _vo.UpdateStockItem(listStock.SelectedIndex);
+            UsersView.Modified = true;
+        }
+
+        private void TextBoxStockDetails_KeyDown(object sender, KeyEventArgs e)
+        {
+            UsersView.Modified = true;
+            var txtb = sender as TextBox;
+            if (txtb == null) return;
+            if (listUsers.SelectedIndex < 0) return;
+            UserDTO rc = UsersView.UsersCollection[listUsers.SelectedIndex];
+            if (e.Key == Key.Return)
+            {
+                BindingExpression exp = txtb.GetBindingExpression(TextBox.TextProperty);
+                UserDTO user = exp.ResolvedSource as UserDTO;
+                if (user == null) return;
+                PropertyInfo pi = user.GetType().GetProperty(exp.ResolvedSourcePropertyName);
+                string target = pi.GetValue(user).ToString();
+                if (target != txtb.Text)
+                    exp.UpdateSource();
+                else exp.ValidateWithoutUpdate();
+            }
+        }
+
+        private void CheckLastBinding()
+        {
+            if (listUsers.SelectedIndex < 0) return;
+            UserDTO rc = UsersView.UsersCollection[listUsers.SelectedIndex];
+            NumberFormatInfo nfi = new CultureInfo("en-US", true).NumberFormat;
+            //TODO Nie wiem co
+            //UsersView.Modified |=
+            //    tbId.Text != rc.IngredientID.ToString() ||
+            //    tbName.Text != rc.Name.ToString() ||
+            //    tbNW.Text != rc.NormalWeight.ToString() ||
+            //    tbEW.Text != rc.ExtraWeight.ToString() ||
+            //    tbPU.Text != rc.PricePerUnit.ToString("0.########", nfi);
         }
     }
 }

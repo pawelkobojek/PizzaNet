@@ -23,13 +23,17 @@ namespace PizzaNetControls.Views
         {
             this.IngredientsRowsCollection = new ObservableCollection<IngredientsRowWork>();
             this.RecipesCollection = new ObservableCollection<RecipeControl>();
+            this.RemovedRecipes = new List<RecipeDTO>(5);
             SelectedRecipe = -1;
+            Modified = false;
         }
 
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
+        public List<RecipeDTO> RemovedRecipes { get; set; }
         private const string TITLE = "PizzaNetWorkClient";
         private int SelectedRecipe { get; set; }
+        public bool Modified { get; set; }
 
         private void showError(string message)
         {
@@ -38,6 +42,8 @@ namespace PizzaNetControls.Views
 
         internal void UpdateRecipe(int index)
         {
+            Modified = true;
+            RecipesCollection[index].Update(Sizes);
             //TODO
             //RecipeControl rc = RecipesCollection[index];
             //Worker.EnqueueTask(new WorkerTask(args =>
@@ -97,6 +103,9 @@ namespace PizzaNetControls.Views
 
         internal void RemoveRecipe(int index)
         {
+            Modified = true;
+            RemovedRecipes.Add(RecipesCollection[index].Recipe);
+            RecipesCollection.RemoveAt(index);
             //MODIFIED
             //Recipe r = ((RecipeControl)RecipesContainer.SelectedItem).Recipe;
             //worker.EnqueueTask(new WorkerTask((args) =>
@@ -191,7 +200,7 @@ namespace PizzaNetControls.Views
                 {
                     var rc = new RecipeControl();
                     rc.Recipe = item;
-                    rc.RecalculatePrices(result.Second.ToArray());
+                    rc.Update(result.Second.ToArray());
                     RecipesCollection.Add(rc);
                 }
                 foreach (var item in result.Third)
@@ -200,6 +209,8 @@ namespace PizzaNetControls.Views
                     row.ButtonIncludeChanged += row_PropertyChanged;
                     IngredientsRowsCollection.Add(row);
                 }
+
+                Sizes = result.Second.ToArray();
                 //    foreach (var item in result.First)
                 //    {
                 //        var rc = new RecipeControl();
@@ -220,10 +231,22 @@ namespace PizzaNetControls.Views
         void row_PropertyChanged(object sender, EventArgs e)
         {
             //TODO ZROBIC
-            //if (SelectedRecipe < 0) return;
-            //var rc = RecipesCollection[SelectedRecipe];
-            //var row = sender as IngredientsRowWork;
-            //if (row == null) return;
+            if (SelectedRecipe < 0) return;
+            var rc = RecipesCollection[SelectedRecipe];
+            var row = sender as IngredientsRowWork;
+            if (row == null) return;
+
+            int index = rc.Recipe.Ingredients.IndexOf(row.Ingredient);
+            if (index >= 0)
+            {
+                rc.Recipe.Ingredients.RemoveAt(index);
+            }
+            else
+            {
+                rc.Recipe.Ingredients.Add(row.Ingredient);
+            }
+
+            UpdateRecipe(SelectedRecipe);
             //Worker.EnqueueTask(new WorkerTask(args =>
             //{
             //    var rw = args[0] as IngredientsRowWork;
@@ -283,6 +306,17 @@ namespace PizzaNetControls.Views
 
         internal void AddRecipe()
         {
+            Modified = true;
+            RecipesCollection.Add(new RecipeControl
+            {
+                Recipe = new RecipeDTO
+                {
+                    RecipeID = -1,
+                    Name = "New Recipe",
+                    Ingredients = new List<OrderIngredientDTO>()
+                }
+            });
+            RecipesCollection[RecipesCollection.Count-1].Update(Sizes);
             //TODO
             //Worker.EnqueueTask(new WorkerTask(args =>
             //{
@@ -315,7 +349,7 @@ namespace PizzaNetControls.Views
             //        }
             //        else
             //        {
-            //            Recipe r = a.Result as Recipe;
+            //            Recipe r = a.Result as RecipeDTO;
             //            if (r == null)
             //            {
             //                showError("Unknown error occured!");
@@ -325,5 +359,61 @@ namespace PizzaNetControls.Views
             //        }
             //    }));
         }
+
+        internal void SaveChanges()
+        {
+            Worker.EnqueueTask(new WorkerTask(args =>
+                {
+                    try
+                    {
+                        using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                        {
+                            List<RecipeDTO> toUpdate = new List<RecipeDTO>();
+                            foreach (var recControl in RecipesCollection)
+                            {
+                                toUpdate.Add(recControl.Recipe);
+                            }
+                            return proxy.UpdateOrRmoveRecipe(new UpdateOrRemoveRequest<IList<RecipeDTO>>
+                            {
+                                Data = toUpdate,
+                                DataToRemove = RemovedRecipes,
+                                Login = ClientConfig.getConfig().User.Email,
+                                Password = ClientConfig.getConfig().User.Password
+                            });
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.WriteLine(exc.Message);
+                        Console.WriteLine("Failed");
+                        return null;
+                    }
+                }, (s, e) =>
+                    {
+                        var result = e.Result as TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int>;
+                        if (result == null)
+                        {
+                            Utils.showError("blablabla", "asd");
+                            return;
+                        }
+
+                        foreach (var item in result.First)
+                        {
+                            var rc = new RecipeControl();
+                            rc.Recipe = item;
+                            //rc.RecalculatePrices(result.Second.ToArray());
+                            RecipesCollection.Add(rc);
+                        }
+                        foreach (var item in result.Second)
+                        {
+                            var row = new IngredientsRowWork(item, false);
+                            row.ButtonIncludeChanged += row_PropertyChanged;
+                            IngredientsRowsCollection.Add(row);
+                        }
+
+                    }, null));
+        }
+
+        public SizeDTO[] Sizes { get; set; }
     }
 }

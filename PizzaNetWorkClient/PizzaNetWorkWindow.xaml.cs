@@ -92,7 +92,8 @@ namespace PizzaNetWorkClient
 
             if (UsersTab.IsSelected)
             {
-                //TODO probably some loading data
+                //TODO lock if no rights
+                usersViewModel.GotFocusAction();
                 LastSelected = UsersTab;
             }
         }

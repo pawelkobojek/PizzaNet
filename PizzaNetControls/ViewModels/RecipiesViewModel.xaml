@@ -19,7 +19,10 @@
             <TextBlock DockPanel.Dock="Top" FontSize="18" Margin="10, 0, 10, 10">
                             Ingredients
             </TextBlock>
-            <StackPanel Margin="0, 20, 0, 10" 
+            <Button DockPanel.Dock="Bottom" Margin="25, 0, 25, 10" Click="ButtonSaveChanges_Click">
+                Save changes
+            </Button>
+            <StackPanel Margin="0, 20, 0, 5" 
                                         DockPanel.Dock="Bottom" 
                                         HorizontalAlignment="Center" 
                                         VerticalAlignment="Center" 

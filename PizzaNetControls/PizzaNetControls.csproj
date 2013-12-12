@@ -64,6 +64,7 @@
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToBackgroundConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\RightsToStringConverter.cs" />
     <Compile Include="Converters\StarWidthGridViewColumnConverter.cs" />
     <Compile Include="Converters\IntModifierConverter.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />

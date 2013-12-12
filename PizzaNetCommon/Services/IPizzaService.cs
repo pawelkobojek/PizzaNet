@@ -51,5 +51,11 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         void MakeOrder(UpdateRequest<OrderDTO> req);
+
+        [OperationContract]
+        void InsertRecipe(UpdateRequest<RecipeDTO> req);
+
+        [OperationContract]
+        TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<IList<RecipeDTO>> req);
     }
 }

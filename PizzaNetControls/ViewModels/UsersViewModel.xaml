@@ -3,8 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:PizzaNetConverters="clr-namespace:PizzaNetControls.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="500">
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <PizzaNetConverters:RightsToStringConverter x:Key="rightsConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -21,12 +25,12 @@
         <ListView x:Name="listUsers" ItemsSource="{Binding UsersView.UsersCollection}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding User.Id}" />
-                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding User.Email}" />
-                    <GridViewColumn Header="Address" DisplayMemberBinding="{Binding User.Address}" />
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding User.Name}" />
-                    <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding User.Phone}" />
-                    <GridViewColumn Header="Rights" DisplayMemberBinding="{Binding User.Rights}" />
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding UserID}" />
+                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" />
+                    <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding Phone}" />
+                    <GridViewColumn Header="Rights" DisplayMemberBinding="{Binding Rights, Converter={ StaticResource ResourceKey=rightsConverter}}" />
                 </GridView>
             </ListView.View>
         </ListView>
@@ -51,28 +55,28 @@
                 <DockPanel>
                     <TextBlock Text="Id:"/>
                     <TextBox IsReadOnly="True"
-                             Text="{Binding ElementName=listUsers, Path=SelectedItem.User.UserId}"/>
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.UserID}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Email:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Email}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Email}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Address:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Address}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Address}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Name:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Name}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Name}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Phone:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.User.Phone}"/>
+                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Phone}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Rights:"/>
-                    <ComboBox ItemsSource="{Binding UsersView.Rights}"
-                            SelectedValue="{Binding ElementName=listUsers, Path=SelectedItem.User.Rights}"/>
+                    <ComboBox ItemsSource="{Binding UsersView.Rights}" HorizontalContentAlignment="Right"
+                            SelectedValue="{Binding ElementName=listUsers, Path=SelectedItem.Rights, Converter={StaticResource ResourceKey=rightsConverter}}"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Margin="0, 20, 0, 0">

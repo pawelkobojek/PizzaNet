@@ -348,5 +348,87 @@ namespace PizzaService
         //    }
         //    return det;
         //}
+
+
+        public void InsertRecipe(UpdateRequest<RecipeDTO> req)
+        {
+            Recipe r = new Recipe { Name = req.Data.Name };
+            List<Ingredient> ings = new List<Ingredient>();
+
+            foreach (var ingDto in req.Data.Ingredients)
+            {
+                ings.Add(db.Ingredients.Get(ingDto.IngredientID));
+            }
+            r.Ingredients = ings;
+            db.Recipies.Insert(r);
+        }
+
+
+        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<IList<RecipeDTO>> request)
+        {
+            if (request.Data == null && request.DataToRemove == null)
+                return null;
+
+            return db.inTransaction(uof =>
+            {
+                if (!HasRights(GetUser(request).Data, 2))
+                    return null;
+
+                if (request.Data != null)
+                {
+                    foreach (var recipe in request.Data)
+                    {
+                        Recipe rec = uof.Db.Recipies.Get(recipe.RecipeID);
+                        if (rec != null)
+                        {
+                            rec.Name = recipe.Name;
+                            foreach (var ing in recipe.Ingredients)
+                            {
+                                Ingredient ingredient = uof.Db.Ingredients.Get(ing.IngredientID);
+                                if (ingredient == null)
+                                {
+                                    db.RequestRollback = true;
+                                    return null;
+                                }
+
+                                rec.Ingredients.Add(ingredient);
+                            }
+                            uof.Db.Recipies.Update(rec);
+                        }
+                        else
+                        {
+                            rec = new Recipe { Name = recipe.Name };
+                            foreach (var ing in recipe.Ingredients)
+                            {
+                                Ingredient ingredient = uof.Db.Ingredients.Get(ing.IngredientID);
+                                if (ingredient == null)
+                                {
+                                    db.RequestRollback = true;
+                                    return null;
+                                }
+
+                                rec.Ingredients.Add(ingredient);
+                            }
+
+                            uof.Db.Recipies.Insert(rec);
+                        }
+                    }
+                }
+                if (request.DataToRemove != null)
+                {
+                    foreach (var recipe in request.DataToRemove)
+                    {
+                        Recipe rec = uof.Db.Recipies.Get(recipe.RecipeID);
+                        if (rec != null)
+                            uof.Db.Recipies.Delete(rec);
+                    }
+                }
+
+                return TrioResponse.Create(uof.Db.Recipies.FindAll().ToList().Select(recipeAssembler.ToSimpleDto).ToList(),
+                    uof.Db.Ingredients.FindAll().Select(ingAssembler.ToOrderIngredientDto).ToList(),
+                    0);
+
+            });
+        }
     }
 }
