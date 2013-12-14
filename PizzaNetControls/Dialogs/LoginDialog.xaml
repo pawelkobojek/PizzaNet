@@ -40,7 +40,8 @@
                 <DockPanel Grid.Column="3" HorizontalAlignment="Right">
                     <PizzaNetWorkers:WorkerControl
                                 DockPanel.Dock="Right"
-                                x:Name="worker"/>
+                                x:Name="worker"
+                                IsRefreshButtonEnabled="False"/>
                 </DockPanel>
             </Grid>
             <Separator Grid.Row="1"/>

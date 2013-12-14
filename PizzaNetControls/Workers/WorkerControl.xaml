@@ -6,7 +6,10 @@
              xmlns:ProgressSpinner="clr-namespace:LoadingPanelSample.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="50" Width="50" Height="50">
-    <StackPanel>
+    <Grid>
         <ProgressSpinner:CircularProgressBar x:Name="spinner" Visibility="Hidden"/>
-    </StackPanel>
+        <Button Name="button" Background="Transparent" Click="button_Click">
+            <Image Source="/PizzaNetControls;component/res/RefreshIcon.png" />
+        </Button>
+    </Grid>
 </UserControl>
