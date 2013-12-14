@@ -30,7 +30,7 @@
                 </StackPanel>
             </DockPanel>
             <Separator  Grid.Row="1"/>
-            <TabControl Grid.Row="2" Name="contentControl" SelectionChanged="contentControl_SelectionChanged">
+            <TabControl Grid.Row="2" Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
                 <TabItem Name="MainTab"  Header="Main">
                     <PizzaNetViewModels:ClientMainViewModel Name="clientMainViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>

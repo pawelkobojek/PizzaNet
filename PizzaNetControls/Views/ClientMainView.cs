@@ -106,8 +106,7 @@ namespace PizzaNetControls.Views
                 }
                 catch (Exception e)
                 {
-                    //TODO
-                    return false;
+                    return e;
                 }
                 //var cfg = args[0] as ClientConfig;
                 //var det = args[1] as List<OrderDetail>;
@@ -144,38 +143,20 @@ namespace PizzaNetControls.Views
                 //return true;
             }, (s, args) =>
             {
-                bool b = (args.Result as bool?) ?? false;
-                MessageBox.Show((b) ? "Ordered successfully" : "Error while ordering", "PizzaNet");
-                if (b) OrderedPizzasCollection.Clear();
-            }, details));
-        }
-
-        //TODO remove methods
-        /// <summary>
-        /// Method needed to merge Ingredients and avoid to duplicate them in Ingredients table
-        /// </summary>
-        /// <param name="det"></param>
-        /// <param name="ing"></param>
-        /// <returns></returns>
-        private List<OrderDetail> mergeIngredients(List<OrderDetail> det, IEnumerable<Ingredient> ing)
-        {
-            foreach (var d in det)
-                foreach (var i in d.Ingredients)
+                if (args.Result is Exception)
                 {
-                    Ingredient s = ing.FirstOrDefault((e) => { return e.IngredientID == i.Ingredient.IngredientID; });
-                    if (s == null) throw new Exception("Inconsistien data");
-                    i.Ingredient = s;
+                    Utils.HandleException(args.Result as Exception);
+                    return;
                 }
-            return det;
-        }
-        private List<OrderDetail> mergeSizes(List<OrderDetail> det, IEnumerable<PizzaNetDataModel.Model.Size> sizes)
-        {
-            foreach (var d in det)
-            {
-                d.Size = sizes.FirstOrDefault((e) => { return e.SizeValue == d.Size.SizeValue; });
-                if (d.Size == null) throw new Exception("Inconsistien data");
-            }
-            return det;
+                bool b = (args.Result as bool?) ?? false;
+                if (b)
+                {
+                    Utils.showInformation(Utils.Messages.ORDERED_SUCCESSFULLY);
+                    OrderedPizzasCollection.Clear();
+                }
+                else
+                    Utils.showExclamation(Utils.Messages.ORDERING_ERROR);
+            }, details));
         }
 
         internal void ChangeCurrentSize(SizeDTO size)
@@ -217,7 +198,7 @@ namespace PizzaNetControls.Views
             foreach (var i in RecipesCollection[index].Recipe.Ingredients)
             {
                 int ind = Ingredients.FindIndex((ing) => { return ing.IngredientID == i.IngredientID; });
-                if (ind > 0)
+                if (ind >= 0)
                     quantities[ind] = true;
             }
             SetCurrentQuantities(quantities);
@@ -283,20 +264,22 @@ namespace PizzaNetControls.Views
                 }
                 catch (Exception exc)
                 {
-                    Console.WriteLine(exc.Message);
-                    return null;
+                    return exc;
                 }
             }, (s, args) =>
             {
-                var result = args.Result as TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>>;
-                //var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Model.Size[], IEnumerable<Ingredient>>;
-                if (result == null)
+                if (args.Result is Exception)
                 {
-                    //TODO MessageBox
-                    Console.WriteLine("Result is null");
+                    Utils.HandleException(args.Result as Exception);
                     return;
                 }
-                if (result.Second.Count != 3) throw new Exception("Invalid number of sizes");
+                var result = args.Result as TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>>;
+                if (result == null)
+                {
+                    Utils.showExclamation(Utils.Messages.RECIPES_REFRESH_FAILED);
+                    return;
+                }
+                if (result.Second.Count != 3) throw new Exception(INVALID_SIZES_COUNT);
                 foreach (var item in result.First)
                 {
                     var rc = new RecipeControl();
@@ -341,6 +324,7 @@ namespace PizzaNetControls.Views
             }
         }
         private SizeDTO _greatSize;
+        private const string INVALID_SIZES_COUNT = "Fatal error: Invalid number of sizes";
         public SizeDTO GreatSize
         {
             get { return _greatSize; }

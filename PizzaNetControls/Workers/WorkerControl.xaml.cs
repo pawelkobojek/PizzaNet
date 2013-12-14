@@ -26,6 +26,37 @@ namespace PizzaNetControls.Workers
 
         public FrameworkElement Lock { get; set; }
 
+        public event EventHandler<EventArgs> RefreshButtonClicked;
+
+        public bool IsRefreshButtonEnabled
+        {
+            get { return (bool)GetValue(IsRefreshButtonEnabledProperty); }
+            set { SetValue(IsRefreshButtonEnabledProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsRefreshButtonEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsRefreshButtonEnabledProperty =
+            DependencyProperty.Register("IsRefreshButtonEnabled", typeof(bool), typeof(WorkerControl),
+            new PropertyMetadata(true, new PropertyChangedCallback(IsRefreshButtonEnabledPropertyChanged)));
+
+        private static void IsRefreshButtonEnabledPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            var control = obj as WorkerControl;
+            if (!control.worker.IsBusy)
+            {
+                if ((e.NewValue as bool?).Value)
+                {
+                    control.button.Visibility = Visibility.Visible;
+                    control.button.IsEnabled = true;
+                }
+                else
+                {
+                    control.button.Visibility = Visibility.Hidden;
+                    control.button.IsEnabled = false;
+                }
+            }
+        }
+
         public WorkerControl()
         {
             InitializeComponent();
@@ -54,6 +85,11 @@ namespace PizzaNetControls.Workers
             if (tasks.Count == 0)
             {
                 this.spinner.Visibility = System.Windows.Visibility.Hidden;
+                if (IsRefreshButtonEnabled)
+                {
+                    this.button.Visibility = System.Windows.Visibility.Visible;
+                    this.button.IsEnabled = true;
+                }
                 if (this.Lock != null)
                     this.Lock.IsEnabled = true;
                 if (AllWorkDone != null)
@@ -65,6 +101,8 @@ namespace PizzaNetControls.Workers
         void nextTask()
         {
             this.spinner.Visibility = System.Windows.Visibility.Visible;
+            this.button.Visibility = System.Windows.Visibility.Hidden;
+            this.button.IsEnabled = false;
             if (this.Lock != null)
                 this.Lock.IsEnabled = false;
             WorkerTask t = tasks.Dequeue();
@@ -86,5 +124,11 @@ namespace PizzaNetControls.Workers
         }
 
         public event EventHandler<EventArgs> AllWorkDone;
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            if (RefreshButtonClicked != null)
+                RefreshButtonClicked(this, new EventArgs());
+        }
     }
 }

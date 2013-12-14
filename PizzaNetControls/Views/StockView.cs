@@ -318,14 +318,7 @@ namespace PizzaNetControls.Views
 
         public bool showSaveChangesDialog()
         {
-            return MessageBox.Show
-                    (
-                        "You have unsaved changes. Do you want to discard them?",
-                        "PizzaNetWork",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Exclamation,
-                        MessageBoxResult.No
-                    ) != MessageBoxResult.No;
+            return Utils.showChangesDialog();
         }
     }
 }

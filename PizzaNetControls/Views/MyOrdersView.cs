@@ -27,7 +27,6 @@ namespace PizzaNetControls.Views
         public BackgroundWorker OrdersRefresher { get; private set; }
 
         private const int TIMER_INTERVAL = 60000;
-        private const string REFRESH_FAILED = "Refreshing orders failed!";
 
         public MyOrdersView(IWorker worker)
             : base(worker)
@@ -86,7 +85,7 @@ namespace PizzaNetControls.Views
                 ListResponse<OrderDTO> res = a.Result as ListResponse<OrderDTO>;
                 if (res == null)
                 {
-                    MessageBox.Show(REFRESH_FAILED);
+                    Utils.showExclamation(Utils.Messages.ORDERS_REFRESH_FAILED);
                     return;
                 }
                 List<OrderDTO> orders = res.Data;

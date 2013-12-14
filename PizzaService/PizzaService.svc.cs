@@ -11,6 +11,7 @@ using PizzaNetCommon.Services;
 using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using PizzaService.Assemblers;
+using System.Text.RegularExpressions;
 
 namespace PizzaService
 {
@@ -572,9 +573,8 @@ namespace PizzaService
             {
                 throw PizzaServiceFault.Create(PizzaServiceFault.PASSWORD_EMPTY);
             }
-            if (user.Email.Length == 0)
+            if (!IsEmailValid(user.Email))
             {
-                //TODO email format check
                 throw PizzaServiceFault.Create(PizzaServiceFault.EMAIL_EMPTY);
             }
             if (user.Address.Length == 0)
@@ -595,6 +595,14 @@ namespace PizzaService
                         return SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Find(ins.Email)));
                     });
             }
+        }
+
+        public static bool IsEmailValid(string email)
+        {
+            const string theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+                                   + "@"
+                                   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+            return Regex.IsMatch(email, theEmailPattern);
         }
     }
 }
