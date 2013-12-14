@@ -40,9 +40,8 @@ namespace PizzaNetControls.Dialogs
                 Utils.showExclamation(INVALID_PASSWORD);
                 return;
             }
-            if (emailInput.Text.Length == 0)
+            if (!Utils.IsEmailValid(emailInput.Text))
             {
-                //TODO email format check
                 Utils.showExclamation(INVALID_EMAIL);
                 return;
             }
@@ -92,12 +91,12 @@ namespace PizzaNetControls.Dialogs
                     var res = x.Result as SingleItemResponse<UserDTO>;
                     if (res == null)
                     {
-                        Utils.showError("Registration failed");
+                        Utils.showExclamation(Utils.Messages.REGISTRATION_FAILED);
                         return;
                     }
                     else
                     {
-                        MessageBox.Show("Registration completed!", Utils.TITLE);
+                        Utils.showInformation(Utils.Messages.REGISTRATION_COMPLETED);
                         this.Close();
                         return;
                     }
@@ -146,7 +145,7 @@ namespace PizzaNetControls.Dialogs
 
         public event PropertyChangedEventHandler PropertyChanged;
         private const string INVALID_PASSWORD = "Password is invalid";
-        private const string INVALID_EMAIL = "Email must not be empty";
+        private const string INVALID_EMAIL = "Email address seems to be invalid";
         private const string INVALID_ADDRESS = "Address must not be empty";
 
         private void NotifyPropertyChanged(String propertyName)

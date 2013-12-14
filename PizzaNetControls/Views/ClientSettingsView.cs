@@ -28,13 +28,13 @@ namespace PizzaNetControls.Views
 
         public void Load()
         {
+            // TODO
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
-                //MODIFIED return ClientConfig.getConfig();
                 return null;
             }, (s, args) =>
             {
-                //MODIFIED Config = args.Result as ClientConfig;
+                User = ClientConfig.CurrentUser;
             }));
         }
 

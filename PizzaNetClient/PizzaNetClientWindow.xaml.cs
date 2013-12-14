@@ -38,8 +38,23 @@ namespace PizzaNetClient
             InitializeComponent();
             this.DataContext = this;
 
-            this.worker.Lock = this.contentControl;
+            this.worker.Lock = this.tabControl;
+            this.worker.RefreshButtonClicked += worker_RefreshButtonClicked;
+            LastSelected = MainTab;
         }
+
+        void worker_RefreshButtonClicked(object sender, EventArgs e)
+        {
+            if (LastSelected == MainTab && clientMainViewModel.LostFocusAction())
+                clientMainViewModel.GotFocusAction();
+            else if (LastSelected == OrdersTab && myOrdersViewModel.LostFocusAction())
+                myOrdersViewModel.GotFocusAction();
+            else if (LastSelected == SettingsTab && settingsViewModel.LostFocusAction())
+                settingsViewModel.GotFocusAction();
+        }
+
+        public TabItem LastSelected { get; set; }
+        public bool IsSelectionChanging { get; set; }
 
         private void PizzaNetWindowClass_Loaded(object sender, RoutedEventArgs e)
         {
@@ -51,8 +66,6 @@ namespace PizzaNetClient
         {
             if (!loginDialog.DialogResult)
                 this.Close();
-
-            //clientMainViewModel.ClientMainView.Load();
             clientMainViewModel.GotFocusAction();
         }
 
@@ -66,26 +79,67 @@ namespace PizzaNetClient
             }
         }
 
-        private void contentControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.OriginalSource is TabControl) || !this.IsLoaded)
                 return;
 
-            if (contentControl.SelectedIndex == 2)
+            if (IsSelectionChanging)
             {
-                settingsViewModel.ClientSettingsView.Load();
+                IsSelectionChanging = false;
+                return;
+            }
+
+            if (LastSelected == MainTab)
+            {
+                if (!clientMainViewModel.LostFocusAction())
+                {
+                    IsSelectionChanging = true;
+                    tabControl.SelectedIndex = 0;
+                    e.Handled = true;
+                    return;
+                }
+
+            }
+
+            if (LastSelected == OrdersTab)
+            {
+                if (!myOrdersViewModel.LostFocusAction())
+                {
+                    IsSelectionChanging = true;
+                    tabControl.SelectedIndex = 1;
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            if (LastSelected == SettingsTab)
+            {
+                if (!settingsViewModel.LostFocusAction())
+                {
+                    IsSelectionChanging = true;
+                    tabControl.SelectedIndex = 2;
+                    e.Handled = true;
+                    return;
+                }
             }
 
             if (MainTab.IsSelected)
             {
                 clientMainViewModel.GotFocusAction();
+                LastSelected = MainTab;
             }
 
             if (OrdersTab.IsSelected)
+            {
                 myOrdersViewModel.GotFocusAction();
-
+                LastSelected = OrdersTab;
+            }
             if (SettingsTab.IsSelected)
+            {
                 settingsViewModel.GotFocusAction();
+                LastSelected = SettingsTab;
+            }
         }
     }
 }

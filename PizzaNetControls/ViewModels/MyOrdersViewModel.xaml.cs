@@ -94,5 +94,11 @@ namespace PizzaNetControls.ViewModels
 
             MyOrdersView.PizzaSelectionChanged(pizzasListView.SelectedIndex);
         }
+
+        public bool LostFocusAction()
+        {
+            // TODO
+            return true;
+        }
     }
 }

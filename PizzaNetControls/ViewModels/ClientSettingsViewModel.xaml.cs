@@ -127,7 +127,7 @@ namespace PizzaNetControls.ViewModels
 
         public void GotFocusAction()
         {
-            ClientSettingsView.User = ClientConfig.CurrentUser;
+            ClientSettingsView.Load();
         }
 
         public bool LostFocusAction()

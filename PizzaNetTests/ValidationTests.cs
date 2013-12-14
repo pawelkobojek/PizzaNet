@@ -10,7 +10,10 @@ namespace PizzaNetTests
         [TestMethod]
         public void EmailValidationTest()
         {
-            string email = "malpa";
+            string email = "";
+            Assert.IsFalse(Utils.IsEmailValid(email)); 
+            
+            email = "malpa";
             Assert.IsFalse(Utils.IsEmailValid(email));
 
             email = "malpa@";

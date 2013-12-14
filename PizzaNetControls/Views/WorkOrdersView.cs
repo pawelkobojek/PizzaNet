@@ -42,7 +42,6 @@ namespace PizzaNetControls.Views
         private const int TIMER_INTERVAL = 60000;
         public BackgroundWorker OrdersRefresher { get; private set; }
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
-        private const string REFRESH_FAILED = "Refreshing orders failed!";
 
         void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -210,7 +209,7 @@ namespace PizzaNetControls.Views
                 ListResponse<OrderDTO> res = a.Result as ListResponse<OrderDTO>;
                 if (res == null)
                 {
-                    MessageBox.Show(REFRESH_FAILED);
+                    Utils.showExclamation(Utils.Messages.ORDERS_REFRESH_FAILED);
                     return;
                 }
                 List<OrderDTO> orders = res.Data;
