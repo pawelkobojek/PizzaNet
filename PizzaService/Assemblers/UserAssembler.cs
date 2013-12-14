@@ -21,5 +21,16 @@ namespace PizzaService.Assemblers
                 UserID = user.UserID
             };
         }
+
+        internal void UpdateEntity(User user, UserDTO userDto)
+        {
+            user.Address = userDto.Address;
+            user.Email = userDto.Email;
+            user.Name = userDto.Name;
+            user.Phone = userDto.Phone;
+            user.Rights = userDto.Rights;
+            //TODO przedyskutować
+            //user.Password = userDto.Password;
+        }
     }
 }

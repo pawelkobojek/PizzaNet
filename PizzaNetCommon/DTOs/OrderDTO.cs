@@ -14,6 +14,6 @@ namespace PizzaNetCommon.DTOs
         public string Address { get; set; }
 //        public int StateID{ get; set; }
         public virtual StateDTO State { get; set; }
-        public IList<OrderDetailDTO> OrderDetailsDTO { get; set; }
+        public List<OrderDetailDTO> OrderDetailsDTO { get; set; }
     }
 }

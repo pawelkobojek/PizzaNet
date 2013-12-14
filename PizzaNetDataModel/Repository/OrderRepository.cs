@@ -18,7 +18,7 @@ namespace PizzaNetDataModel.Repository
         /// It uses lazy loading. In order to get eagerly loaded data use FindAllEagearly() method.
         /// </summary>
         /// <returns>List of all orders.</returns>
-        IList<Order> FindAll();
+        List<Order> FindAll();
         /// <summary>
         /// Retrieves all Orders in the database in a eager manner.
         /// In order to use lazy loading call FindAll() method.
@@ -32,7 +32,7 @@ namespace PizzaNetDataModel.Repository
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        IList<Order> FindAllEagerlyWhere(Func<Order, bool> predicate);
+        List<Order> FindAllEagerlyWhere(Func<Order, bool> predicate);
     }
     
     /// <summary>
@@ -48,7 +48,7 @@ namespace PizzaNetDataModel.Repository
             db = ctx;
         }
 
-        public IList<Order> FindAll()
+        public List<Order> FindAll()
         {
             return db.Orders.ToList();
         }
@@ -95,7 +95,7 @@ namespace PizzaNetDataModel.Repository
                 .ToList();
         }
 
-        public IList<Order> FindAllEagerlyWhere(Func<Order, bool> predicate)
+        public List<Order> FindAllEagerlyWhere(Func<Order, bool> predicate)
         {
             return db.Orders
                 .Include(o => o.OrderDetails.Select(od => od.Ingredients))

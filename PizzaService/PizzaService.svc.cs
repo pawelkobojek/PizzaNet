@@ -154,7 +154,7 @@ namespace PizzaService
                 });
         }
 
-        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<List<StockIngredientDTO>> request)
         {
             if (request.Data == null)
                 return null;
@@ -178,7 +178,7 @@ namespace PizzaService
                 });
         }
 
-        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<List<StockIngredientDTO>> request)
         {
             if (request.Data == null && request.DataToRemove == null)
                 return null;
@@ -245,7 +245,7 @@ namespace PizzaService
                 });
         }
 
-        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<IList<OrderSuppliesDTO>> request)
+        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<List<OrderSuppliesDTO>> request)
         {
             return db.inTransaction(uow =>
             {
@@ -325,6 +325,7 @@ namespace PizzaService
                     };
 
                     uow.Db.Orders.Insert(order);
+                    uow.Db.Commit();
                 });
         }
 
@@ -352,19 +353,23 @@ namespace PizzaService
 
         public void InsertRecipe(UpdateRequest<RecipeDTO> req)
         {
-            Recipe r = new Recipe { Name = req.Data.Name };
-            List<Ingredient> ings = new List<Ingredient>();
+            db.inTransaction(uow =>
+                {
+                    Recipe r = new Recipe { Name = req.Data.Name };
+                    List<Ingredient> ings = new List<Ingredient>();
 
-            foreach (var ingDto in req.Data.Ingredients)
-            {
-                ings.Add(db.Ingredients.Get(ingDto.IngredientID));
-            }
-            r.Ingredients = ings;
-            db.Recipies.Insert(r);
+                    foreach (var ingDto in req.Data.Ingredients)
+                    {
+                        ings.Add(db.Ingredients.Get(ingDto.IngredientID));
+                    }
+                    r.Ingredients = ings;
+                    db.Recipies.Insert(r);
+                    uow.Db.Commit();
+                });
         }
 
 
-        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<IList<RecipeDTO>> request)
+        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> request)
         {
             if (request.Data == null && request.DataToRemove == null)
                 return null;
@@ -381,7 +386,23 @@ namespace PizzaService
                         Recipe rec = uof.Db.Recipies.Get(recipe.RecipeID);
                         if (rec != null)
                         {
+
                             rec.Name = recipe.Name;
+                            int j;
+                            for (int i = 0; i < rec.Ingredients.Count; i++)
+                            {
+                                Ingredient ingredient = rec.Ingredients.ElementAt(i);
+                                for (j = 0; j < recipe.Ingredients.Count; j++)
+                                {
+                                    if (ingredient.IngredientID == recipe.Ingredients[j].IngredientID)
+                                        break;
+                                }
+                                if (j == recipe.Ingredients.Count)
+                                {
+                                    rec.Ingredients.Remove(ingredient);
+                                }
+                            }
+
                             foreach (var ing in recipe.Ingredients)
                             {
                                 Ingredient ingredient = uof.Db.Ingredients.Get(ing.IngredientID);
@@ -398,6 +419,7 @@ namespace PizzaService
                         else
                         {
                             rec = new Recipe { Name = recipe.Name };
+                            rec.Ingredients = new List<Ingredient>();
                             foreach (var ing in recipe.Ingredients)
                             {
                                 Ingredient ingredient = uof.Db.Ingredients.Get(ing.IngredientID);
@@ -424,11 +446,68 @@ namespace PizzaService
                     }
                 }
 
+                uof.Db.Commit();
+
                 return TrioResponse.Create(uof.Db.Recipies.FindAll().ToList().Select(recipeAssembler.ToSimpleDto).ToList(),
                     uof.Db.Ingredients.FindAll().Select(ingAssembler.ToOrderIngredientDto).ToList(),
                     0);
-
             });
+        }
+
+
+        public ListResponse<UserDTO> UpdateOrRemoveUser(UpdateOrRemoveRequest<List<UserDTO>> request)
+        {
+            if (request.Data == null && request.DataToRemove == null)
+                return null;
+
+            return db.inTransaction(uow =>
+                {
+                    if (!HasRights(GetUser(request).Data, 3))
+                        return null;
+
+
+                    if (request.Data != null)
+                    {
+                        foreach (var userDto in request.Data)
+                        {
+                            User user = uow.Db.Users.Get(userDto.UserID);
+
+                            if (user != null)
+                            {
+                                userAssembler.UpdateEntity(user, userDto);
+                                uow.Db.Users.Update(user);
+                            }
+                            else
+                            {
+                                user = new User
+                                {
+                                    Address = userDto.Address,
+                                    Email = userDto.Email,
+                                    Name = userDto.Name,
+                                    Password = userDto.Password,
+                                    Phone = userDto.Phone,
+                                    Rights = userDto.Rights
+                                };
+                                uow.Db.Users.Insert(user);
+                            }
+                        }
+                    }
+
+                    if (request.DataToRemove != null)
+                    {
+                        foreach (var userDto in request.DataToRemove)
+                        {
+                            User user = uow.Db.Users.Get(userDto.UserID);
+
+                            if (user != null)
+                                uow.Db.Users.Delete(user);
+                        }
+                    }
+                    db.RequestRollback = false;
+                    uow.Db.Commit();
+                    return ListResponse.Create(uow.Db.Users.FindAll().ToList().Select(userAssembler.ToSimpleDto)
+                        .ToList());
+                });
         }
     }
 }

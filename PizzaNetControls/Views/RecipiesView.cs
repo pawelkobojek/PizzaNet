@@ -236,7 +236,17 @@ namespace PizzaNetControls.Views
             var row = sender as IngredientsRowWork;
             if (row == null) return;
 
-            int index = rc.Recipe.Ingredients.IndexOf(row.Ingredient);
+            //int index = rc.Recipe.Ingredients.IndexOf(row.Ingredient);
+            int index = -1;
+            for (int i = 0; i < rc.Recipe.Ingredients.Count; i++)
+            {
+                if (rc.Recipe.Ingredients[i].IngredientID == row.Ingredient.IngredientID)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
             if (index >= 0)
             {
                 rc.Recipe.Ingredients.RemoveAt(index);
@@ -373,7 +383,7 @@ namespace PizzaNetControls.Views
                             {
                                 toUpdate.Add(recControl.Recipe);
                             }
-                            return proxy.UpdateOrRmoveRecipe(new UpdateOrRemoveRequest<IList<RecipeDTO>>
+                            return proxy.UpdateOrRmoveRecipe(new UpdateOrRemoveRequest<List<RecipeDTO>>
                             {
                                 Data = toUpdate,
                                 DataToRemove = RemovedRecipes,
@@ -397,11 +407,15 @@ namespace PizzaNetControls.Views
                             return;
                         }
 
+                        RecipesCollection.Clear();
+                        IngredientsRowsCollection.Clear();
+                        RemovedRecipes.Clear();
                         foreach (var item in result.First)
                         {
                             var rc = new RecipeControl();
                             rc.Recipe = item;
                             //rc.RecalculatePrices(result.Second.ToArray());
+                            rc.Update(Sizes);
                             RecipesCollection.Add(rc);
                         }
                         foreach (var item in result.Second)
@@ -410,7 +424,6 @@ namespace PizzaNetControls.Views
                             row.ButtonIncludeChanged += row_PropertyChanged;
                             IngredientsRowsCollection.Add(row);
                         }
-
                     }, null));
         }
 

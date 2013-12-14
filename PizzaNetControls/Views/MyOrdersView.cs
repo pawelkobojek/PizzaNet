@@ -90,7 +90,7 @@ namespace PizzaNetControls.Views
                     MessageBox.Show(REFRESH_FAILED);
                     return;
                 }
-                IList<OrderDTO> orders = res.Data;
+                List<OrderDTO> orders = res.Data;
                 //foreach (var item in orders)
                 //{
                 //    OrdersCollection.Add(new OrdersRow(item));

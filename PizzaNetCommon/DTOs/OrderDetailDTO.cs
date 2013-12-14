@@ -9,7 +9,7 @@ namespace PizzaNetCommon.DTOs
     {
         public int OrderDetailID { get; set; }
         public SizeDTO Size { get; set; }
-        public IList<OrderIngredientDTO> Ingredients { get; set; }
+        public List<OrderIngredientDTO> Ingredients { get; set; }
 
     }
 }

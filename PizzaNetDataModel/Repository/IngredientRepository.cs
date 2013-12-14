@@ -17,7 +17,7 @@ namespace PizzaNetDataModel.Repository
         /// Retrieves all Ingredients from the repository.
         /// </summary>
         /// <returns>List of all ingredients</returns>
-        IList<Ingredient> FindAll();
+       List<Ingredient> FindAll();
 
         /// <summary>
         /// Retrieves all Ingredients from the repository with associated Recipies.
@@ -51,7 +51,7 @@ namespace PizzaNetDataModel.Repository
             this.db = ctx;
         }
 
-        public IList<Model.Ingredient> FindAll()
+        public List<Model.Ingredient> FindAll()
         {
             return db.Ingredients.ToList();
         }

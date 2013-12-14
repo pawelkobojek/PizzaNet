@@ -11,9 +11,9 @@ namespace PizzaNetCommon.Requests
     public class ListResponse<TData>
     {
         [DataMember]
-        public IList<TData> Data { get; set; }
+        public List<TData> Data { get; set; }
 
-        public ListResponse(IList<TData> data)
+        public ListResponse(List<TData> data)
         {
             this.Data = data;
         }
@@ -21,7 +21,7 @@ namespace PizzaNetCommon.Requests
 
     public static class ListResponse
     {
-        public static ListResponse<TData> Create<TData>(IList<TData> data)
+        public static ListResponse<TData> Create<TData>(List<TData> data)
         {
             return new ListResponse<TData>(data);
         }

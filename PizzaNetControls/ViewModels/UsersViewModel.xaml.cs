@@ -89,7 +89,7 @@ namespace PizzaNetControls.ViewModels
 
         private void ButtonSaveChanges_Click(object sender, RoutedEventArgs e)
         {
-
+            UsersView.SaveChanges();
         }
 
         public void GotFocusAction()

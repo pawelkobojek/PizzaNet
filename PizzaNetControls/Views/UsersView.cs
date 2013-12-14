@@ -17,13 +17,14 @@ namespace PizzaNetControls.Views
     {
         public ObservableCollection<UserDTO> UsersCollection { get; set; }
         public ObservableCollection<string> Rights { get; set; }
-        public ObservableCollection<UserDTO RemovedUsers { get; set; }
+        public ObservableCollection<UserDTO> RemovedUsers { get; set; }
         public bool Modified { get; set; }
 
         public UsersView(IWorker worker)
             : base(worker)
         {
             UsersCollection = new ObservableCollection<UserDTO>();
+            RemovedUsers = new ObservableCollection<UserDTO>();
             Rights = new ObservableCollection<string>()
                 {
                     "Customer",
@@ -73,7 +74,7 @@ namespace PizzaNetControls.Views
         private int counter = 1;
         internal void AddUser()
         {
-            UsersCollection.Add(new UserDTO { Address = "Address", Email = "Email " + counter.ToString(), Name = "Name", UserID=-counter, Phone = -1, Rights = 1 });
+            UsersCollection.Add(new UserDTO { Address = "Address", Email = "Email " + counter.ToString(), Name = "Name", UserID = -counter, Phone = -1, Rights = 1 });
             counter++;
             Modified = true;
         }
@@ -82,6 +83,56 @@ namespace PizzaNetControls.Views
         {
             RemovedUsers.Add(UsersCollection[index]);
             UsersCollection.RemoveAt(index);
+        }
+
+        internal void SaveChanges()
+        {
+            Worker.EnqueueTask(new WorkerTask(args =>
+                {
+                    try
+                    {
+                        using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                        {
+                            List<UserDTO> toUpdate = new List<UserDTO>();
+                            List<UserDTO> toRemove = new List<UserDTO>();
+                            foreach (var user in UsersCollection)
+                            {
+                                toUpdate.Add(user);
+                            }
+
+                            foreach (var user in RemovedUsers)
+                            {
+                                toRemove.Add(user);
+                            }
+
+                            return proxy.UpdateOrRemoveUser(new UpdateOrRemoveRequest<List<UserDTO>>
+                            {
+                                Data = toUpdate,
+                                DataToRemove = toRemove,
+                                Login = ClientConfig.getConfig().User.Email,
+                                Password = ClientConfig.getConfig().User.Password
+                            });
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        return null;
+                    }
+                }, (s, e) =>
+                    {
+                        var result = e.Result as ListResponse<UserDTO>;
+                        if (result == null)
+                        {
+                            Utils.showError("bla", "blabla");
+                            return;
+                        }
+                        UsersCollection.Clear();
+                        RemovedUsers.Clear();
+                        foreach (var item in result.Data)
+                        {
+                            UsersCollection.Add(item);
+                        }
+                    }, null));
         }
     }
 }
