@@ -7,10 +7,7 @@ using PizzaNetDataModel.Repository;
 
 namespace PizzaService
 {
-    public class ServiceBase
+    public abstract class ServiceBase
     {
-        private readonly PizzaUnitOfWork db;
-
-
     }
 }
