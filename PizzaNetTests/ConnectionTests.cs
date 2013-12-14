@@ -16,7 +16,7 @@ namespace PizzaNetTests
         [TestMethod]
         public void GetIngredientsTest()
         {
-            using (WorkChannel ch = new WorkChannel("Admin","123"))
+            using (WorkChannel ch = new WorkChannel())
             {
 
                 InAutoRollbackTransaction(uof =>
@@ -42,7 +42,7 @@ namespace PizzaNetTests
         [TestMethod]
         public void GetOrdersTest()
         {
-            using (var ch = new WorkChannel("Admin", "123"))
+            using (var ch = new WorkChannel())
             {
                 InAutoRollbackTransaction(uof =>
                     {
@@ -96,7 +96,7 @@ namespace PizzaNetTests
         [TestMethod]
         public void SetOrderStateTest()
         {
-            using (var ch = new WorkChannel("Admin", "123"))
+            using (var ch = new WorkChannel())
             {
                 InAutoRollbackTransaction(uof =>
                     {
@@ -134,7 +134,7 @@ namespace PizzaNetTests
         [TestMethod]
         public void UpdateIngredientTest()
         {
-            using (var ch = new WorkChannel("Admin", "123"))
+            using (var ch = new WorkChannel())
             {
                 IList<StockIngredientDTO> ings = ch.GetIngredients(empRequest).Data;
                 List<StockIngredientDTO> toUpdate = new List<StockIngredientDTO>();

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
@@ -15,6 +16,14 @@ namespace PizzaNetControls.Common
     public static class Utils
     {
         public const string TITLE = "PizzaNet";
+
+        public static bool IsEmailValid(string email)
+        {
+            const string theEmailPattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+                                   + "@"
+                                   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+            return Regex.IsMatch(email, theEmailPattern);
+        }
 
         public static void showError(string message)
         {

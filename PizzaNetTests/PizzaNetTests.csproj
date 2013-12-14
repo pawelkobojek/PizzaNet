@@ -67,6 +67,7 @@
     <Compile Include="PersistanceTests.cs" />
     <Compile Include="AssemblingTests.cs" />
     <Compile Include="ConnectionTests.cs" />
+    <Compile Include="ValidationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PizzaNetClient\PizzaNetClient.csproj">
