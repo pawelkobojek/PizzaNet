@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -32,6 +33,8 @@ namespace PizzaNetClient
     {
         public PizzaNetClientWindow()
         {
+            if (!((Properties.Settings.Default["UsesValidCertificate"] as bool?) ?? true))
+                ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => { return true; };
             InitializeComponent();
             this.DataContext = this;
 

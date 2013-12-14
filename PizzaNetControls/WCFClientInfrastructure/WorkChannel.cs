@@ -17,8 +17,8 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
 
     public class WorkChannel : ServiceProxyBase<IPizzaService>, IWorkChannel
     {
-        public WorkChannel(string address)
-            : base(address)
+        public WorkChannel()
+            : base()
         {
         }
 
@@ -89,6 +89,12 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         public void MakeOrder(UpdateRequest<OrderDTO> req)
         {
             Channel.MakeOrder(req);
+        }
+
+
+        public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<RegisterUserDTO> req)
+        {
+            return Channel.RegisterUser(req);
         }
     }
 }

@@ -21,5 +21,18 @@ namespace PizzaService.Assemblers
                 UserID = user.UserID
             };
         }
+
+        public User ToUser(RegisterUserDTO user)
+        {
+            return new User
+            {
+                Email = user.Email,
+                Name = user.Name,
+                Address = user.Address,
+                Phone = user.Phone,
+                Rights = 1,
+                Password = user.Password
+            };
+        }
     }
 }

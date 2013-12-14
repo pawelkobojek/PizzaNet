@@ -28,12 +28,11 @@ namespace PizzaNetControls.Views
 
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
-        private const string TITLE = "PizzaNetWorkClient";
         private int SelectedRecipe { get; set; }
 
         private void showError(string message)
         {
-            Utils.showError(TITLE, message);
+            Utils.showError(message);
         }
 
         internal void UpdateRecipe(int index)
@@ -145,12 +144,12 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
                         return proxy.GetRecipeTabData(new EmptyRequest
                         {
-                            Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().User.Password
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password
                         });
                     }
                     //        using (var db = new PizzaUnitOfWork())

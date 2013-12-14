@@ -36,8 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,11 +57,11 @@
     <Compile Include="Common\NotifiedObservableCollection.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Configuration\User.cs" />
+    <Compile Include="Configuration\UsersDictionary.cs" />
     <Compile Include="Controls\CircularProgressBar.xaml.cs">
       <DependentUpon>CircularProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Configuration\ClientConfig.cs" />
-    <Compile Include="Configuration\AbstractConfig.cs" />
     <Compile Include="Controls\PizzaRow.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToBackgroundConverter.cs" />

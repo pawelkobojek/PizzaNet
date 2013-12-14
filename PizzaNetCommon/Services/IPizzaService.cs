@@ -17,6 +17,10 @@ namespace PizzaNetCommon.Services
         ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
+        SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<RegisterUserDTO> req);
+
+        [OperationContract]
         TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req);
 
         [OperationContract]

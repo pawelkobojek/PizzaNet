@@ -54,14 +54,13 @@ namespace PizzaNetControls.Dialogs
                     var list = args[0] as IList<OrderSuppliesDTO>;
                     try
                     {
-                        var cfg = ClientConfig.getConfig();
-                        using(var proxy = new WorkChannel(cfg.ServerAddress))
+                        using (var proxy = new WorkChannel())
                         {
                             return proxy.OrderSupplies(new UpdateRequest<IList<OrderSuppliesDTO>>()
                             {
                                 Data = list,
-                                Login = cfg.User.Email,
-                                Password = cfg.User.Password
+                                Login = ClientConfig.CurrentUser.Email,
+                                Password = ClientConfig.CurrentUser.Password
                             });
                         }
                     }
@@ -76,7 +75,7 @@ namespace PizzaNetControls.Dialogs
                     var res = ex.Result as ListResponse<OrderSuppliesDTO>;
                     if (res==null)
                     {
-                        Utils.showError("PizzaNetWorkClient", ORDER_FAILURE);
+                        Utils.showError(ORDER_FAILURE);
                         return;
                     }
                     Data.Clear();

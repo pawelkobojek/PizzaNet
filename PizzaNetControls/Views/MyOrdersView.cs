@@ -70,10 +70,9 @@ namespace PizzaNetControls.Views
                     //        return result;
                     //    });
                     //}
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
-                        var cfg = ClientConfig.getConfig();
-                        return proxy.GetOrdersForUser(new EmptyRequest { Login = cfg.User.Email, Password = cfg.User.Password });
+                        return proxy.GetOrdersForUser(new EmptyRequest { Login = ClientConfig.CurrentUser.Email, Password = ClientConfig.CurrentUser.Password });
                     }
 
                 }

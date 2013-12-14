@@ -23,7 +23,6 @@ namespace PizzaNetControls.Views
         public NotifiedObservableCollection<StockIngredientDTO> StockItemsCollection { get; set; }
         private List<StockIngredientDTO> RemovedStockItemsList { get; set; }
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
-        private const string TITLE = "PizzaNetWorkClient";
         private const string SAVE_CHANGES_FAILURE = "Save changes failed";
 
         public event EventHandler<EventArgs> SuppliesOrdered;
@@ -37,7 +36,7 @@ namespace PizzaNetControls.Views
 
         private void showError(string message)
         {
-            Utils.showError(TITLE, message);
+            Utils.showError(message);
         }
 
         public bool Modified { get; set; }
@@ -134,10 +133,9 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    var cfg = ClientConfig.getConfig();
-                    using (var proxy = new WorkChannel(cfg.ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
-                        return proxy.GetIngredients(new EmptyRequest { Login = cfg.User.Email, Password = cfg.User.Password });
+                        return proxy.GetIngredients(new EmptyRequest { Login = ClientConfig.CurrentUser.Email, Password = ClientConfig.CurrentUser.Password });
                     }
                     //using (var db = new PizzaUnitOfWork())
                     //{
@@ -191,12 +189,12 @@ namespace PizzaNetControls.Views
                 {
                     var list       = args[0] as IList<StockIngredientDTO>;
                     var removeList = args[1] as IList<StockIngredientDTO>;
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
                         return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<IList<StockIngredientDTO>>()
                         {
-                            Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().User.Password,
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password,
                             Data = list,
                             DataToRemove = removeList
                         });

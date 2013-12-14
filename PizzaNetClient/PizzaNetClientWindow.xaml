@@ -43,6 +43,6 @@
             </TabControl>
         </Grid>
         <PizzaNetDialogs:LoginDialog Name="loginDialog" OverlayOn="{Binding ElementName=allContent}"
-                                     MinRightsLevel="1"/>
+                                     MinRightsLevel="1" ParentWindow="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
     </Grid>
 </Window>

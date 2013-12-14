@@ -13,12 +13,10 @@ namespace PizzaNetTests
     [TestClass]
     public class ConnectionTests : DbTest
     {
-        private const string ADDRESS = "http://localhost:60499/PizzaService.svc";
-
         [TestMethod]
         public void GetIngredientsTest()
         {
-            using (WorkChannel ch = new WorkChannel(ADDRESS))
+            using (WorkChannel ch = new WorkChannel("Admin","123"))
             {
 
                 InAutoRollbackTransaction(uof =>
@@ -44,7 +42,7 @@ namespace PizzaNetTests
         [TestMethod]
         public void GetOrdersTest()
         {
-            using (var ch = new WorkChannel(ADDRESS))
+            using (var ch = new WorkChannel("Admin", "123"))
             {
                 InAutoRollbackTransaction(uof =>
                     {
@@ -98,7 +96,7 @@ namespace PizzaNetTests
         [TestMethod]
         public void SetOrderStateTest()
         {
-            using (var ch = new WorkChannel(ADDRESS))
+            using (var ch = new WorkChannel("Admin", "123"))
             {
                 InAutoRollbackTransaction(uof =>
                     {
@@ -136,7 +134,7 @@ namespace PizzaNetTests
         [TestMethod]
         public void UpdateIngredientTest()
         {
-            using (var ch = new WorkChannel(ADDRESS))
+            using (var ch = new WorkChannel("Admin", "123"))
             {
                 IList<StockIngredientDTO> ings = ch.GetIngredients(empRequest).Data;
                 List<StockIngredientDTO> toUpdate = new List<StockIngredientDTO>();

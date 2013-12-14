@@ -13,7 +13,8 @@ namespace PizzaService
     {
         public override void Validate(string userName, string password)
         {
-            User user = null;
+            return;
+            /*User user = null;
             using (var db = new PizzaUnitOfWork())
             {
                 user = db.inTransaction(uow =>
@@ -24,7 +25,7 @@ namespace PizzaService
             if (user == null || password != user.Password)
             {
                 throw new SecurityTokenException("Wrong username or password");
-            }
+            }*/
         }
     }
 }

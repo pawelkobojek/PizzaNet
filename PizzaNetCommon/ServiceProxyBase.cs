@@ -11,15 +11,13 @@ namespace PizzaNetCommon
 {
     public abstract class ServiceProxyBase<T> : IDisposable where T : class
     {
-        private readonly string endPointAddress;
         private readonly object _syncRoot = new object();
         private ChannelFactory<T> channelFactory;
         private T channel;
         private bool disposed = false;
 
-        protected ServiceProxyBase(string address)
+        protected ServiceProxyBase()
         {
-            endPointAddress = address;
         }
 
         protected T Channel
@@ -49,8 +47,8 @@ namespace PizzaNetCommon
                 EndpointIdentity identity = EndpointIdentity.CreateDnsIdentity("MyServerCert");
                 //var endPoint = new EndpointAddress(new Uri(this.endPointAddress), identity);
                 channelFactory = new ChannelFactory<T>("PizzaServiceSecure");
-                channelFactory.Credentials.UserName.UserName = "Admin";
-                channelFactory.Credentials.UserName.Password = "123";
+                channelFactory.Credentials.UserName.UserName = "UserName";
+                channelFactory.Credentials.UserName.Password = "Password";
 
                 channel = channelFactory.CreateChannel();
             }
@@ -75,14 +73,46 @@ namespace PizzaNetCommon
             {
                 lock (_syncRoot)
                 {
-                    CloseChannel();
+                    var c = channel as IChannel;
+                    try
+                    {
+                        if (c != null)
+                        {
+                            if (c.State != CommunicationState.Faulted)
+                            {
+                                c.Close();
+                            }
+                            else
+                            {
+                                c.Abort();
+                            }
+                        }
+                    }
+                    catch (CommunicationException)
+                    {
+                        c.Abort();
+                    }
+                    catch (TimeoutException)
+                    {
+                        c.Abort();
+                    }
+                    catch (Exception)
+                    {
+                        c.Abort();
+                        throw;
+                    }
+                    finally
+                    {
+                        channel = null;
+                    }
+                    /*CloseChannel();
 
                     if (channelFactory != null)
                     {
                         ((IDisposable)channelFactory).Dispose();
                     }
                     channelFactory = null;
-                    channel = null;
+                    channel = null;*/
                 }
             }
             disposed = true;
