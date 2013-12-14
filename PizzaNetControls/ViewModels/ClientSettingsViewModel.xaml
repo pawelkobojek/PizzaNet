@@ -37,6 +37,10 @@
                 <Setter Property="DockPanel.Dock" Value="Right"/>
                 <Setter Property="Width" Value="130"/>
             </Style>
+            <Style x:Key="passwordBoxStyle" TargetType="{x:Type PasswordBox}">
+                <Setter Property="DockPanel.Dock" Value="Right"/>
+                <Setter Property="Width" Value="130"/>
+            </Style>
         </Grid.Resources>
         <StackPanel Margin="30" Grid.Column="0" Grid.Row="0">
             <DockPanel>
@@ -70,35 +74,16 @@
         <StackPanel Margin="30" Grid.Column="1" Grid.Row="0">
             <DockPanel>
                 <TextBlock Text="Current password:"/>
-                <PasswordBox Name="currentPasswordInput"
+                <PasswordBox Name="currentPasswordInput" GotFocus="inputGotFocus"
                              PizzaNetValidation:PasswordHelper.Attach="True">
                     <PizzaNetValidation:PasswordHelper.Password>
                         <Binding NotifyOnValidationError="True"
-                                 Path="Password"
-                                 Mode="TwoWay">
-                        </Binding>
-                    </PizzaNetValidation:PasswordHelper.Password>
-                </PasswordBox>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="New password:"/>
-                <PasswordBox Name="newPasswordInput"
-                             PizzaNetValidation:PasswordHelper.Attach="True">
-                    <PizzaNetValidation:PasswordHelper.Password>
-                        <Binding Path="NewPassword" Mode="TwoWay"/>
-                    </PizzaNetValidation:PasswordHelper.Password>
-                </PasswordBox>
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="Repeat new password:"/>
-                <PasswordBox Name="newPasswordRepeatInput">
-                    <PizzaNetValidation:PasswordHelper.Password>
-                        <Binding Path="PasswordRepeated"
+                                 Path="CurrentPassword"
                                  Mode="TwoWay">
                             <Binding.ValidationRules>
-                                <PizzaNetValidation:PasswordEqualRule>
+                                <PizzaNetValidation:PasswordEqualRule Validation="newPasswordInput_Validation">
                                     <PizzaNetValidation:PasswordEqualRule.PasswordConfig>
-                                        <PizzaNetValidation:PasswordConfig x:Name="repeatedPasswordConfig" AllowEmpty="True"/>
+                                        <PizzaNetValidation:PasswordConfig x:Name="currentPasswordConfig"/>
                                     </PizzaNetValidation:PasswordEqualRule.PasswordConfig>
                                 </PizzaNetValidation:PasswordEqualRule>
                             </Binding.ValidationRules>
@@ -106,8 +91,85 @@
                     </PizzaNetValidation:PasswordHelper.Password>
                 </PasswordBox>
             </DockPanel>
+            <DockPanel>
+                <TextBlock Text="New password:"/>
+                <PasswordBox Name="newPasswordInput" GotFocus="inputGotFocus"
+                             PizzaNetValidation:PasswordHelper.Attach="True">
+                    <PizzaNetValidation:PasswordHelper.Password>
+                        <Binding Path="NewPassword" Mode="TwoWay"/>
+                    </PizzaNetValidation:PasswordHelper.Password>
+                    <PasswordBox.Style>
+                        <Style TargetType="PasswordBox" BasedOn="{StaticResource ResourceKey=passwordBoxStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentPassword.Length}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding HasCurrentValidationError}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </PasswordBox.Style>
+                </PasswordBox>
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="Repeat new password:"/>
+                <PasswordBox Name="newPasswordRepeatInput" GotFocus="inputGotFocus" PizzaNetValidation:PasswordHelper.Attach="True">
+                    <PizzaNetValidation:PasswordHelper.Password>
+                        <Binding Path="PasswordRepeated"
+                                 Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <PizzaNetValidation:PasswordEqualRule Validation="passwordRepeatInput_Validation">
+                                    <PizzaNetValidation:PasswordEqualRule.PasswordConfig>
+                                        <PizzaNetValidation:PasswordConfig x:Name="repeatedPasswordConfig" AllowEmptySource="True"/>
+                                    </PizzaNetValidation:PasswordEqualRule.PasswordConfig>
+                                </PizzaNetValidation:PasswordEqualRule>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </PizzaNetValidation:PasswordHelper.Password>
+                    <PasswordBox.Style>
+                        <Style TargetType="PasswordBox" BasedOn="{StaticResource ResourceKey=passwordBoxStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewPassword.Length}" Value="0">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding HasCurrentValidationError}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=newPasswordInput, Path=IsEnabled}" Value="False">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </PasswordBox.Style>
+                </PasswordBox>
+            </DockPanel>
             <Button Margin="20" Grid.Column="1" Click="SettingsButtonSavePassword_Click">
                 Save password
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Password.Length}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding NewPassword.Length}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding PasswordRepeated.Length}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=newPasswordRepeatInput, Path=IsEnabled}" Value="False">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=newPasswordInput, Path=IsEnabled}" Value="False">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HasValidationError}" Value="True">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
             </Button>
         </StackPanel>
     </Grid>

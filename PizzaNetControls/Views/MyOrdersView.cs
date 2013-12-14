@@ -26,6 +26,7 @@ namespace PizzaNetControls.Views
         public ObservableCollection<PizzaRow> PizzasCollection { get; set; }
         public BackgroundWorker OrdersRefresher { get; private set; }
 
+        //TODO timer interval settings
         private const int TIMER_INTERVAL = 60000;
 
         public MyOrdersView(IWorker worker)
@@ -34,11 +35,6 @@ namespace PizzaNetControls.Views
             this.OrdersCollection = new NotifiedObservableCollection<OrdersRow>();
             this.IngredientsCollection = new ObservableCollection<OrderIngredientDTO>();
             this.PizzasCollection = new ObservableCollection<PizzaRow>();
-
-            //OrdersRefresher = new BackgroundWorker();
-            //OrdersRefresher.DoWork += OrdersRefresher_DoWork;
-            //OrdersRefresher.RunWorkerCompleted += OrdersRefresher_RunWorkerCompleted;
-            //OrdersRefresher.RunWorkerAsync();
         }
 
         private void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -52,7 +48,6 @@ namespace PizzaNetControls.Views
             System.Threading.Thread.Sleep(TIMER_INTERVAL);
         }
 
-        //private WorkChannel proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress);
         public void RefreshCurrentOrders()
         {
             Worker.EnqueueTask(new WorkerTask((args) =>
@@ -77,11 +72,15 @@ namespace PizzaNetControls.Views
                 }
                 catch (Exception exc)
                 {
-                    Console.WriteLine(exc);
-                    return null;
+                    return exc;
                 }
             }, (s, a) =>
             {
+                if (a.Result is Exception)
+                {
+                    Utils.HandleException(a.Result as Exception);
+                    return;
+                }
                 ListResponse<OrderDTO> res = a.Result as ListResponse<OrderDTO>;
                 if (res == null)
                 {
@@ -89,12 +88,7 @@ namespace PizzaNetControls.Views
                     return;
                 }
                 List<OrderDTO> orders = res.Data;
-                //foreach (var item in orders)
-                //{
-                //    OrdersCollection.Add(new OrdersRow(item));
-                //}
 
-                //TODO odkomentować poniższe, zakomentować powyższe
                 bool[] current = new bool[orders.Count()];
                 foreach (var order in orders)
                 {

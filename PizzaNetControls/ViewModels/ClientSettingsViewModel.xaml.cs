@@ -33,6 +33,7 @@ namespace PizzaNetControls.ViewModels
             InitializeComponent();
             this.Loaded += ClientSettingsViewModel_Loaded;
             this.repeatedPasswordConfig.SetTarget(typeof(ClientSettingsViewModel), this, "NewPassword");
+            this.currentPasswordConfig.SetTarget(typeof(ClientSettingsViewModel), this, "Password");
         }
 
         bool initialized = false;
@@ -43,6 +44,8 @@ namespace PizzaNetControls.ViewModels
             {
                 this.ClientSettingsView = new ClientSettingsView(Worker);
                 initialized = true;
+
+                CurrentPassword = PasswordRepeated = NewPassword = "";
             }
         }
 
@@ -61,7 +64,7 @@ namespace PizzaNetControls.ViewModels
 
         #region passwords
         //TODO przenieść obsługę haseł do ClientSettingsView
-        private string _cpass="password";
+        private string _cpass;
         public string CurrentPassword
         {
             get { return _cpass; }
@@ -79,7 +82,7 @@ namespace PizzaNetControls.ViewModels
         public string NewPassword
         {
             get { return _passn; }
-            set { _passn = value; NotifyPropertyChanged("NewPassword"); }
+            set { _passn = value; NotifyPropertyChanged("NewPassword"); newPasswordRepeatInput.Password = PasswordRepeated; }
         }
 
         private string _passr;
@@ -87,6 +90,30 @@ namespace PizzaNetControls.ViewModels
         {
             get { return _passr; }
             set { _passr = value; NotifyPropertyChanged("PasswordRepeated"); }
+        }
+
+        private bool _haserr;
+        public bool HasValidationError
+        {
+            get { return _haserr; }
+            set { _haserr = value; NotifyPropertyChanged("HasValidationError"); }
+        }
+
+        private bool _hascurrerr;
+        public bool HasCurrentValidationError
+        {
+            get { return _hascurrerr; }
+            set { _hascurrerr = value; NotifyPropertyChanged("HasCurrentValidationError"); }
+        }
+
+        private void newPasswordInput_Validation(object s, PasswordEqualRule.ValidationEventArgs e)
+        {
+            HasCurrentValidationError = !e.Result;
+        }
+
+        private void passwordRepeatInput_Validation(object s, PasswordEqualRule.ValidationEventArgs e)
+        {
+            HasValidationError = !e.Result;
         }
         #endregion
 
@@ -128,11 +155,20 @@ namespace PizzaNetControls.ViewModels
         public void GotFocusAction()
         {
             ClientSettingsView.Load();
+            Password = ClientConfig.CurrentUser.Password;
         }
 
         public bool LostFocusAction()
         {
             return true;
+        }
+
+        private void inputGotFocus(object sender, RoutedEventArgs e)
+        {
+            var s = sender as TextBox;
+            if (s != null) s.SelectAll();
+            var p = sender as PasswordBox;
+            if (p != null) p.SelectAll();
         }
     }
 }

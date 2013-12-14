@@ -97,7 +97,6 @@ namespace PizzaNetControls.ViewModels
 
         public bool LostFocusAction()
         {
-            // TODO
             return true;
         }
     }

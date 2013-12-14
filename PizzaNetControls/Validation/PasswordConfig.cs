@@ -16,6 +16,7 @@ namespace PizzaNetControls.Validation
         private PropertyInfo PropertyInfo { get; set; }
         private object Target { get; set; }
         public bool AllowEmpty { get; set; }
+        public bool AllowEmptySource { get; set; }
         public void SetTarget(Type targetType, object target, string propertyName)
         {
             PropertyInfo=targetType.GetProperty(propertyName);

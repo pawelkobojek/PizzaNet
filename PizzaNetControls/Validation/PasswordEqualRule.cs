@@ -18,7 +18,9 @@ namespace PizzaNetControls.Validation
             string val = value as string;
             if (val == null) return new ValidationResult(false, "Value cannot be converted to string");
             string temp = PasswordConfig.Value;
-            bool result = String.Equals(val, temp) || (PasswordConfig.AllowEmpty && String.Equals(val, ""));
+            bool result = String.Equals(val, temp)
+                || (PasswordConfig.AllowEmpty && String.Equals(val, ""))
+                || (PasswordConfig.AllowEmptySource && String.Equals(temp, ""));
             if (Validation != null)
                 Validation(this, new ValidationEventArgs { Result = result });
             return new ValidationResult(result,"Incorrect password");
