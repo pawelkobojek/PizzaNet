@@ -36,13 +36,13 @@ namespace PizzaNetCommon.Services
         void SetOrderState(UpdateRequest<OrderDTO> request);
 
         [OperationContract]
-        ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<IList<OrderSuppliesDTO>> request);
+        ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<List<OrderSuppliesDTO>> request);
 
         [OperationContract]
-        ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request);
+        ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<List<StockIngredientDTO>> request);
 
         [OperationContract]
-        ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request);
+        ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<List<StockIngredientDTO>> request);
 
         [OperationContract]
         SingleItemResponse<UserDTO> GetUser(EmptyRequest req);
@@ -55,5 +55,14 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         void MakeOrder(UpdateRequest<OrderDTO> req);
+
+        [OperationContract]
+        void InsertRecipe(UpdateRequest<RecipeDTO> req);
+
+        [OperationContract]
+        TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req);
+
+        [OperationContract]
+        ListResponse<UserDTO> UpdateOrRemoveUser(UpdateOrRemoveRequest<List<UserDTO>> req);
     }
 }

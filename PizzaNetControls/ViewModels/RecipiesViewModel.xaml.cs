@@ -104,5 +104,10 @@ namespace PizzaNetControls.ViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        private void ButtonSaveChanges_Click(object sender, RoutedEventArgs e)
+        {
+            RecipiesView.SaveChanges();
+        }
     }
 }

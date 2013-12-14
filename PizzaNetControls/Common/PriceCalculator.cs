@@ -16,6 +16,9 @@ namespace PizzaNetControls.Common
         {
             PriceData result = new PriceData() { PriceLow =  BASE_PRICE * sizes[0].SizeValue,
                 PriceMed = BASE_PRICE * sizes[1].SizeValue, PriceHigh = BASE_PRICE * sizes[2].SizeValue };
+            if (r.Ingredients == null)
+                return result;
+
             foreach (var i in r.Ingredients)
             {
                 if (sizes.Count() != 3) throw new Exception("Invalid sizes collection");

@@ -15,7 +15,7 @@ namespace PizzaService.Assemblers
 
             if (r.Ingredients != null)
             {
-                IList<OrderIngredientDTO> ingDtos = new List<OrderIngredientDTO>();
+                List<OrderIngredientDTO> ingDtos = new List<OrderIngredientDTO>();
 
                 foreach (var ing in r.Ingredients)
                 {

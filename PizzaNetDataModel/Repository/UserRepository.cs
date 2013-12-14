@@ -10,7 +10,7 @@ namespace PizzaNetDataModel.Repository
     public interface IUserRepository : IRepository<User, int>
     {
         User Find(string login);
-        IList<User> FindAll();
+        List<User> FindAll();
     }
 
     public class UserRepository : IUserRepository
@@ -22,7 +22,7 @@ namespace PizzaNetDataModel.Repository
             db = ctx;
         }
 
-        public IList<User> FindAll()
+        public List<User> FindAll()
         {
             return db.Users.ToList();
         }
@@ -55,6 +55,11 @@ namespace PizzaNetDataModel.Repository
         public User Find(string email)
         {
             return db.Users.SingleOrDefault(u => u.Email == email);
+        }
+
+        public void Update(User user)
+        {
+            db.Users.Attach(user);
         }
     }
 }

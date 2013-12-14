@@ -213,7 +213,7 @@ namespace PizzaNetControls.Views
                     MessageBox.Show(REFRESH_FAILED);
                     return;
                 }
-                IList<OrderDTO> orders = res.Data;
+                List<OrderDTO> orders = res.Data;
                 bool[] current = new bool[orders.Count()];
                 foreach (var order in orders)
                 {

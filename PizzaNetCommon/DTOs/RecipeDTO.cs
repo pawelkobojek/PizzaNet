@@ -12,6 +12,6 @@ namespace PizzaNetCommon.DTOs
 
         public string Name { get; set; }
 
-        public IList<OrderIngredientDTO> Ingredients { get; set; }
+        public List<OrderIngredientDTO> Ingredients { get; set; }
     }
 }

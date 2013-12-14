@@ -9,7 +9,7 @@ namespace PizzaNetDataModel.Repository
 {
     public interface IStateRepository : IRepository<State, int>
     {
-        IList<State> FindAll();
+        List<State> FindAll();
 
         State Find(int stateValue);
     }
@@ -23,7 +23,7 @@ namespace PizzaNetDataModel.Repository
             db = ctx;
         }
 
-        public IList<State> FindAll()
+        public List<State> FindAll()
         {
             return db.States.ToList();
         }

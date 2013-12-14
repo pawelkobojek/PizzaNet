@@ -17,6 +17,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using PizzaNetCommon.DTOs;
+using PizzaNetControls.Configuration;
 
 namespace PizzaNetControls.ViewModels
 {
@@ -93,7 +95,8 @@ namespace PizzaNetControls.ViewModels
 
         private void SettingsButtonApply_Click(object sender, RoutedEventArgs e)
         {
-            _vo.SaveConfig();
+            //_vo.SaveConfig();
+            _vo.SaveUserInfo();
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -120,6 +123,16 @@ namespace PizzaNetControls.ViewModels
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public void GotFocusAction()
+        {
+            ClientSettingsView.User = ClientConfig.CurrentUser;
+        }
+
+        public bool LostFocusAction()
+        {
+            return true;
         }
     }
 }

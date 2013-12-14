@@ -21,8 +21,8 @@ namespace PizzaNetTests
 
                 InAutoRollbackTransaction(uof =>
                     {
-                        IList<Ingredient> ingredients = uof.Db.Ingredients.FindAll();
-                        IList<StockIngredientDTO> ingDtos = ch.GetIngredients(empRequest).Data;
+                        List<Ingredient> ingredients = uof.Db.Ingredients.FindAll();
+                        List<StockIngredientDTO> ingDtos = ch.GetIngredients(empRequest).Data;
 
                         for (int i = 0; i < ingDtos.Count; i++)
                         {
@@ -46,11 +46,11 @@ namespace PizzaNetTests
             {
                 InAutoRollbackTransaction(uof =>
                     {
-                        IList<Order> orders = uof.Db.Orders.FindAllEagerlyWhere(o => o.State.StateValue == State.NEW ||
+                        List<Order> orders = uof.Db.Orders.FindAllEagerlyWhere(o => o.State.StateValue == State.NEW ||
                             o.State.StateValue == State.IN_REALISATION);
 
                         // IList<OrderDTO> dtoOrders = ch.GetOrdersWhere(QueryRequest.New(new OrdersQuery { Predicate = st => st.State.StateValue == State.IN_REALISATION || st.State.StateValue == State.NEW })).Data;
-                        IList<OrderDTO> dtoOrders = ch.GetUndoneOrders(empRequest).Data;
+                        List<OrderDTO> dtoOrders = ch.GetUndoneOrders(empRequest).Data;
 
                         Assert.IsTrue(orders.Count == dtoOrders.Count);
 
@@ -136,7 +136,7 @@ namespace PizzaNetTests
         {
             using (var ch = new WorkChannel())
             {
-                IList<StockIngredientDTO> ings = ch.GetIngredients(empRequest).Data;
+                List<StockIngredientDTO> ings = ch.GetIngredients(empRequest).Data;
                 List<StockIngredientDTO> toUpdate = new List<StockIngredientDTO>();
                 string Name1 = ings[0].Name;
                 string Name2 = ings[1].Name;
@@ -144,9 +144,9 @@ namespace PizzaNetTests
                 ings[1].Name = "UPDATED2";
                 toUpdate.Add(ings[0]);
                 toUpdate.Add(ings[1]);
-                ch.UpdateIngredient(new UpdateRequest<IList<StockIngredientDTO>> { Data = toUpdate, Login=emp.Email, Password=emp.Password });
+                ch.UpdateIngredient(new UpdateRequest<List<StockIngredientDTO>> { Data = toUpdate, Login=emp.Email, Password=emp.Password });
 
-                IList<StockIngredientDTO> newIngs = ch.GetIngredients(empRequest).Data;
+                List<StockIngredientDTO> newIngs = ch.GetIngredients(empRequest).Data;
                 Assert.IsTrue(newIngs[0].Name == ings[0].Name);
                 Assert.IsTrue(newIngs[1].Name == ings[1].Name);
 
@@ -157,7 +157,7 @@ namespace PizzaNetTests
                 toUpdate.Add(newIngs[0]);
                 toUpdate.Add(newIngs[1]);
 
-                ch.UpdateIngredient(new UpdateRequest<IList<StockIngredientDTO>> { Data = toUpdate, Login=emp.Email, Password=emp.Password });
+                ch.UpdateIngredient(new UpdateRequest<List<StockIngredientDTO>> { Data = toUpdate, Login=emp.Email, Password=emp.Password });
             }
             //ServiceMock mock = new ServiceMock();
 

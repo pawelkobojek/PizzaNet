@@ -57,12 +57,12 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             return Channel.GetUser(req);
         }
 
-        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<IList<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<List<StockIngredientDTO>> request)
         {
             return Channel.UpdateIngredient(request);
         }
 
-        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<IList<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<List<StockIngredientDTO>> request)
         {
             return Channel.UpdateOrRemoveIngredient(request);
         }
@@ -74,7 +74,7 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         }
 
 
-        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<IList<OrderSuppliesDTO>> request)
+        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<List<OrderSuppliesDTO>> request)
         {
             return Channel.OrderSupplies(request);
         }
@@ -91,6 +91,22 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             Channel.MakeOrder(req);
         }
 
+        public void InsertRecipe(UpdateRequest<RecipeDTO> req)
+        {
+            Channel.InsertRecipe(req);
+        }
+
+
+        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req)
+        {
+            return Channel.UpdateOrRmoveRecipe(req);
+        }
+
+
+        public ListResponse<UserDTO> UpdateOrRemoveUser(UpdateOrRemoveRequest<List<UserDTO>> req)
+        {
+            return Channel.UpdateOrRemoveUser(req);
+        }
 
         public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<RegisterUserDTO> req)
         {

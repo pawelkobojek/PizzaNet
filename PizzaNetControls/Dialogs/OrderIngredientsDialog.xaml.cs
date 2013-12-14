@@ -51,12 +51,12 @@ namespace PizzaNetControls.Dialogs
         {
             worker.EnqueueTask(new Workers.WorkerTask((args) =>
                 {
-                    var list = args[0] as IList<OrderSuppliesDTO>;
+                    var list = args[0] as List<OrderSuppliesDTO>;
                     try
                     {
                         using (var proxy = new WorkChannel())
                         {
-                            return proxy.OrderSupplies(new UpdateRequest<IList<OrderSuppliesDTO>>()
+                            return proxy.OrderSupplies(new UpdateRequest<List<OrderSuppliesDTO>>()
                             {
                                 Data = list,
                                 Login = ClientConfig.CurrentUser.Email,

@@ -18,8 +18,20 @@ namespace PizzaService.Assemblers
                 Address = user.Address,
                 Phone = user.Phone,
                 Rights = user.Rights,
-                UserID = user.UserID
+                UserID = user.UserID,
+                Password = user.Password
             };
+        }
+
+        internal void UpdateEntity(User user, UserDTO userDto)
+        {
+            user.Address = userDto.Address;
+            user.Email = userDto.Email;
+            user.Name = userDto.Name;
+            user.Phone = userDto.Phone;
+            user.Rights = userDto.Rights;
+            //TODO przedyskutować
+            //user.Password = userDto.Password;
         }
 
         public User ToUser(RegisterUserDTO user)

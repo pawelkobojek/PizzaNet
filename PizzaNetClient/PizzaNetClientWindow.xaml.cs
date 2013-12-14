@@ -83,6 +83,9 @@ namespace PizzaNetClient
 
             if (OrdersTab.IsSelected)
                 myOrdersViewModel.GotFocusAction();
+
+            if (SettingsTab.IsSelected)
+                settingsViewModel.GotFocusAction();
         }
     }
 }

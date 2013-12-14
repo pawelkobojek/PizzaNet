@@ -27,7 +27,8 @@ namespace PizzaNetControls.Views
 
         public event EventHandler<EventArgs> SuppliesOrdered;
 
-        public StockView(IWorker worker) : base(worker)
+        public StockView(IWorker worker)
+            : base(worker)
         {
             this.StockItemsCollection = new NotifiedObservableCollection<StockIngredientDTO>();
             this.RemovedStockItemsList = new List<StockIngredientDTO>();
@@ -80,8 +81,8 @@ namespace PizzaNetControls.Views
             //    Console.WriteLine("Added " + ing.Name);
             //}));
             int nextId = NextId();
-            string newName = "New Ingredient" + ((int.MinValue-nextId-1 == -1) ? "" : String.Format(" {0}", -(int.MinValue-nextId-1)));
-            StockItemsCollection.Add(new StockIngredientDTO { IngredientID=nextId, Name = newName, StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, IsPartOfRecipe=false });
+            string newName = "New Ingredient" + ((int.MinValue - nextId - 1 == -1) ? "" : String.Format(" {0}", -(int.MinValue - nextId - 1)));
+            StockItemsCollection.Add(new StockIngredientDTO { IngredientID = nextId, Name = newName, StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, IsPartOfRecipe = false });
             Modified = true;
         }
 
@@ -167,11 +168,11 @@ namespace PizzaNetControls.Views
                 Console.WriteLine("Result is null");
                 return;
             }
-            IList<StockIngredientDTO> ings = ((ListResponse<StockIngredientDTO>)e.Result).Data;
+            List<StockIngredientDTO> ings = ((ListResponse<StockIngredientDTO>)e.Result).Data;
             RewriteStockItems(ings);
         }
 
-        private void RewriteStockItems(IList<StockIngredientDTO> list)
+        private void RewriteStockItems(List<StockIngredientDTO> list)
         {
             StockItemsCollection.Clear();
             foreach (var item in list)
@@ -187,11 +188,11 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    var list       = args[0] as IList<StockIngredientDTO>;
-                    var removeList = args[1] as IList<StockIngredientDTO>;
+                    var list = args[0] as List<StockIngredientDTO>;
+                    var removeList = args[1] as List<StockIngredientDTO>;
                     using (var proxy = new WorkChannel())
                     {
-                        return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<IList<StockIngredientDTO>>()
+                        return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<List<StockIngredientDTO>>()
                         {
                             Login = ClientConfig.CurrentUser.Email,
                             Password = ClientConfig.CurrentUser.Password,
@@ -205,7 +206,7 @@ namespace PizzaNetControls.Views
                     Console.WriteLine(exc.Message);
                     return null;
                 }
-            }, (s,e) =>
+            }, (s, e) =>
             {
                 var result = e.Result as ListResponse<StockIngredientDTO>;
                 if (result == null)
