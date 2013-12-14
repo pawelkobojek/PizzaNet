@@ -84,27 +84,29 @@ namespace PizzaNetControls.Views
 
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
+                var det = args[0] as List<OrderDetailDTO>;
                 try
                 {
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
                         proxy.MakeOrder(new UpdateRequest<OrderDTO>
                         {
                             Data = new OrderDTO
                                 {
-                                    Address = ClientConfig.getConfig().User.Address,
+                                    Address = ClientConfig.CurrentUser.Address,
                                     Date = DateTime.Now,
-                                    CustomerPhone = ClientConfig.getConfig().User.Phone,
-                                    OrderDetailsDTO = details
+                                    CustomerPhone = ClientConfig.CurrentUser.Phone,
+                                    OrderDetailsDTO = det
                                 },
-                            Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().User.Password
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password
                         });
                     }
                     return true;
                 }
                 catch (Exception e)
                 {
+                    //TODO
                     return false;
                 }
                 //var cfg = args[0] as ClientConfig;
@@ -145,9 +147,10 @@ namespace PizzaNetControls.Views
                 bool b = (args.Result as bool?) ?? false;
                 MessageBox.Show((b) ? "Ordered successfully" : "Error while ordering", "PizzaNet");
                 if (b) OrderedPizzasCollection.Clear();
-            }, ClientConfig.getConfig(), details));
+            }, details));
         }
 
+        //TODO remove methods
         /// <summary>
         /// Method needed to merge Ingredients and avoid to duplicate them in Ingredients table
         /// </summary>
@@ -250,12 +253,12 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
                         return proxy.GetRecipeTabData(new PizzaNetCommon.Requests.EmptyRequest
                         {
-                            Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().User.Password
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password
                         });
                     }
                     //using (var db = new PizzaUnitOfWork())

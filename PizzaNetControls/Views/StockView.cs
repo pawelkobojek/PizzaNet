@@ -23,12 +23,12 @@ namespace PizzaNetControls.Views
         public NotifiedObservableCollection<StockIngredientDTO> StockItemsCollection { get; set; }
         private List<StockIngredientDTO> RemovedStockItemsList { get; set; }
         private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
-        private const string TITLE = "PizzaNetWorkClient";
         private const string SAVE_CHANGES_FAILURE = "Save changes failed";
 
         public event EventHandler<EventArgs> SuppliesOrdered;
 
-        public StockView(IWorker worker) : base(worker)
+        public StockView(IWorker worker)
+            : base(worker)
         {
             this.StockItemsCollection = new NotifiedObservableCollection<StockIngredientDTO>();
             this.RemovedStockItemsList = new List<StockIngredientDTO>();
@@ -37,7 +37,7 @@ namespace PizzaNetControls.Views
 
         private void showError(string message)
         {
-            Utils.showError(TITLE, message);
+            Utils.showError(message);
         }
 
         public bool Modified { get; set; }
@@ -81,8 +81,8 @@ namespace PizzaNetControls.Views
             //    Console.WriteLine("Added " + ing.Name);
             //}));
             int nextId = NextId();
-            string newName = "New Ingredient" + ((int.MinValue-nextId-1 == -1) ? "" : String.Format(" {0}", -(int.MinValue-nextId-1)));
-            StockItemsCollection.Add(new StockIngredientDTO { IngredientID=nextId, Name = newName, StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, IsPartOfRecipe=false });
+            string newName = "New Ingredient" + ((int.MinValue - nextId - 1 == -1) ? "" : String.Format(" {0}", -(int.MinValue - nextId - 1)));
+            StockItemsCollection.Add(new StockIngredientDTO { IngredientID = nextId, Name = newName, StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, IsPartOfRecipe = false });
             Modified = true;
         }
 
@@ -134,10 +134,9 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    var cfg = ClientConfig.getConfig();
-                    using (var proxy = new WorkChannel(cfg.ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
-                        return proxy.GetIngredients(new EmptyRequest { Login = cfg.User.Email, Password = cfg.User.Password });
+                        return proxy.GetIngredients(new EmptyRequest { Login = ClientConfig.CurrentUser.Email, Password = ClientConfig.CurrentUser.Password });
                     }
                     //using (var db = new PizzaUnitOfWork())
                     //{
@@ -189,14 +188,14 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    var list       = args[0] as List<StockIngredientDTO>;
+                    var list = args[0] as List<StockIngredientDTO>;
                     var removeList = args[1] as List<StockIngredientDTO>;
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
                         return proxy.UpdateOrRemoveIngredient(new UpdateOrRemoveRequest<List<StockIngredientDTO>>()
                         {
-                            Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().User.Password,
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password,
                             Data = list,
                             DataToRemove = removeList
                         });
@@ -207,7 +206,7 @@ namespace PizzaNetControls.Views
                     Console.WriteLine(exc.Message);
                     return null;
                 }
-            }, (s,e) =>
+            }, (s, e) =>
             {
                 var result = e.Result as ListResponse<StockIngredientDTO>;
                 if (result == null)

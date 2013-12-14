@@ -52,9 +52,9 @@ namespace PizzaNetDataModel.Repository
             db.Users.Remove(entity);
         }
 
-        public User Find(string p)
+        public User Find(string email)
         {
-            return db.Users.SingleOrDefault(u => u.Email == p);
+            return db.Users.SingleOrDefault(u => u.Email == email);
         }
 
         public void Update(User user)

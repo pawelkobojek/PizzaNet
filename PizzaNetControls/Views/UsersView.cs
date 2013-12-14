@@ -40,12 +40,12 @@ namespace PizzaNetControls.Views
                 {
                     try
                     {
-                        using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                        using (var proxy = new WorkChannel())
                         {
                             return proxy.GetUsers(new EmptyRequest
                             {
-                                Login = ClientConfig.getConfig().User.Email,
-                                Password = ClientConfig.getConfig().User.Password
+                                Login = ClientConfig.CurrentUser.Email,
+                                Password = ClientConfig.CurrentUser.Password
                             });
                         }
                     }
@@ -59,7 +59,7 @@ namespace PizzaNetControls.Views
                         var result = e.Result as ListResponse<UserDTO>;
                         if (result == null)
                         {
-                            Utils.showError("blabla", "blablablabla");
+                            Utils.showError("blabla");
                             return;
                         }
 
@@ -91,7 +91,7 @@ namespace PizzaNetControls.Views
                 {
                     try
                     {
-                        using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                        using (var proxy = new WorkChannel())
                         {
                             List<UserDTO> toUpdate = new List<UserDTO>();
                             List<UserDTO> toRemove = new List<UserDTO>();
@@ -109,8 +109,8 @@ namespace PizzaNetControls.Views
                             {
                                 Data = toUpdate,
                                 DataToRemove = toRemove,
-                                Login = ClientConfig.getConfig().User.Email,
-                                Password = ClientConfig.getConfig().User.Password
+                                Login = ClientConfig.CurrentUser.Email,
+                                Password = ClientConfig.CurrentUser.Password
                             });
                         }
                     }
@@ -123,7 +123,7 @@ namespace PizzaNetControls.Views
                         var result = e.Result as ListResponse<UserDTO>;
                         if (result == null)
                         {
-                            Utils.showError("bla", "blabla");
+                            Utils.showError("bla");
                             return;
                         }
                         UsersCollection.Clear();

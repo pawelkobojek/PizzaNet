@@ -37,12 +37,12 @@
                 <TabItem Name="OrdersTab" Header="My orders">
                     <PizzaNetViewModels:MyOrdersViewModel Name="myOrdersViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
-                <TabItem Header="Settings">
+                <TabItem Name="SettingsTab" Header="Settings">
                     <PizzaNetViewModels:ClientSettingsViewModel Name="settingsViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
             </TabControl>
         </Grid>
         <PizzaNetDialogs:LoginDialog Name="loginDialog" OverlayOn="{Binding ElementName=allContent}"
-                                     MinRightsLevel="1"/>
+                                     MinRightsLevel="1" ParentWindow="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
     </Grid>
 </Window>

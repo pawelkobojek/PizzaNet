@@ -37,7 +37,7 @@ namespace PizzaNetControls.Views
 
         private void showError(string message)
         {
-            Utils.showError(TITLE, message);
+            Utils.showError(message);
         }
 
         internal void UpdateRecipe(int index)
@@ -154,12 +154,12 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
                         return proxy.GetRecipeTabData(new EmptyRequest
                         {
-                            Login = ClientConfig.getConfig().User.Email,
-                            Password = ClientConfig.getConfig().User.Password
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password
                         });
                     }
                     //        using (var db = new PizzaUnitOfWork())
@@ -376,7 +376,7 @@ namespace PizzaNetControls.Views
                 {
                     try
                     {
-                        using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                        using (var proxy = new WorkChannel())
                         {
                             List<RecipeDTO> toUpdate = new List<RecipeDTO>();
                             foreach (var recControl in RecipesCollection)
@@ -387,8 +387,8 @@ namespace PizzaNetControls.Views
                             {
                                 Data = toUpdate,
                                 DataToRemove = RemovedRecipes,
-                                Login = ClientConfig.getConfig().User.Email,
-                                Password = ClientConfig.getConfig().User.Password
+                                Login = ClientConfig.CurrentUser.Email,
+                                Password = ClientConfig.CurrentUser.Password
                             });
                         }
                     }
@@ -403,7 +403,7 @@ namespace PizzaNetControls.Views
                         var result = e.Result as TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int>;
                         if (result == null)
                         {
-                            Utils.showError("blablabla", "asd");
+                            Utils.showError("blablabla");
                             return;
                         }
 

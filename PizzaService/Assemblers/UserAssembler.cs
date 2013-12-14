@@ -18,7 +18,8 @@ namespace PizzaService.Assemblers
                 Address = user.Address,
                 Phone = user.Phone,
                 Rights = user.Rights,
-                UserID = user.UserID
+                UserID = user.UserID,
+                Password = user.Password
             };
         }
 
@@ -31,6 +32,19 @@ namespace PizzaService.Assemblers
             user.Rights = userDto.Rights;
             //TODO przedyskutować
             //user.Password = userDto.Password;
+        }
+
+        public User ToUser(RegisterUserDTO user)
+        {
+            return new User
+            {
+                Email = user.Email,
+                Name = user.Name,
+                Address = user.Address,
+                Phone = user.Phone,
+                Rights = 1,
+                Password = user.Password
+            };
         }
     }
 }

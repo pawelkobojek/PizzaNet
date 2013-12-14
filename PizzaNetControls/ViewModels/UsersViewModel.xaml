@@ -30,6 +30,7 @@
                     <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}" />
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding Phone}" />
+                    <GridViewColumn Header="Password" DisplayMemberBinding="{Binding Password}"/>
                     <GridViewColumn Header="Rights" DisplayMemberBinding="{Binding Rights, Converter={ StaticResource ResourceKey=rightsConverter}}" />
                 </GridView>
             </ListView.View>

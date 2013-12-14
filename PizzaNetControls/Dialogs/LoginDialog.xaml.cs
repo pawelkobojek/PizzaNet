@@ -44,7 +44,6 @@ namespace PizzaNetControls.Dialogs
 
         public SignUpCommand SignUpCommand { get; private set; }
         public int MinRightsLevel { get; set; }
-        public const string TITLE = "Login";
         public const string LOGIN_FAILED = "Login failed";
         public const string RIGHTS_LEVEL_FAILURE = "You don't have enough rights level";
 
@@ -53,6 +52,20 @@ namespace PizzaNetControls.Dialogs
             get { return (bool)GetValue(ShowSignUpProperty); }
             set { SetValue(ShowSignUpProperty, value); }
         }
+
+        public Window ParentWindow
+        {
+            get { return (Window)GetValue(ParentWindowProperty); }
+            set { SetValue(ParentWindowProperty, value); }
+        }
+
+        public object Me { get { return this; } }
+
+        // Using a DependencyProperty as the backing store for ParentWindow.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ParentWindowProperty =
+            DependencyProperty.Register("ParentWindow", typeof(Window), typeof(LoginDialog), new FrameworkPropertyMetadata());
+
+        
 
         // Using a DependencyProperty as the backing store for ShowSignUp.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ShowSignUpProperty =
@@ -67,13 +80,13 @@ namespace PizzaNetControls.Dialogs
                 UserDTO res = o.Result as UserDTO;
                 if (res!=null)
                 {
-                    ClientConfig cfg = ClientConfig.getConfig(res.Email);
-                    cfg.User = User.FromUserDTO(res);
-                    cfg.User.Password = passwordInput.Password;
-                    cfg.Save();
-                    if (cfg.User.Rights<MinRightsLevel)
+                    ClientConfig.CurrentUser = ClientConfig.GetUser(res.Email);
+                    ClientConfig.CurrentUser.UpdateWithUserDTO(res);
+                    ClientConfig.CurrentUser.Password = passwordInput.Password;
+                    ClientConfig.Save();
+                    if (ClientConfig.CurrentUser.Rights < MinRightsLevel)
                     {
-                        Utils.showError(TITLE, RIGHTS_LEVEL_FAILURE);
+                        Utils.showError(RIGHTS_LEVEL_FAILURE);
                         return;
                     }
                     if (OnLogin != null)
@@ -83,7 +96,7 @@ namespace PizzaNetControls.Dialogs
                 }
                 else
                 {
-                    Utils.showError(TITLE, LOGIN_FAILED);
+                    Utils.showError(LOGIN_FAILED);
                     return;
                 }
             },emailInput.Text, passwordInput.Password);
@@ -95,7 +108,6 @@ namespace PizzaNetControls.Dialogs
             this.Hide();
         }
 
-        private WorkChannel proxy = new WorkChannel("http://localhost:60499/PizzaService.svc");
         private void ValidateLogin(WorkerTask.WorkFinishedHandler handler, string login, string password)
         {
             worker.EnqueueTask(new WorkerTask(
@@ -103,10 +115,10 @@ namespace PizzaNetControls.Dialogs
                 {
                     var log = args[0] as string;
                     var pass = args[1] as string;
-                    var cfg = args[2] as ClientConfig;
+                    var cfg = ClientConfig.GetUser(log);
                     try
                     {
-                        using (var proxy = new WorkChannel(cfg.ServerAddress))
+                        using (var proxy = new WorkChannel())
                         {
                             var result = proxy.GetUser(new EmptyRequest() { Login = log, Password = pass });
                             if (result == null) return null;
@@ -118,7 +130,15 @@ namespace PizzaNetControls.Dialogs
                         Console.WriteLine(exc.Message);
                         return null;
                     }
-                },handler, login, password, ClientConfig.getConfig()));
+                },handler, login, password));
+        }
+
+        private void inputGotFocus(object sender, RoutedEventArgs e)
+        {
+            var s = sender as TextBox;
+            if (s != null) s.SelectAll();
+            var p = sender as PasswordBox;
+            if (p != null) p.SelectAll();
         }
     }
 
@@ -133,7 +153,10 @@ namespace PizzaNetControls.Dialogs
 
         public void Execute(object parameter)
         {
-            new SignUpWindow().ShowDialog();
+            var w = parameter as LoginDialog;
+            new SignUpWindow(){ Owner = w.ParentWindow }.ShowDialog();
+            FocusManager.SetFocusedElement(w, w.emailInput);
+            Keyboard.Focus(w.emailInput);
         }
     }
 }

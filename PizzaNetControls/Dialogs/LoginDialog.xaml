@@ -67,15 +67,15 @@
                     </StackPanel.Resources>
                     <DockPanel>
                         <TextBlock Text="Email:"/>
-                        <TextBox Name="emailInput"/>
+                        <TextBox Name="emailInput" GotFocus="inputGotFocus"/>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock Text="Password:"/>
-                        <PasswordBox Name="passwordInput"/>
+                        <PasswordBox Name="passwordInput" GotFocus="inputGotFocus"/>
                     </DockPanel>
                     <TextBlock Margin="0,5,0,0" HorizontalAlignment="Center" FontSize="9" Visibility="{Binding ShowSignUp, Converter={StaticResource ResourceKey=boolToVisibilityConverter}}">
                         <Hyperlink Command="{Binding SignUpCommand}" 
-                                   CommandParameter="{Binding}">
+                                   CommandParameter="{Binding Me}">
                             You don't have an account? Sign up for free!
                         </Hyperlink>
                     </TextBlock>

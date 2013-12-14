@@ -130,13 +130,13 @@ namespace PizzaNetControls.Views
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
                 o.Order.State.StateValue = State.IN_REALISATION;
-                using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                using (var proxy = new WorkChannel())
                 {
                     proxy.SetOrderState(new UpdateRequest<OrderDTO>
                     {
                         Data = o.Order,
-                        Login = ClientConfig.getConfig().User.Email,
-                        Password = ClientConfig.getConfig().User.Password
+                        Login = ClientConfig.CurrentUser.Email,
+                        Password = ClientConfig.CurrentUser.Password
                     });
                 }
                 return o;
@@ -181,9 +181,13 @@ namespace PizzaNetControls.Views
             {
                 try
                 {
-                    using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                    using (var proxy = new WorkChannel())
                     {
-                        return proxy.GetUndoneOrders(new PizzaNetCommon.Requests.EmptyRequest { Login = ClientConfig.getConfig().User.Email, Password = ClientConfig.getConfig().User.Password });
+                        return proxy.GetUndoneOrders(new PizzaNetCommon.Requests.EmptyRequest 
+                        { 
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password 
+                        });
                     }
                     //using (var db = new PizzaUnitOfWork())
                     //{
@@ -225,13 +229,13 @@ namespace PizzaNetControls.Views
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
                 o.Order.State.StateValue = State.DONE;
-                using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                using (var proxy = new WorkChannel())
                 {
                     proxy.SetOrderState(new UpdateRequest<OrderDTO>
                     {
                         Data = o.Order,
-                        Login = ClientConfig.getConfig().User.Email,
-                        Password = ClientConfig.getConfig().User.Password
+                        Login = ClientConfig.CurrentUser.Email,
+                        Password = ClientConfig.CurrentUser.Password
                     });
                 }
                 return o;
@@ -247,14 +251,14 @@ namespace PizzaNetControls.Views
             OrdersRow or = OrdersCollection[orderIndex];
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
-                using (var proxy = new WorkChannel(ClientConfig.getConfig().ServerAddress))
+                using (var proxy = new WorkChannel())
                 {
                     proxy.RemoveOrder(new UpdateOrRemoveRequest<OrderDTO>
                     {
                         Data = null,
                         DataToRemove = or.Order,
-                        Login = ClientConfig.getConfig().User.Email,
-                        Password = ClientConfig.getConfig().User.Password
+                        Login = ClientConfig.CurrentUser.Email,
+                        Password = ClientConfig.CurrentUser.Password
                     });
                 }
                 return null;

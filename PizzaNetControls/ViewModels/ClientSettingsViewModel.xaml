@@ -41,7 +41,7 @@
         <StackPanel Margin="30" Grid.Column="0" Grid.Row="0">
             <DockPanel>
                 <TextBlock Text="Id:"/>
-                <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.UserId}"/>
+                <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.UserID}"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Name:"/>

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Net;
+using System.Configuration;
 
 namespace PizzaNetWorkClient
 {
@@ -13,7 +14,8 @@ namespace PizzaNetWorkClient
     {
         public PizzaNetWorkWindow()
         {
-            ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => { return true; };
+            if (!((Properties.Settings.Default["UsesValidCertificate"] as bool?) ?? true))
+                ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => { return true; };
             InitializeComponent();
             this.DataContext = this;
             this.worker.Lock = this.tabControl;

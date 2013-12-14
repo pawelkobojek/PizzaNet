@@ -509,5 +509,37 @@ namespace PizzaService
                         .ToList());
                 });
         }
+
+        public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<RegisterUserDTO> req)
+        {
+            var user = req.Data;
+            if (user == null)
+                return null;
+
+            if (user.Password.Length == 0)
+            {
+                throw PizzaServiceFault.Create(PizzaServiceFault.PASSWORD_EMPTY);
+            }
+            if (user.Email.Length == 0)
+            {
+                //TODO email format check
+                throw PizzaServiceFault.Create(PizzaServiceFault.EMAIL_EMPTY);
+            }
+            if (user.Address.Length == 0)
+            {
+                throw PizzaServiceFault.Create(PizzaServiceFault.ADDRESS_EMPTY);
+            }
+
+            return db.inTransaction(uow =>
+                {
+                    if (uow.Db.Users.Find(user.Email) != null)
+                        throw PizzaServiceFault.Create(String.Format(PizzaServiceFault.EMAIL_ALREADY_REGISTERED_FORMAT, user.Email));
+                    var ins = userAssembler.ToUser(user);
+                    ins.UserID = -1;
+                    uow.Db.Users.Insert(ins);
+                    uow.Db.Commit();
+                    return SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Find(ins.Email)));
+                });
+        }
     }
 }
