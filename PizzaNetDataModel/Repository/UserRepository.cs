@@ -60,6 +60,7 @@ namespace PizzaNetDataModel.Repository
         public void Update(User user)
         {
             db.Users.Attach(user);
+            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
         }
     }
 }

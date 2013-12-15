@@ -558,7 +558,6 @@ namespace PizzaService
                                     uow.Db.Users.Delete(user);
                             }
                         }
-                        db.RequestRollback = false;
                         uow.Db.Commit();
                         return ListResponse.Create(uow.Db.Users.FindAll().ToList().Select(userAssembler.ToSimpleDto)
                             .ToList());
