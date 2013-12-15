@@ -44,8 +44,6 @@ namespace PizzaNetControls.Dialogs
 
         public SignUpCommand SignUpCommand { get; private set; }
         public int MinRightsLevel { get; set; }
-        public const string LOGIN_FAILED = "Login failed";
-        public const string RIGHTS_LEVEL_FAILURE = "You don't have enough rights level";
 
         public bool ShowSignUp
         {
@@ -77,16 +75,20 @@ namespace PizzaNetControls.Dialogs
         {
             ValidateLogin((s,o) =>
             {
+                if (o.Result is Exception)
+                {
+                    Utils.HandleException(o.Result as Exception);
+                    return;
+                }
                 UserDTO res = o.Result as UserDTO;
                 if (res!=null)
                 {
                     ClientConfig.CurrentUser = ClientConfig.GetUser(res.Email);
                     ClientConfig.CurrentUser.UpdateWithUserDTO(res);
                     ClientConfig.CurrentUser.Password = passwordInput.Password;
-                    ClientConfig.Save();
                     if (ClientConfig.CurrentUser.Rights < MinRightsLevel)
                     {
-                        Utils.showError(RIGHTS_LEVEL_FAILURE);
+                        Utils.showError(Utils.Messages.RIGHTS_LEVEL_FAILURE);
                         return;
                     }
                     if (OnLogin != null)
@@ -96,7 +98,7 @@ namespace PizzaNetControls.Dialogs
                 }
                 else
                 {
-                    Utils.showError(LOGIN_FAILED);
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
                     return;
                 }
             },emailInput.Text, passwordInput.Password);
@@ -115,7 +117,6 @@ namespace PizzaNetControls.Dialogs
                 {
                     var log = args[0] as string;
                     var pass = args[1] as string;
-                    var cfg = ClientConfig.GetUser(log);
                     try
                     {
                         using (var proxy = new WorkChannel())
@@ -128,7 +129,7 @@ namespace PizzaNetControls.Dialogs
                     catch(Exception exc)
                     {
                         Console.WriteLine(exc.Message);
-                        return null;
+                        return exc;
                     }
                 },handler, login, password));
         }

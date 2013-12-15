@@ -20,6 +20,7 @@ namespace PizzaNetControls.Validation
         public bool AllowZero { get; set; }
         public bool AllowPositive { get; set; }
         public bool IntegersOnly { get; set; }
+        public event EventHandler<ValidationEventArgs> Validation;
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -37,6 +38,8 @@ namespace PizzaNetControls.Validation
                 result = result && (d <= 0);
             if (!AllowZero)
                 result = result && (d != 0);
+            if (Validation != null)
+                Validation(this, new ValidationEventArgs { Result = result });
             return new ValidationResult(result, null);
         }
 
@@ -52,6 +55,8 @@ namespace PizzaNetControls.Validation
                 result = result && (d <= 0);
             if (!AllowZero)
                 result = result && (d != 0);
+            if (Validation != null)
+                Validation(this, new ValidationEventArgs { Result = result });
             return new ValidationResult(result, null);
         }
     }

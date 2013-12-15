@@ -74,6 +74,25 @@
                 <TextBox Name="tbRights" 
                          SourceUpdated="binding_SourceUpdated" IsReadOnly="True" Text="{Binding ClientSettingsView.User.Rights, NotifyOnSourceUpdated=True}"/>
             </DockPanel>
+            <DockPanel Height="20">
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="Refresh time:"/>
+                <TextBox Name="tbRefreshTime" 
+                         SourceUpdated="binding_SourceUpdated">
+                    <TextBox.Text>
+                        <Binding Path="ClientSettingsView.User.RefreshTime"
+                                 NotifyOnSourceUpdated="True">
+                            <Binding.ValidationRules>
+                                <PizzaNetValidation:NumberValidation AllowNegative="False" 
+                                                                     AllowZero="False" 
+                                                                     IntegersOnly="True" 
+                                                                     Validation="refreshTimeValidation"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </DockPanel>
             <Button Margin="20" Grid.Column="0" Click="SettingsButtonApply_Click">
                 Apply
                 <Button.Style>
@@ -95,6 +114,9 @@
                                 <Setter Property="IsDefault" Value="True"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding ElementName=tbRights, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=tbRefreshTime, Path=IsFocused}" Value="True">
                                 <Setter Property="IsDefault" Value="True"/>
                             </DataTrigger>
                         </Style.Triggers>

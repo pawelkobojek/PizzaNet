@@ -28,7 +28,6 @@ namespace PizzaService
         private StateAssembler stateAssembler = new StateAssembler();
 
         private PizzaUnitOfWork db = new PizzaUnitOfWork();
-        private const string NOT_ENOUGH_INGS_MSG = "Not enough Ingredients in stock!";
 
         private bool HasRights(UserDTO userDTO, int p)
         {
@@ -41,17 +40,20 @@ namespace PizzaService
             {
                 using (var db = new PizzaUnitOfWork())
                 {
-
                     return db.inTransaction(uof =>
                         {
                             if (!HasRights(GetUser(req).Data, 2))
-                                return null;
+                                throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                             return ListResponse.Create(uof.Db.Ingredients.FindAll().ToList()
                                 .Select(ingAssembler.ToSimpleDto)
                                 .ToList());
                         });
                 }
+            }
+            catch (FaultException<PizzaServiceFault> e)
+            {
+                throw e;
             }
             catch (Exception e)
             {
@@ -69,7 +71,7 @@ namespace PizzaService
                     return db.inTransaction(uof =>
                     {
                         if (!HasRights(GetUser(req).Data, 1))
-                            return null;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         return TrioResponse.Create(uof.Db.Recipies.FindAll().ToList()
                             .Select(recipeAssembler.ToSimpleDto)
@@ -80,6 +82,10 @@ namespace PizzaService
                             .ToList());
                     });
                 }
+            }
+            catch (FaultException<PizzaServiceFault> e)
+            {
+                throw e;
             }
             catch (Exception e)
             {
@@ -112,7 +118,6 @@ namespace PizzaService
             }
         }
 
-
         public ListResponse<UserDTO> GetUsers(EmptyRequest req)
         {
             using (var db = new PizzaUnitOfWork())
@@ -120,7 +125,7 @@ namespace PizzaService
                 return db.inTransaction(uof =>
                     {
                         if (!HasRights(GetUser(req).Data, 3))
-                            return null;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         return ListResponse.Create(uof.Db.Users.FindAll().ToList()
                             .Select(userAssembler.ToSimpleDto).ToList());
@@ -135,7 +140,7 @@ namespace PizzaService
                 db.inTransaction(uof =>
                     {
                         if (!HasRights(GetUser(request).Data, 2))
-                            return;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
                         Order o = uof.Db.Orders.Get(request.Data.OrderID);
                         State st = uof.Db.States.Find(request.Data.State.StateValue);
                         if (request.Data.State.StateValue == State.IN_REALISATION)
@@ -148,7 +153,7 @@ namespace PizzaService
                                     if (ing == null) return;
                                     if (ing.StockQuantity - ingr.Quantity < 0)
                                     {
-                                        throw new FaultException(NOT_ENOUGH_INGS_MSG);
+                                        throw PizzaServiceFault.Create(Messages.NOT_ENOUGH_INGS_MSG);
                                     }
                                     ing.StockQuantity -= ingr.Quantity;
                                 }
@@ -167,7 +172,7 @@ namespace PizzaService
                 return db.inTransaction(uof =>
                     {
                         if (!HasRights(GetUser(req).Data, 2))
-                            return null;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         return ListResponse.Create(uof.Db.Orders.FindAll().ToList()
                             .Select(orderAssembler.ToSimpleDto).ToList());
@@ -178,14 +183,14 @@ namespace PizzaService
         public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<List<StockIngredientDTO>> request)
         {
             if (request.Data == null)
-                return null;
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
 
             using (var db = new PizzaUnitOfWork())
             {
                 return db.inTransaction(uof =>
                     {
                         if (!HasRights(GetUser(request).Data, 2))
-                            return null;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         foreach (var stockItem in request.Data)
                         {
@@ -205,13 +210,13 @@ namespace PizzaService
         public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<List<StockIngredientDTO>> request)
         {
             if (request.Data == null && request.DataToRemove == null)
-                return null;
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
             using (var db = new PizzaUnitOfWork())
             {
                 return db.inTransaction(uof =>
                 {
                     if (!HasRights(GetUser(request).Data, 2))
-                        return null;
+                        throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                     if (request.Data != null)
                     {
@@ -247,8 +252,10 @@ namespace PizzaService
                 return db.inTransaction(uow =>
                     {
                         User user = uow.Db.Users.Find(req.Login);
-                        if (user == null || !PerformValidation(user, req))
-                            return null;
+                        if (user == null)
+                            throw PizzaServiceFault.Create(Messages.INVALID_USER_OR_PASSWORD);
+                        if (!PerformValidation(user, req))
+                            throw PizzaServiceFault.Create(Messages.INVALID_USER_OR_PASSWORD);
 
                         return SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
                     });
@@ -272,7 +279,7 @@ namespace PizzaService
                 return db.inTransaction(uow =>
                     {
                         if (!HasRights(GetUser(req).Data, 1))
-                            return null;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         return ListResponse.Create(uow.Db.Orders.FindAllEagerlyWhere(o => o.User.Email == req.Login)
                             .ToList().Select(orderAssembler.ToSimpleDto).ToList());
@@ -287,12 +294,13 @@ namespace PizzaService
                 return db.inTransaction(uow =>
                 {
                     if (!HasRights(GetUser(request).Data, 2))
-                        return null;
+                        throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                     foreach (var os in request.Data)
                     {
                         Ingredient ing = uow.Db.Ingredients.Get(os.IngredientID);
-                        if (ing == null) return null;
+                        if (ing == null)
+                            throw PizzaServiceFault.Create(Messages.INGS_LIST_OUT_OF_DATE);
                         ing.StockQuantity += os.OrderValue;
                     }
 
@@ -303,7 +311,6 @@ namespace PizzaService
             }
         }
 
-
         public void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> request)
         {
             using (var db = new PizzaUnitOfWork())
@@ -311,7 +318,7 @@ namespace PizzaService
                 db.inTransaction(uow =>
                     {
                         if (!HasRights(GetUser(request).Data, 2))
-                            return;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         Order o = db.Orders.Get(request.DataToRemove.OrderID);
                         db.Orders.Delete(o);
@@ -321,7 +328,6 @@ namespace PizzaService
             }
         }
 
-
         public void MakeOrder(UpdateRequest<OrderDTO> req)
         {
             using (var db = new PizzaUnitOfWork())
@@ -330,12 +336,11 @@ namespace PizzaService
                     {
                         UserDTO userDto = GetUser(req).Data;
                         if (!HasRights(userDto, 1))
-                            return;
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         User user = uow.Db.Users.Get(userDto.UserID);
                         OrderDTO o = req.Data;
                         State st = uow.Db.States.Find(State.NEW);
-
 
                         List<OrderDetail> od = new List<OrderDetail>();
                         foreach (var ordDto in o.OrderDetailsDTO)
@@ -400,33 +405,35 @@ namespace PizzaService
             using (var db = new PizzaUnitOfWork())
             {
                 db.inTransaction(uow =>
-                    {
-                        Recipe r = new Recipe { Name = req.Data.Name };
-                        List<Ingredient> ings = new List<Ingredient>();
+                {
+                    if (!HasRights(GetUser(req).Data, 2))
+                        throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
-                        foreach (var ingDto in req.Data.Ingredients)
-                        {
-                            ings.Add(db.Ingredients.Get(ingDto.IngredientID));
-                        }
-                        r.Ingredients = ings;
-                        db.Recipies.Insert(r);
-                        uow.Db.Commit();
-                    });
+                    Recipe r = new Recipe { Name = req.Data.Name };
+                    List<Ingredient> ings = new List<Ingredient>();
+
+                    foreach (var ingDto in req.Data.Ingredients)
+                    {
+                        ings.Add(db.Ingredients.Get(ingDto.IngredientID));
+                    }
+                    r.Ingredients = ings;
+                    db.Recipies.Insert(r);
+                    uow.Db.Commit();
+                });
             }
         }
-
 
         public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRemoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> request)
         {
             if (request.Data == null && request.DataToRemove == null)
-                return null;
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
 
             using (var db = new PizzaUnitOfWork())
             {
                 return db.inTransaction(uof =>
                 {
                     if (!HasRights(GetUser(request).Data, 2))
-                        return null;
+                        throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                     if (request.Data != null)
                     {
@@ -435,7 +442,6 @@ namespace PizzaService
                             Recipe rec = uof.Db.Recipies.Get(recipe.RecipeID);
                             if (rec != null)
                             {
-
                                 rec.Name = recipe.Name;
                                 int j;
                                 for (int i = 0; i < rec.Ingredients.Count; i++)
@@ -458,7 +464,7 @@ namespace PizzaService
                                     if (ingredient == null)
                                     {
                                         db.RequestRollback = true;
-                                        return null;
+                                        throw PizzaServiceFault.Create(Messages.INGS_LIST_OUT_OF_DATE);
                                     }
 
                                     rec.Ingredients.Add(ingredient);
@@ -475,12 +481,10 @@ namespace PizzaService
                                     if (ingredient == null)
                                     {
                                         db.RequestRollback = true;
-                                        return null;
+                                        throw PizzaServiceFault.Create(Messages.INGS_LIST_OUT_OF_DATE);
                                     }
-
                                     rec.Ingredients.Add(ingredient);
                                 }
-
                                 uof.Db.Recipies.Insert(rec);
                             }
                         }
@@ -504,19 +508,17 @@ namespace PizzaService
             }
         }
 
-
         public ListResponse<UserDTO> UpdateOrRemoveUser(UpdateOrRemoveRequest<List<UserDTO>> request)
         {
             if (request.Data == null && request.DataToRemove == null)
-                return null;
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
 
             using (var db = new PizzaUnitOfWork())
             {
                 return db.inTransaction(uow =>
                     {
                         if (!HasRights(GetUser(request).Data, 3))
-                            return null;
-
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         if (request.Data != null)
                         {
@@ -565,9 +567,10 @@ namespace PizzaService
 
         public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<UserDTO> req)
         {
+            if (req == null || req.Data == null)
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
+
             var user = req.Data;
-            if (user == null)
-                return null;
 
             if (user.Password.Length == 0)
             {
@@ -605,7 +608,6 @@ namespace PizzaService
             return Regex.IsMatch(email, theEmailPattern);
         }
 
-
         public SingleItemResponse<UserDTO> UpdateUser(UpdateRequest<UserDTO> request)
         {
             if (request.Data == null)
@@ -617,10 +619,8 @@ namespace PizzaService
                     {
                         User user = uow.Db.Users.Find(request.Login);
                         if (user == null)
-                            throw PizzaServiceFault.Create(String.Format(Messages.USER_NOT_EXISTS_FORMAT,request.Login));
-                        if (!HasRights(userAssembler.ToSimpleDto(user), 1) || 
-                            user.UserID!=request.Data.UserID || 
-                            user.Password!=request.Password)
+                            throw PizzaServiceFault.Create(String.Format(Messages.USER_NOT_EXISTS_FORMAT, request.Login));
+                        if (user.UserID != request.Data.UserID || !PerformValidation(user, request))
                             throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         userAssembler.UpdateEntityUserLevel(user, request.Data);
@@ -632,8 +632,11 @@ namespace PizzaService
         public static class Messages
         {
             public const string NO_DATA = "No data to proceed has been sent!";
-            public const string NO_PERMISSIONS = "You have no permissions to proceed!";
+            public const string NO_PERMISSIONS = "Operation not permitted!";
             public const string USER_NOT_EXISTS_FORMAT = "User {0} not exists!";
+            public const string NOT_ENOUGH_INGS_MSG = "Not enough Ingredients in stock!";
+            public const string INGS_LIST_OUT_OF_DATE = "Ingredients list is out of date!";
+            public const string INVALID_USER_OR_PASSWORD = "Invalid user or password";
         }
     }
 }

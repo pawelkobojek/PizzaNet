@@ -75,11 +75,6 @@ namespace PizzaNetControls.ViewModels
             }
         }
 
-        public void GotFocusAction()
-        {
-            MyOrdersView.RefreshCurrentOrders();
-        }
-
         private void ordersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ordersListView.SelectedIndex < 0)
@@ -95,8 +90,15 @@ namespace PizzaNetControls.ViewModels
             MyOrdersView.PizzaSelectionChanged(pizzasListView.SelectedIndex);
         }
 
+        public void GotFocusAction()
+        {
+            this._vo.SetAutoRefresh(true);
+            this._vo.RefreshCurrentOrders();
+        }
+
         public bool LostFocusAction()
         {
+            this._vo.SetAutoRefresh(false);
             return true;
         }
     }

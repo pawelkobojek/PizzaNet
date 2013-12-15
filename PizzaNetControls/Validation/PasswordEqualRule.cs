@@ -25,10 +25,5 @@ namespace PizzaNetControls.Validation
                 Validation(this, new ValidationEventArgs { Result = result });
             return new ValidationResult(result,"Incorrect password");
         }
-
-        public class ValidationEventArgs : EventArgs
-        {
-            public bool Result { get; set; }
-        }
     }
 }

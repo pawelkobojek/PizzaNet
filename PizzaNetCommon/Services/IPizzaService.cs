@@ -14,6 +14,7 @@ namespace PizzaNetCommon.Services
     public interface IPizzaService
     {
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req);
 
         [OperationContract]
@@ -21,48 +22,63 @@ namespace PizzaNetCommon.Services
         SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<UserDTO> req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<OrderDTO> GetOrders(EmptyRequest req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<OrderDTO> GetUndoneOrders(EmptyRequest req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<UserDTO> GetUsers(EmptyRequest req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         void SetOrderState(UpdateRequest<OrderDTO> request);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<List<OrderSuppliesDTO>> request);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<List<StockIngredientDTO>> request);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<List<StockIngredientDTO>> request);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         SingleItemResponse<UserDTO> GetUser(EmptyRequest req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> request);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         void MakeOrder(UpdateRequest<OrderDTO> req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         void InsertRecipe(UpdateRequest<RecipeDTO> req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRemoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req);
 
         [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
         ListResponse<UserDTO> UpdateOrRemoveUser(UpdateOrRemoveRequest<List<UserDTO>> req);
 
         [OperationContract]

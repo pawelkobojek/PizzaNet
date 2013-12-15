@@ -26,26 +26,44 @@ namespace PizzaNetControls.Views
         public ObservableCollection<PizzaRow> PizzasCollection { get; set; }
         public BackgroundWorker OrdersRefresher { get; private set; }
 
-        //TODO timer interval settings
-        private const int TIMER_INTERVAL = 60000;
-
+        private const int SECOND = 1000;
+        
         public MyOrdersView(IWorker worker)
             : base(worker)
         {
             this.OrdersCollection = new NotifiedObservableCollection<OrdersRow>();
             this.IngredientsCollection = new ObservableCollection<OrderIngredientDTO>();
             this.PizzasCollection = new ObservableCollection<PizzaRow>();
+            OrdersRefresher = new BackgroundWorker();
+            OrdersRefresher.DoWork+=OrdersRefresher_DoWork;
+            OrdersRefresher.RunWorkerCompleted += OrdersRefresher_RunWorkerCompleted;
         }
 
         private void OrdersRefresher_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            RefreshCurrentOrders();
-            OrdersRefresher.RunWorkerAsync();
+            if (AutoRefreshingEnabled)
+            {
+                RefreshCurrentOrders();
+                if (!OrdersRefresher.IsBusy)
+                    OrdersRefresher.RunWorkerAsync();
+            }
+        }
+
+        private bool AutoRefreshingEnabled = false;
+
+        public void SetAutoRefresh(bool enable)
+        {
+            if (enable && !AutoRefreshingEnabled)
+            {
+                if (!OrdersRefresher.IsBusy)
+                    this.OrdersRefresher.RunWorkerAsync();
+            }
+            AutoRefreshingEnabled = enable;
         }
 
         private void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
         {
-            System.Threading.Thread.Sleep(TIMER_INTERVAL);
+            System.Threading.Thread.Sleep(ClientConfig.CurrentUser.RefreshTime*SECOND);
         }
 
         public void RefreshCurrentOrders()
