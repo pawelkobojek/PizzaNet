@@ -138,7 +138,7 @@ namespace PizzaNetControls.ViewModels
                 tbEmail.Text != ClientSettingsView.User.Email ||
                 tbPhone.Text != ClientSettingsView.User.Phone.ToString() ||
                 tbRights.Text != ClientSettingsView.User.Rights.ToString() ||
-                tbRefreshTime.Text != ClientSettingsView.User.RefreshTime.ToString();
+                tbRefreshTime.Text != ClientSettingsView.User.RefreshRate.ToString();
         }
 
         private void refreshTimeValidation(object sender, ValidationEventArgs e)

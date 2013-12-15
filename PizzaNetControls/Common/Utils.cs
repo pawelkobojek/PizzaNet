@@ -105,9 +105,9 @@ namespace PizzaNetControls.Common
         public static void HandleException(Exception exc)
         {
             if (exc is FaultException<PizzaServiceFault>)
-            {
                 showExclamation((exc as FaultException<PizzaServiceFault>).Detail.Reason);
-            }
+            else if (exc is PizzaNetException)
+                showExclamation((exc as PizzaNetException).Message);
             else
                 showError(Messages.UNKNOWN_ERROR);
         }

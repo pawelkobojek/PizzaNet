@@ -77,11 +77,11 @@
             <DockPanel Height="20">
             </DockPanel>
             <DockPanel>
-                <TextBlock Text="Refresh time:"/>
+                <TextBlock Text="Refresh rate:"/>
                 <TextBox Name="tbRefreshTime" 
                          SourceUpdated="binding_SourceUpdated">
                     <TextBox.Text>
-                        <Binding Path="ClientSettingsView.User.RefreshTime"
+                        <Binding Path="ClientSettingsView.User.RefreshRate"
                                  NotifyOnSourceUpdated="True">
                             <Binding.ValidationRules>
                                 <PizzaNetValidation:NumberValidation AllowNegative="False" 

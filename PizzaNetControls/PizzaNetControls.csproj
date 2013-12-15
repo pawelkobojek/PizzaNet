@@ -54,6 +54,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Extender.cs" />
     <Compile Include="Common\NotifiedObservableCollection.cs" />
     <Compile Include="Common\PizzaNetException.cs" />
     <Compile Include="Common\Utils.cs" />

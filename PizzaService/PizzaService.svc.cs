@@ -133,11 +133,11 @@ namespace PizzaService
             }
         }
 
-        public void SetOrderState(UpdateRequest<OrderDTO> request)
+        public SingleItemResponse<OrderDTO> SetOrderState(UpdateRequest<OrderDTO> request)
         {
             using (var db = new PizzaUnitOfWork())
             {
-                db.inTransaction(uof =>
+                return db.inTransaction(uof =>
                     {
                         if (!HasRights(GetUser(request).Data, 2))
                             throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
@@ -150,7 +150,8 @@ namespace PizzaService
                                 foreach (var ingr in orderDet.Ingredients)
                                 {
                                     Ingredient ing = uof.Db.Ingredients.Get(ingr.IngredientID);
-                                    if (ing == null) return;
+                                    if (ing == null) //TODO FIX!!!!! co z tym zrobić gdy usuwamy składnik który jest w zamówieniu?
+                                        throw PizzaServiceFault.Create(Messages.SERVER_INTERNAL_ERROR);
                                     if (ing.StockQuantity - ingr.Quantity < 0)
                                     {
                                         throw PizzaServiceFault.Create(Messages.NOT_ENOUGH_INGS_MSG);
@@ -161,6 +162,7 @@ namespace PizzaService
                         }
                         o.State = st;
                         uof.Db.Commit();
+                        return SingleItemResponse.Create(orderAssembler.ToSimpleDto(uof.Db.Orders.Get(o.OrderID)));
                     });
             }
         }
@@ -399,7 +401,6 @@ namespace PizzaService
         //    return det;
         //}
 
-
         public void InsertRecipe(UpdateRequest<RecipeDTO> req)
         {
             using (var db = new PizzaUnitOfWork())
@@ -636,7 +637,8 @@ namespace PizzaService
             public const string USER_NOT_EXISTS_FORMAT = "User {0} not exists!";
             public const string NOT_ENOUGH_INGS_MSG = "Not enough Ingredients in stock!";
             public const string INGS_LIST_OUT_OF_DATE = "Ingredients list is out of date!";
-            public const string INVALID_USER_OR_PASSWORD = "Invalid user or password";
+            public const string INVALID_USER_OR_PASSWORD = "Invalid user or password!";
+            public const string SERVER_INTERNAL_ERROR = "Server internal error!";
         }
     }
 }

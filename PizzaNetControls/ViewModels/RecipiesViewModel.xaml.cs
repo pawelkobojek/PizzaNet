@@ -109,5 +109,16 @@ namespace PizzaNetControls.ViewModels
         {
             RecipiesView.SaveChanges();
         }
+
+        public bool LostFocusAction()
+        {
+            //TODO
+            return true;
+        }
+
+        public void GotFocusAction()
+        {
+            //TODO
+        }
     }
 }

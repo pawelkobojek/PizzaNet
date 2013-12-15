@@ -39,7 +39,7 @@ namespace PizzaNetControls.Views
         public ObservableCollection<PizzaRow> PizzasCollection { get; set; }
         public NotifiedObservableCollection<PizzaNetControls.OrdersRow> OrdersCollection { get; set; }
         public ObservableCollection<OrderIngredientDTO> IngredientsCollection { get; set; }
-        private const int TIMER_INTERVAL = 60000;
+        private const int SECOND = 1000;
         public BackgroundWorker OrdersRefresher { get; private set; }
         private const string ORDER_IMPOSSIBLE = "Action imposible! Not enough ingredient in stock!";
 
@@ -55,7 +55,7 @@ namespace PizzaNetControls.Views
 
         void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
         {
-            System.Threading.Thread.Sleep(TIMER_INTERVAL);
+            System.Threading.Thread.Sleep(ClientConfig.CurrentUser.RefreshRate * SECOND);
         }
 
         internal void ChangeOrderSelection(int index)
@@ -128,20 +128,38 @@ namespace PizzaNetControls.Views
         {
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
-                o.Order.State.StateValue = State.IN_REALISATION;
-                using (var proxy = new WorkChannel())
+                try
                 {
-                    proxy.SetOrderState(new UpdateRequest<OrderDTO>
+                    using (var proxy = new WorkChannel())
                     {
-                        Data = o.Order,
-                        Login = ClientConfig.CurrentUser.Email,
-                        Password = ClientConfig.CurrentUser.Password
-                    });
+                        OrderDTO order = o.Order.Clone();
+                        order.State.StateValue = State.IN_REALISATION;
+                        return proxy.SetOrderState(new UpdateRequest<OrderDTO>
+                        {
+                            Data = order,
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password
+                        });
+                    }
                 }
-                return o;
-
+                catch (Exception e)
+                {
+                    return e;
+                }
             }, (a, s) =>
             {
+                if (s.Result is Exception)
+                {
+                    Utils.HandleException(s.Result as Exception);
+                    return;
+                }
+                var res = s.Result as SingleItemResponse<OrderDTO>;
+                if (res == null)
+                {
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    return;
+                }
+                o.Order.State = res.Data.State;
                 o.Update();
             }));
         }
@@ -182,10 +200,10 @@ namespace PizzaNetControls.Views
                 {
                     using (var proxy = new WorkChannel())
                     {
-                        return proxy.GetUndoneOrders(new PizzaNetCommon.Requests.EmptyRequest 
-                        { 
+                        return proxy.GetUndoneOrders(new PizzaNetCommon.Requests.EmptyRequest
+                        {
                             Login = ClientConfig.CurrentUser.Email,
-                            Password = ClientConfig.CurrentUser.Password 
+                            Password = ClientConfig.CurrentUser.Password
                         });
                     }
                     //using (var db = new PizzaUnitOfWork())
@@ -202,10 +220,15 @@ namespace PizzaNetControls.Views
                 catch (Exception exc)
                 {
                     Console.WriteLine(exc);
-                    return null;
+                    return exc;
                 }
             }, (s, a) =>
             {
+                if (a.Result is Exception)
+                {
+                    Utils.HandleException(a.Result as Exception);
+                    return;
+                }
                 ListResponse<OrderDTO> res = a.Result as ListResponse<OrderDTO>;
                 if (res == null)
                 {
@@ -227,20 +250,39 @@ namespace PizzaNetControls.Views
         {
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
-                o.Order.State.StateValue = State.DONE;
-                using (var proxy = new WorkChannel())
+                var order = o.Order.Clone();
+                try
                 {
-                    proxy.SetOrderState(new UpdateRequest<OrderDTO>
+                    order.State.StateValue = State.DONE;
+                    using (var proxy = new WorkChannel())
                     {
-                        Data = o.Order,
-                        Login = ClientConfig.CurrentUser.Email,
-                        Password = ClientConfig.CurrentUser.Password
-                    });
+                        return proxy.SetOrderState(new UpdateRequest<OrderDTO>
+                        {
+                            Data = order,
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password
+                        });
+                    }
                 }
-                return o;
+                catch (Exception e)
+                {
+                    return e;
+                }
 
             }, (a, s) =>
             {
+                if (s.Result is Exception)
+                {
+                    Utils.HandleException(s.Result as Exception);
+                    return;
+                }
+                var res = s.Result as SingleItemResponse<OrderDTO>;
+                if (res == null)
+                {
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    return;
+                }
+                o.Order.State = res.Data.State;
                 o.Update();
             }));
         }
@@ -250,17 +292,24 @@ namespace PizzaNetControls.Views
             OrdersRow or = OrdersCollection[orderIndex];
             Worker.EnqueueTask(new WorkerTask((args) =>
             {
-                using (var proxy = new WorkChannel())
+                try
                 {
-                    proxy.RemoveOrder(new UpdateOrRemoveRequest<OrderDTO>
+                    using (var proxy = new WorkChannel())
                     {
-                        Data = null,
-                        DataToRemove = or.Order,
-                        Login = ClientConfig.CurrentUser.Email,
-                        Password = ClientConfig.CurrentUser.Password
-                    });
+                        proxy.RemoveOrder(new UpdateOrRemoveRequest<OrderDTO>
+                        {
+                            Data = null,
+                            DataToRemove = or.Order,
+                            Login = ClientConfig.CurrentUser.Email,
+                            Password = ClientConfig.CurrentUser.Password
+                        });
+                    }
+                    return true;
                 }
-                return null;
+                catch(Exception e)
+                {
+                    return e;
+                }
                 //using (var db = new PizzaUnitOfWork())
                 //{
                 //    return db.inTransaction(uof =>
@@ -276,10 +325,20 @@ namespace PizzaNetControls.Views
                 //    });
                 //}
             },
-                (s, a) =>
+            (s, a) =>
+            {
+                if (a.Result is Exception)
                 {
-                    RefreshCurrentOrders();
-                }));
+                    Utils.HandleException(a.Result as Exception);
+                    return;
+                }
+                if ((a.Result as bool?)??false)
+                {
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    return;
+                }
+                RefreshCurrentOrders();
+            }));
         }
 
         //public void RefreshOrders()
