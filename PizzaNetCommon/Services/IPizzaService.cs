@@ -39,7 +39,7 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         [FaultContract(typeof(PizzaServiceFault))]
-        void SetOrderState(UpdateRequest<OrderDTO> request);
+        SingleItemResponse<OrderDTO> SetOrderState(UpdateRequest<OrderDTO> request);
 
         [OperationContract]
         [FaultContract(typeof(PizzaServiceFault))]

@@ -44,7 +44,6 @@ namespace PizzaNetControls.Views
         {
             Modified = true;
             RecipesCollection[index].Update(Sizes);
-            //TODO
             //RecipeControl rc = RecipesCollection[index];
             //Worker.EnqueueTask(new WorkerTask(args =>
             //{
@@ -147,7 +146,7 @@ namespace PizzaNetControls.Views
 
         public void RefreshRecipies()
         {
-            //TODO
+            Modified = false;
             RecipesCollection.Clear();
             IngredientsRowsCollection.Clear();
             Worker.EnqueueTask(new WorkerTask((args) =>
@@ -185,15 +184,21 @@ namespace PizzaNetControls.Views
                 catch (Exception exc)
                 {
                     Console.WriteLine(exc.Message);
-                    return null;
+                    return exc;
                 }
             }, (s, args) =>
             {
+                if (args.Result is Exception)
+                {
+                    Utils.HandleException(args.Result as Exception);
+                    return;
+                }
                 var result = args.Result as TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>>;
                 //    var result = args.Result as Trio<IEnumerable<Recipe>, PizzaNetDataModel.Size[], IEnumerable<Ingredient>>;
                 if (result == null)
                 {
                     Console.WriteLine("Result is null");
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
                     return;
                 }
                 foreach (var item in result.First)
@@ -230,7 +235,6 @@ namespace PizzaNetControls.Views
 
         void row_PropertyChanged(object sender, EventArgs e)
         {
-            //TODO ZROBIC
             if (SelectedRecipe < 0) return;
             var rc = RecipesCollection[SelectedRecipe];
             var row = sender as IngredientsRowWork;
@@ -396,14 +400,19 @@ namespace PizzaNetControls.Views
                     {
                         Console.WriteLine(exc.Message);
                         Console.WriteLine("Failed");
-                        return null;
+                        return exc;
                     }
                 }, (s, e) =>
                     {
+                        if (e.Result is Exception)
+                        {
+                            Utils.HandleException(e.Result as Exception);
+                            return;
+                        }
                         var result = e.Result as TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int>;
                         if (result == null)
                         {
-                            Utils.showError("blablabla");
+                            Utils.showError(Utils.Messages.UNKNOWN_ERROR);
                             return;
                         }
 
@@ -424,6 +433,7 @@ namespace PizzaNetControls.Views
                             row.ButtonIncludeChanged += row_PropertyChanged;
                             IngredientsRowsCollection.Add(row);
                         }
+                        Modified = false;
                     }, null));
         }
 

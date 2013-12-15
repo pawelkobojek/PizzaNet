@@ -63,7 +63,7 @@ namespace PizzaNetControls.Views
 
         private void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
         {
-            System.Threading.Thread.Sleep(ClientConfig.CurrentUser.RefreshTime*SECOND);
+            System.Threading.Thread.Sleep(ClientConfig.CurrentUser.RefreshRate*SECOND);
         }
 
         public void RefreshCurrentOrders()

@@ -26,8 +26,8 @@ namespace PizzaNetControls.Configuration
 
         [XmlAttribute]
         public string Email { get; set; }
-        private int refreshTime=60;
-        public int RefreshTime { get { return refreshTime;} set {if(refreshTime>0) refreshTime=value;}}
+        private int refreshRate=60;
+        public int RefreshRate { get { return refreshRate;} set {if(refreshRate>0) refreshRate=value;}}
 
         public void UpdateWithUserDTO(UserDTO userDto)
         {

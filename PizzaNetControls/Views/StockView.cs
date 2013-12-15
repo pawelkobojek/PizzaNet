@@ -22,8 +22,6 @@ namespace PizzaNetControls.Views
     {
         public NotifiedObservableCollection<StockIngredientDTO> StockItemsCollection { get; set; }
         private List<StockIngredientDTO> RemovedStockItemsList { get; set; }
-        private const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
-        private const string SAVE_CHANGES_FAILURE = "Save changes failed";
 
         public event EventHandler<EventArgs> SuppliesOrdered;
 
@@ -33,11 +31,6 @@ namespace PizzaNetControls.Views
             this.StockItemsCollection = new NotifiedObservableCollection<StockIngredientDTO>();
             this.RemovedStockItemsList = new List<StockIngredientDTO>();
             ResetIds();
-        }
-
-        private void showError(string message)
-        {
-            Utils.showError(message);
         }
 
         public bool Modified { get; set; }
@@ -136,36 +129,32 @@ namespace PizzaNetControls.Views
                 {
                     using (var proxy = new WorkChannel())
                     {
-                        return proxy.GetIngredients(new EmptyRequest { Login = ClientConfig.CurrentUser.Email, Password = ClientConfig.CurrentUser.Password });
+                        return proxy.GetIngredients(new EmptyRequest 
+                        { 
+                            Login = ClientConfig.CurrentUser.Email, 
+                            Password = ClientConfig.CurrentUser.Password 
+                        });
                     }
-                    //using (var db = new PizzaUnitOfWork())
-                    //{
-                    //    return db.inTransaction(uof =>
-                    //    {
-                    //        Console.WriteLine("LoadDataStart");
-
-                    //        var result = uof.Db.Ingredients.FindAllIncludeRecipies();
-                    //        Console.WriteLine("after query");
-
-                    //        Console.WriteLine("Result is null: {0}", result == null);
-
-                    //        return result;
-                    //    });
-                    //}
                 }
                 catch (Exception exc)
                 {
                     Console.WriteLine(exc.Message);
-                    return null;
+                    return exc;
                 }
             }, PostData, null));
         }
 
         private void PostData(object sender, PizzaNetControls.Workers.WorkFinishedEventArgs e)
         {
-            if (e.Result == null)
+            if (e.Result is Exception)
+            {
+                Utils.HandleException(e.Result as Exception);
+                return;
+            }
+            if (e.Result as ListResponse<StockIngredientDTO> == null)
             {
                 Console.WriteLine("Result is null");
+                Utils.showError(Utils.Messages.UNKNOWN_ERROR);
                 return;
             }
             List<StockIngredientDTO> ings = ((ListResponse<StockIngredientDTO>)e.Result).Data;
@@ -204,14 +193,19 @@ namespace PizzaNetControls.Views
                 catch (Exception exc)
                 {
                     Console.WriteLine(exc.Message);
-                    return null;
+                    return exc;
                 }
             }, (s, e) =>
             {
+                if (e.Result is Exception)
+                {
+                    Utils.HandleException(e.Result as Exception);
+                    return;
+                }
                 var result = e.Result as ListResponse<StockIngredientDTO>;
                 if (result == null)
                 {
-                    showError(SAVE_CHANGES_FAILURE);
+                    Utils.showError(Utils.Messages.SAVE_CHANGES_FAILURE);
                     return;
                 }
                 RewriteStockItems(result.Data);

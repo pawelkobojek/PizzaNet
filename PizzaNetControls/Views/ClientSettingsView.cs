@@ -158,7 +158,7 @@ namespace PizzaNetControls.Views
                         return;
                     }
                     ClientConfig.CurrentUser.UpdateWithUserDTO(userRes.Data);
-                    ClientConfig.CurrentUser.RefreshTime = this.User.RefreshTime;
+                    ClientConfig.CurrentUser.RefreshRate = this.User.RefreshRate;
                     this.User = ClientConfig.CurrentUser;
                     ModifiedUserData = false;
                     Utils.showInformation(Utils.Messages.SAVED_SUCCESSFULLY);

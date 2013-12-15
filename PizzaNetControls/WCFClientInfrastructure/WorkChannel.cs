@@ -37,9 +37,9 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             return Channel.GetUndoneOrders(req);
         }
 
-        public void SetOrderState(UpdateRequest<OrderDTO> request)
+        public SingleItemResponse<OrderDTO> SetOrderState(UpdateRequest<OrderDTO> request)
         {
-            Channel.SetOrderState(request);
+            return Channel.SetOrderState(request);
         }
 
         public ListResponse<OrderDTO> GetOrders(EmptyRequest req)
