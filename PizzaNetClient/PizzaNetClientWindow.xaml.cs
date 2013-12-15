@@ -39,8 +39,14 @@ namespace PizzaNetClient
             this.DataContext = this;
 
             this.worker.Lock = this.tabControl;
+            this.Closed += PizzaNetClientWindow_Closed;
             this.worker.RefreshButtonClicked += worker_RefreshButtonClicked;
             LastSelected = MainTab;
+        }
+
+        void PizzaNetClientWindow_Closed(object sender, EventArgs e)
+        {
+            ClientConfig.Save();
         }
 
         void worker_RefreshButtonClicked(object sender, EventArgs e)

@@ -158,8 +158,10 @@ namespace PizzaNetControls.Views
                         return;
                     }
                     ClientConfig.CurrentUser.UpdateWithUserDTO(userRes.Data);
+                    ClientConfig.CurrentUser.RefreshTime = this.User.RefreshTime;
                     this.User = ClientConfig.CurrentUser;
                     ModifiedUserData = false;
+                    Utils.showInformation(Utils.Messages.SAVED_SUCCESSFULLY);
                 }, null));
         }
 
@@ -228,6 +230,7 @@ namespace PizzaNetControls.Views
                     User.Password = userRes.Data.Password;
                     CurrentPassword = PasswordRepeated = NewPassword = "";
                     ModifiedPasssword = false;
+                    Utils.showInformation(Utils.Messages.PASSWORD_CHANGED);
                 }, ClientConfig.CurrentUser, NewPassword));
         }
     }

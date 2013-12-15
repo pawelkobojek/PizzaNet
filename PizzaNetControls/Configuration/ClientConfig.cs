@@ -59,6 +59,7 @@ namespace PizzaNetControls.Configuration
 
         public static void Save()
         {
+            if (Users == null) return;
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.OmitXmlDeclaration = true;

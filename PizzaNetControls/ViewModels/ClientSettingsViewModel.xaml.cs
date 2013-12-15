@@ -68,13 +68,13 @@ namespace PizzaNetControls.ViewModels
             set { SetValue(WorkerProperty, value); }
         }
 
-        private void newPasswordInput_Validation(object s, PasswordEqualRule.ValidationEventArgs e)
+        private void newPasswordInput_Validation(object s, ValidationEventArgs e)
         {
             ClientSettingsView.ModifiedPasssword = true;
             ClientSettingsView.HasCurrentValidationError = !e.Result;
         }
 
-        private void passwordRepeatInput_Validation(object s, PasswordEqualRule.ValidationEventArgs e)
+        private void passwordRepeatInput_Validation(object s, ValidationEventArgs e)
         {
             ClientSettingsView.ModifiedPasssword = true;
             ClientSettingsView.HasValidationError = !e.Result;
@@ -137,7 +137,13 @@ namespace PizzaNetControls.ViewModels
                 tbAddress.Text != ClientSettingsView.User.Address ||
                 tbEmail.Text != ClientSettingsView.User.Email ||
                 tbPhone.Text != ClientSettingsView.User.Phone.ToString() ||
-                tbRights.Text != ClientSettingsView.User.Rights.ToString();
+                tbRights.Text != ClientSettingsView.User.Rights.ToString() ||
+                tbRefreshTime.Text != ClientSettingsView.User.RefreshTime.ToString();
+        }
+
+        private void refreshTimeValidation(object sender, ValidationEventArgs e)
+        {
+            ClientSettingsView.ModifiedUserData = true;
         }
 
         private void binding_SourceUpdated(object sender, DataTransferEventArgs e)

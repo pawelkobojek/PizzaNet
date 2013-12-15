@@ -122,6 +122,7 @@
     <Compile Include="Validation\PasswordHelper.cs" />
     <Compile Include="Validation\PasswordConfig.cs" />
     <Compile Include="Validation\StringValidation.cs" />
+    <Compile Include="Validation\ValidationEventArgs.cs" />
     <Compile Include="ViewModels\ClientMainViewModel.xaml.cs">
       <DependentUpon>ClientMainViewModel.xaml</DependentUpon>
     </Compile>

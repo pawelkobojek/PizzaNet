@@ -157,7 +157,7 @@ namespace PizzaNetControls.Dialogs
             }
         }
 
-        private void passwordRepeatInput_Validation(object s, PasswordEqualRule.ValidationEventArgs e)
+        private void passwordRepeatInput_Validation(object s, ValidationEventArgs e)
         {
             HasValidationError = !e.Result;
         }

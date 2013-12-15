@@ -71,6 +71,10 @@ namespace PizzaNetControls.Common
             public const string INVALID_PASSWORD = "Inserted password is not valid!";
             public const string PASSWORD_EMPTY = "Password cannot be empty!";
             public const string REPEATED_PASSWORD_DIFF = "Repeated password is diffrent than new password!";
+            public const string SAVED_SUCCESSFULLY = "Saved successfully!";
+            public const string PASSWORD_CHANGED = "Password has been changed successfully!";
+            public const string LOGIN_FAILED = "Login failed";
+            public const string RIGHTS_LEVEL_FAILURE = "You don't have enough rights level";
         }
 
         public static XmlNode SerializeObjectToXmlNode(Object obj)

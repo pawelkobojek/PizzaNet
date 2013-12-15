@@ -37,7 +37,7 @@ namespace PizzaService.Assemblers
                         NormalWeight = ing.Ingredient.NormalWeight
                     });
                 }
-                oDto.OrderDetailsDTO.Add(new OrderDetailDTO { Ingredients = oIngDtos, Size = new SizeDTO { SizeValue = od.Size.SizeValue } });
+                oDto.OrderDetailsDTO.Add(new OrderDetailDTO { OrderDetailID=od.OrderDetailID, Ingredients = oIngDtos, Size = new SizeDTO { SizeValue = od.Size.SizeValue } });
             }
 
 
