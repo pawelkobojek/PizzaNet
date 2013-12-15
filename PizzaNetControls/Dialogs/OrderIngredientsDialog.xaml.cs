@@ -45,7 +45,6 @@ namespace PizzaNetControls.Dialogs
         }
 
         public ObservableCollection<OrderSuppliesDTO> Data { get; set; }
-        private const string ORDER_FAILURE = "Ordering supplies failed";
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -67,15 +66,20 @@ namespace PizzaNetControls.Dialogs
                     catch(Exception exc)
                     {
                         Console.WriteLine(exc.Message);
-                        return null;
+                        return exc;
                     }
                 },
                 (s,ex) =>
                 {
+                    if (ex.Result is Exception)
+                    {
+                        Utils.HandleException(ex.Result as Exception);
+                        return;
+                    }
                     var res = ex.Result as ListResponse<OrderSuppliesDTO>;
                     if (res==null)
                     {
-                        Utils.showError(ORDER_FAILURE);
+                        Utils.showError(Utils.Messages.ORDER_FAILURE);
                         return;
                     }
                     Data.Clear();

@@ -75,6 +75,9 @@ namespace PizzaNetControls.Common
             public const string PASSWORD_CHANGED = "Password has been changed successfully!";
             public const string LOGIN_FAILED = "Login failed";
             public const string RIGHTS_LEVEL_FAILURE = "You don't have enough rights level";
+            public const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
+            public const string SAVE_CHANGES_FAILURE = "Save changes failed";
+            public const string ORDER_FAILURE = "Ordering supplies failed";
         }
 
         public static XmlNode SerializeObjectToXmlNode(Object obj)
