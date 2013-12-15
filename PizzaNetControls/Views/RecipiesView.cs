@@ -383,7 +383,7 @@ namespace PizzaNetControls.Views
                             {
                                 toUpdate.Add(recControl.Recipe);
                             }
-                            return proxy.UpdateOrRmoveRecipe(new UpdateOrRemoveRequest<List<RecipeDTO>>
+                            return proxy.UpdateOrRemoveRecipe(new UpdateOrRemoveRequest<List<RecipeDTO>>
                             {
                                 Data = toUpdate,
                                 DataToRemove = RemovedRecipes,

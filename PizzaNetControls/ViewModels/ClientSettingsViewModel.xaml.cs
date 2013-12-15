@@ -19,6 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PizzaNetCommon.DTOs;
 using PizzaNetControls.Configuration;
+using PizzaNetControls.Common;
 
 namespace PizzaNetControls.ViewModels
 {
@@ -32,8 +33,6 @@ namespace PizzaNetControls.ViewModels
             this.DataContext = this;
             InitializeComponent();
             this.Loaded += ClientSettingsViewModel_Loaded;
-            this.repeatedPasswordConfig.SetTarget(typeof(ClientSettingsViewModel), this, "NewPassword");
-            this.currentPasswordConfig.SetTarget(typeof(ClientSettingsViewModel), this, "Password");
         }
 
         bool initialized = false;
@@ -43,10 +42,17 @@ namespace PizzaNetControls.ViewModels
             if (!initialized)
             {
                 this.ClientSettingsView = new ClientSettingsView(Worker);
+                this.ClientSettingsView.PropertyChanged += ClientSettingsView_PropertyChanged;
+                this.repeatedPasswordConfig.SetTarget(typeof(ClientSettingsView), ClientSettingsView, "NewPassword");
+                this.currentPasswordConfig.SetTarget(typeof(ClientSettingsView), ClientSettingsView, "Password");
                 initialized = true;
-
-                CurrentPassword = PasswordRepeated = NewPassword = "";
             }
+        }
+
+        void ClientSettingsView_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "NewPassword")
+                newPasswordRepeatInput.Password = ClientSettingsView.PasswordRepeated;
         }
 
         private ClientSettingsView _vo;
@@ -62,84 +68,34 @@ namespace PizzaNetControls.ViewModels
             set { SetValue(WorkerProperty, value); }
         }
 
-        #region passwords
-        //TODO przenieść obsługę haseł do ClientSettingsView
-        private string _cpass;
-        public string CurrentPassword
-        {
-            get { return _cpass; }
-            set { _cpass = value; NotifyPropertyChanged("CurrentPassword"); }
-        }
-
-        private string _pass;
-        public string Password 
-        {
-            get { return _pass; }
-            set { _pass = value; NotifyPropertyChanged("Password"); }
-        }
-
-        private string _passn;
-        public string NewPassword
-        {
-            get { return _passn; }
-            set { _passn = value; NotifyPropertyChanged("NewPassword"); newPasswordRepeatInput.Password = PasswordRepeated; }
-        }
-
-        private string _passr;
-        public string PasswordRepeated
-        {
-            get { return _passr; }
-            set { _passr = value; NotifyPropertyChanged("PasswordRepeated"); }
-        }
-
-        private bool _haserr;
-        public bool HasValidationError
-        {
-            get { return _haserr; }
-            set { _haserr = value; NotifyPropertyChanged("HasValidationError"); }
-        }
-
-        private bool _hascurrerr;
-        public bool HasCurrentValidationError
-        {
-            get { return _hascurrerr; }
-            set { _hascurrerr = value; NotifyPropertyChanged("HasCurrentValidationError"); }
-        }
-
         private void newPasswordInput_Validation(object s, PasswordEqualRule.ValidationEventArgs e)
         {
-            HasCurrentValidationError = !e.Result;
+            ClientSettingsView.ModifiedPasssword = true;
+            ClientSettingsView.HasCurrentValidationError = !e.Result;
         }
 
         private void passwordRepeatInput_Validation(object s, PasswordEqualRule.ValidationEventArgs e)
         {
-            HasValidationError = !e.Result;
+            ClientSettingsView.ModifiedPasssword = true;
+            ClientSettingsView.HasValidationError = !e.Result;
         }
-        #endregion
 
         public static readonly DependencyProperty WorkerProperty =
             DependencyProperty.Register("Worker", typeof(IWorker), typeof(ClientSettingsViewModel), new UIPropertyMetadata());
 
         private void SettingsButtonApply_Click(object sender, RoutedEventArgs e)
         {
-            //_vo.SaveConfig();
             _vo.SaveUserInfo();
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !IsNumber(e.Text);
+            e.Handled = !Utils.IsNumber(e.Text);
         }
 
         private void SettingsButtonSavePassword_Click(object sender, RoutedEventArgs e)
         {
-            //TODO implement save new password
-        }
-
-        private static bool IsNumber(string text)
-        {
-            Regex regex = new Regex("^[0-9]+$");
-            return regex.IsMatch(text);
+            _vo.SavePassword();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -155,12 +111,14 @@ namespace PizzaNetControls.ViewModels
         public void GotFocusAction()
         {
             ClientSettingsView.Load();
-            Password = ClientConfig.CurrentUser.Password;
         }
 
         public bool LostFocusAction()
         {
-            return true;
+            CheckLastBinding();
+            if (ClientSettingsView.Modified)
+                return Utils.showChangesDialog();
+            else return true;
         }
 
         private void inputGotFocus(object sender, RoutedEventArgs e)
@@ -169,6 +127,25 @@ namespace PizzaNetControls.ViewModels
             if (s != null) s.SelectAll();
             var p = sender as PasswordBox;
             if (p != null) p.SelectAll();
+        }
+
+        private void CheckLastBinding()
+        {
+            ClientSettingsView.ModifiedUserData |=
+                tbId.Text != ClientSettingsView.User.UserID.ToString() ||
+                tbName.Text != ClientSettingsView.User.Name ||
+                tbAddress.Text != ClientSettingsView.User.Address ||
+                tbEmail.Text != ClientSettingsView.User.Email ||
+                tbPhone.Text != ClientSettingsView.User.Phone.ToString() ||
+                tbRights.Text != ClientSettingsView.User.Rights.ToString();
+        }
+
+        private void binding_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (sender is TextBox)
+                ClientSettingsView.ModifiedUserData = true;
+            if (sender is PasswordBox)
+                ClientSettingsView.ModifiedPasssword = true;
         }
     }
 }

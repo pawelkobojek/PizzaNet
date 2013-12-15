@@ -45,41 +45,74 @@
         <StackPanel Margin="30" Grid.Column="0" Grid.Row="0">
             <DockPanel>
                 <TextBlock Text="Id:"/>
-                <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.UserID}"/>
+                <TextBox Name="tbId" IsReadOnly="True" 
+                         SourceUpdated="binding_SourceUpdated"
+                         Text="{Binding ClientSettingsView.User.UserID, NotifyOnSourceUpdated=True}"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Name:"/>
-                <TextBox Text="{Binding ClientSettingsView.User.Name}"/>
+                <TextBox Name="tbName" 
+                         SourceUpdated="binding_SourceUpdated" Text="{Binding ClientSettingsView.User.Name, NotifyOnSourceUpdated=True}"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Phone:"/>
-                <TextBox Text="{Binding ClientSettingsView.User.Phone}"/>
+                <TextBox Name="tbPhone" 
+                         SourceUpdated="binding_SourceUpdated" Text="{Binding ClientSettingsView.User.Phone, NotifyOnSourceUpdated=True}"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Address:"/>
-                <TextBox Text="{Binding ClientSettingsView.User.Address}"/>
+                <TextBox Name="tbAddress" 
+                         SourceUpdated="binding_SourceUpdated" Text="{Binding ClientSettingsView.User.Address, NotifyOnSourceUpdated=True}"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Email:"/>
-                <TextBox Text="{Binding ClientSettingsView.User.Email}"/>
+                <TextBox Name="tbEmail" IsReadOnly="True"
+                         SourceUpdated="binding_SourceUpdated" Text="{Binding ClientSettingsView.User.Email, NotifyOnSourceUpdated=True}"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Rights:"/>
-                <TextBox IsReadOnly="True" Text="{Binding ClientSettingsView.User.Rights}"/>
+                <TextBox Name="tbRights" 
+                         SourceUpdated="binding_SourceUpdated" IsReadOnly="True" Text="{Binding ClientSettingsView.User.Rights, NotifyOnSourceUpdated=True}"/>
             </DockPanel>
             <Button Margin="20" Grid.Column="0" Click="SettingsButtonApply_Click">
                 Apply
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=tbId, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=tbName, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=tbAddress, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=tbPhone, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=tbEmail, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=tbRights, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
             </Button>
         </StackPanel>
         <StackPanel Margin="30" Grid.Column="1" Grid.Row="0">
             <DockPanel>
                 <TextBlock Text="Current password:"/>
                 <PasswordBox Name="currentPasswordInput" GotFocus="inputGotFocus"
-                             PizzaNetValidation:PasswordHelper.Attach="True">
+                             PizzaNetValidation:PasswordHelper.Attach="True"
+                             SourceUpdated="binding_SourceUpdated">
                     <PizzaNetValidation:PasswordHelper.Password>
                         <Binding NotifyOnValidationError="True"
-                                 Path="CurrentPassword"
-                                 Mode="TwoWay">
+                                 Path="ClientSettingsView.CurrentPassword"
+                                 Mode="TwoWay"
+                                 NotifyOnSourceUpdated="True">
                             <Binding.ValidationRules>
                                 <PizzaNetValidation:PasswordEqualRule Validation="newPasswordInput_Validation">
                                     <PizzaNetValidation:PasswordEqualRule.PasswordConfig>
@@ -94,17 +127,19 @@
             <DockPanel>
                 <TextBlock Text="New password:"/>
                 <PasswordBox Name="newPasswordInput" GotFocus="inputGotFocus"
-                             PizzaNetValidation:PasswordHelper.Attach="True">
+                             PizzaNetValidation:PasswordHelper.Attach="True"
+                             SourceUpdated="binding_SourceUpdated">
                     <PizzaNetValidation:PasswordHelper.Password>
-                        <Binding Path="NewPassword" Mode="TwoWay"/>
+                        <Binding Path="ClientSettingsView.NewPassword" Mode="TwoWay"
+                                 NotifyOnSourceUpdated="True"/>
                     </PizzaNetValidation:PasswordHelper.Password>
                     <PasswordBox.Style>
                         <Style TargetType="PasswordBox" BasedOn="{StaticResource ResourceKey=passwordBoxStyle}">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding CurrentPassword.Length}" Value="0">
+                                <DataTrigger Binding="{Binding ClientSettingsView.CurrentPassword.Length}" Value="0">
                                     <Setter Property="IsEnabled" Value="False"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding HasCurrentValidationError}" Value="True">
+                                <DataTrigger Binding="{Binding ClientSettingsView.HasCurrentValidationError}" Value="True">
                                     <Setter Property="IsEnabled" Value="False"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -114,10 +149,11 @@
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Repeat new password:"/>
-                <PasswordBox Name="newPasswordRepeatInput" GotFocus="inputGotFocus" PizzaNetValidation:PasswordHelper.Attach="True">
+                <PasswordBox Name="newPasswordRepeatInput" SourceUpdated="binding_SourceUpdated" GotFocus="inputGotFocus" PizzaNetValidation:PasswordHelper.Attach="True">
                     <PizzaNetValidation:PasswordHelper.Password>
-                        <Binding Path="PasswordRepeated"
-                                 Mode="TwoWay">
+                        <Binding Path="ClientSettingsView.PasswordRepeated"
+                                 Mode="TwoWay"
+                                 NotifyOnSourceUpdated="True">
                             <Binding.ValidationRules>
                                 <PizzaNetValidation:PasswordEqualRule Validation="passwordRepeatInput_Validation">
                                     <PizzaNetValidation:PasswordEqualRule.PasswordConfig>
@@ -130,10 +166,10 @@
                     <PasswordBox.Style>
                         <Style TargetType="PasswordBox" BasedOn="{StaticResource ResourceKey=passwordBoxStyle}">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding NewPassword.Length}" Value="0">
+                                <DataTrigger Binding="{Binding ClientSettingsView.NewPassword.Length}" Value="0">
                                     <Setter Property="IsEnabled" Value="False"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding HasCurrentValidationError}" Value="True">
+                                <DataTrigger Binding="{Binding ClientSettingsView.HasCurrentValidationError}" Value="True">
                                     <Setter Property="IsEnabled" Value="False"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding ElementName=newPasswordInput, Path=IsEnabled}" Value="False">
@@ -149,13 +185,13 @@
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Password.Length}" Value="0">
+                            <DataTrigger Binding="{Binding ClientSettingsView.Password.Length}" Value="0">
                                 <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding NewPassword.Length}" Value="0">
+                            <DataTrigger Binding="{Binding ClientSettingsView.NewPassword.Length}" Value="0">
                                 <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding PasswordRepeated.Length}" Value="0">
+                            <DataTrigger Binding="{Binding ClientSettingsView.PasswordRepeated.Length}" Value="0">
                                 <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding ElementName=newPasswordRepeatInput, Path=IsEnabled}" Value="False">
@@ -164,8 +200,17 @@
                             <DataTrigger Binding="{Binding ElementName=newPasswordInput, Path=IsEnabled}" Value="False">
                                 <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding HasValidationError}" Value="True">
+                            <DataTrigger Binding="{Binding ClientSettingsView.HasValidationError}" Value="True">
                                 <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=currentPasswordInput, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=newPasswordInput, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=newPasswordRepeatInput, Path=IsFocused}" Value="True">
+                                <Setter Property="IsDefault" Value="True"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

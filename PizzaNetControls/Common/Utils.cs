@@ -25,6 +25,12 @@ namespace PizzaNetControls.Common
             return Regex.IsMatch(email, theEmailPattern);
         }
 
+        public static bool IsNumber(string text)
+        {
+            Regex regex = new Regex("^[0-9]+$");
+            return regex.IsMatch(text);
+        }
+
         public static void showError(string message)
         {
             MessageBox.Show(message, TITLE, MessageBoxButton.OK, MessageBoxImage.Error);
@@ -60,6 +66,11 @@ namespace PizzaNetControls.Common
             public const string ORDERS_REFRESH_FAILED = "Refreshing orders failed!";
             public const string DISCARD_CHANGES_QUESTION = "You have unsaved changes. Do you want to discard them?";
             public const string RECIPES_REFRESH_FAILED = "Refreshing recipes failed!";
+            public const string NO_USER_LOGGED_IN = "No user is logged in!";
+            public const string NO_USER_FOUND_FORMAT = "No user {0} found in database!";
+            public const string INVALID_PASSWORD = "Inserted password is not valid!";
+            public const string PASSWORD_EMPTY = "Password cannot be empty!";
+            public const string REPEATED_PASSWORD_DIFF = "Repeated password is diffrent than new password!";
         }
 
         public static XmlNode SerializeObjectToXmlNode(Object obj)

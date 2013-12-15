@@ -34,6 +34,8 @@ namespace PizzaNetControls.Configuration
             this.Email = userDto.Email;
             this.Phone = userDto.Phone;
             this.Rights = userDto.Rights;
+            this.Name = userDto.Name;
+            this.Password = userDto.Password;
         }
 
         public override int GetHashCode()

@@ -416,7 +416,7 @@ namespace PizzaService
         }
 
 
-        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> request)
+        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRemoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> request)
         {
             if (request.Data == null && request.DataToRemove == null)
                 return null;
@@ -563,7 +563,7 @@ namespace PizzaService
             }
         }
 
-        public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<RegisterUserDTO> req)
+        public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<UserDTO> req)
         {
             var user = req.Data;
             if (user == null)
@@ -603,6 +603,37 @@ namespace PizzaService
                                    + "@"
                                    + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
             return Regex.IsMatch(email, theEmailPattern);
+        }
+
+
+        public SingleItemResponse<UserDTO> UpdateUser(UpdateRequest<UserDTO> request)
+        {
+            if (request.Data == null)
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
+
+            using (var db = new PizzaUnitOfWork())
+            {
+                return db.inTransaction(uow =>
+                    {
+                        User user = uow.Db.Users.Find(request.Login);
+                        if (user == null)
+                            throw PizzaServiceFault.Create(String.Format(Messages.USER_NOT_EXISTS_FORMAT,request.Login));
+                        if (!HasRights(userAssembler.ToSimpleDto(user), 1) || 
+                            user.UserID!=request.Data.UserID || 
+                            user.Password!=request.Password)
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
+
+                        userAssembler.UpdateEntityUserLevel(user, request.Data);
+                        uow.Db.Commit();
+                        return SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Get(request.Data.UserID)));
+                    });
+            }
+        }
+        public static class Messages
+        {
+            public const string NO_DATA = "No data to proceed has been sent!";
+            public const string NO_PERMISSIONS = "You have no permissions to proceed!";
+            public const string USER_NOT_EXISTS_FORMAT = "User {0} not exists!";
         }
     }
 }

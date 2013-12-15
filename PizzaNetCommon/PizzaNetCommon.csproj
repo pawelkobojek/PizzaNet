@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="DTOs\OrderIngredientDTO.cs" />
     <Compile Include="DTOs\OrderSuppliesDTO.cs" />
-    <Compile Include="DTOs\RegisterUserDTO.cs" />
     <Compile Include="DTOs\StockIngredientDTO.cs" />
     <Compile Include="DTOs\OrderDetailDTO.cs" />
     <Compile Include="DTOs\OrderDTO.cs" />
