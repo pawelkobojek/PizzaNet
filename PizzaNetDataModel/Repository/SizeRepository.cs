@@ -67,5 +67,10 @@ namespace PizzaNetDataModel.Repository
         {
             db.Sizes.Add(entity);
         }
+
+        public Size Find(double p)
+        {
+            return db.Sizes.Where(s => s.SizeValue == p).FirstOrDefault();
+        }
     }
 }

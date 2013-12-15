@@ -47,7 +47,6 @@ namespace PizzaNetTests
                     List<Order> orders = uof.Db.Orders.FindAllEagerlyWhere(o => o.State.StateValue == State.NEW ||
                         o.State.StateValue == State.IN_REALISATION);
 
-                    // IList<OrderDTO> dtoOrders = ch.GetOrdersWhere(QueryRequest.New(new OrdersQuery { Predicate = st => st.State.StateValue == State.IN_REALISATION || st.State.StateValue == State.NEW })).Data;
                     List<OrderDTO> dtoOrders = svc.GetUndoneOrders(empRequest).Data;
 
                     Assert.IsTrue(orders.Count == dtoOrders.Count);
@@ -134,21 +133,84 @@ namespace PizzaNetTests
             toUpdate.Add(newIngs[1]);
 
             svc.UpdateIngredient(new UpdateRequest<List<StockIngredientDTO>> { Data = toUpdate, Login = emp.Email, Password = emp.Password });
-            //ServiceMock mock = new ServiceMock();
+        }
 
-            //IList<StockIngredientDTO> ings = mock.GetIngredients().Data;
-            //List<StockIngredientDTO> toUpdate = new List<StockIngredientDTO>();
-            //ings[0].Name = "UPDATED1";
-            //ings[1].Name = "UPDATED2";
-            //toUpdate.Add(ings[0]);
-            //toUpdate.Add(ings[1]);
+        [TestMethod]
+        public void GetUndoneOrdersTest()
+        {
+            PizzaService.PizzaService svc = new PizzaService.PizzaService();
+            List<OrderDTO> orders = svc.GetUndoneOrders(new EmptyRequest() { Login = emp.Email, Password = emp.Password }).Data;
+            foreach (var order in orders)
+            {
+                Assert.IsTrue(order.State.StateValue == State.IN_REALISATION || order.State.StateValue == State.NEW);
+            }
+        }
 
-            //mock.UpdateIngredient(new UpdateRequest<IList<StockIngredientDTO>>
-            //{
-            //    Data = toUpdate
-            //});
+        [TestMethod]
+        public void MakeOrderTest()
+        {
+            PizzaService.PizzaService svc = new PizzaService.PizzaService();
+            InAutoRollbackTransaction(uow =>
+                {
+                    List<OrderIngredientDTO> ings = new List<OrderIngredientDTO>();
+                    ings.Add(
+                        (new IngredientAssembler()).ToOrderIngredientDto(uow.Db.Ingredients.Get(1))
+                    );
+                    List<OrderDetailDTO> od = new List<OrderDetailDTO>();
+                    od.Add(new OrderDetailDTO
+                    {
+                        Size = (new SizeAssembler()).ToSimpleDto(uow.Db.Sizes.Find(Size.MEDIUM)),
+                        Ingredients = ings
+                    });
+                    OrderDTO order = new OrderDTO
+                    {
+                        Address = "A",
+                        CustomerPhone = 1,
+                        Date = new DateTime(1992, 6, 21),
+                        State = new StateDTO { StateValue = State.NEW },
+                        OrderDetailsDTO = od
+                    };
+                    svc.MakeOrder(new UpdateRequest<OrderDTO>
+                    {
+                        Login = customer.Email,
+                        Password = customer.Password,
+                        Data = order
+                    });
 
+                    List<OrderDTO> orders = svc.GetUndoneOrders(new EmptyRequest
+                    {
+                        Login = emp.Email,
+                        Password = emp.Password
+                    }).Data;
 
+                    OrderDTO inserted = null;
+                    for (int i = 0; i < orders.Count; i++)
+                    {
+                        if (orders[i].Address == "A")
+                        {
+                            inserted = orders[i];
+                            break;
+                        }
+                    }
+
+                    Assert.IsNotNull(inserted);
+
+                    Assert.IsTrue(order.CustomerPhone == inserted.CustomerPhone);
+                    Assert.IsTrue(order.Date == inserted.Date);
+                    Assert.IsTrue(order.State.StateValue == inserted.State.StateValue);
+                    for (int i = 0; i < order.OrderDetailsDTO.Count; i++)
+                    {
+                        Assert.IsTrue(order.OrderDetailsDTO[i].Size.SizeValue == inserted.OrderDetailsDTO[i].Size.SizeValue);
+                        for (int j = 0; j < order.OrderDetailsDTO[i].Ingredients.Count; j++)
+                        {
+                            Assert.IsTrue(order.OrderDetailsDTO[i].Ingredients[j].ExtraWeight == inserted.OrderDetailsDTO[i].Ingredients[j].ExtraWeight);
+                            Assert.IsTrue(order.OrderDetailsDTO[i].Ingredients[j].Name == inserted.OrderDetailsDTO[i].Ingredients[j].Name);
+                            Assert.IsTrue(order.OrderDetailsDTO[i].Ingredients[j].NormalWeight == inserted.OrderDetailsDTO[i].Ingredients[j].NormalWeight);
+                            Assert.IsTrue(order.OrderDetailsDTO[i].Ingredients[j].Price == inserted.OrderDetailsDTO[i].Ingredients[j].Price);
+                            Assert.IsTrue(order.OrderDetailsDTO[i].Ingredients[j].Quantity == inserted.OrderDetailsDTO[i].Ingredients[j].Quantity);
+                        }
+                    }
+                });
         }
     }
 }
