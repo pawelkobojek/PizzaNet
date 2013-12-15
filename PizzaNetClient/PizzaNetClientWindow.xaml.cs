@@ -96,53 +96,73 @@ namespace PizzaNetClient
                 return;
             }
 
+            TabItem SelectedTab = null;
+            if (OrdersTab.IsSelected)
+                SelectedTab = OrdersTab;
+            else if (SettingsTab.IsSelected)
+                SelectedTab = SettingsTab;
+            else if (MainTab.IsSelected)
+                SelectedTab = MainTab;
+
             if (LastSelected == MainTab)
             {
+                IsSelectionChanging = true;
                 if (!clientMainViewModel.LostFocusAction())
                 {
-                    IsSelectionChanging = true;
                     tabControl.SelectedIndex = 0;
-                    e.Handled = true;
+                    IsSelectionChanging = false;
                     return;
                 }
+                IsSelectionChanging = false;
 
             }
 
             if (LastSelected == OrdersTab)
             {
+                IsSelectionChanging = true;
                 if (!myOrdersViewModel.LostFocusAction())
                 {
-                    IsSelectionChanging = true;
                     tabControl.SelectedIndex = 1;
-                    e.Handled = true;
+                    IsSelectionChanging = false;
                     return;
                 }
+                IsSelectionChanging = false;
             }
 
             if (LastSelected == SettingsTab)
             {
+                IsSelectionChanging = true;
                 if (!settingsViewModel.LostFocusAction())
                 {
-                    IsSelectionChanging = true;
                     tabControl.SelectedIndex = 2;
-                    e.Handled = true;
+                    IsSelectionChanging = false;
                     return;
                 }
+                IsSelectionChanging = false;
             }
 
-            if (MainTab.IsSelected)
+            if (MainTab==SelectedTab)
             {
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 0;
+                IsSelectionChanging = false;
                 clientMainViewModel.GotFocusAction();
                 LastSelected = MainTab;
             }
 
-            if (OrdersTab.IsSelected)
+            if (OrdersTab==SelectedTab)
             {
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 1;
+                IsSelectionChanging = false;
                 myOrdersViewModel.GotFocusAction();
                 LastSelected = OrdersTab;
             }
-            if (SettingsTab.IsSelected)
+            if (SettingsTab==SelectedTab)
             {
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 2;
+                IsSelectionChanging = false;
                 settingsViewModel.GotFocusAction();
                 LastSelected = SettingsTab;
             }

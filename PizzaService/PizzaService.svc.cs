@@ -150,7 +150,7 @@ namespace PizzaService
                                 foreach (var ingr in orderDet.Ingredients)
                                 {
                                     Ingredient ing = uof.Db.Ingredients.Get(ingr.IngredientID);
-                                    if (ing == null) //TODO FIX!!!!! co z tym zrobić gdy usuwamy składnik który jest w zamówieniu?
+                                    if (ing == null) //this should never happen (when removing ingredient it is removed from all orders)
                                         throw PizzaServiceFault.Create(Messages.SERVER_INTERNAL_ERROR);
                                     if (ing.StockQuantity - ingr.Quantity < 0)
                                     {

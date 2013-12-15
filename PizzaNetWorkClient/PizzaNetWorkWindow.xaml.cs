@@ -71,6 +71,11 @@ namespace PizzaNetWorkClient
             ordersViewModel.GotFocusAction();
         }
 
+        /// <summary>
+        /// Workaround selection changing since there is no SelectionChanging event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!(e.OriginalSource is TabControl) || !this.IsLoaded)
@@ -82,71 +87,96 @@ namespace PizzaNetWorkClient
                 return;
             }
 
+            TabItem SelectedTab=null;
+            if (OrdersTab.IsSelected)
+                SelectedTab = OrdersTab;
+            else if (StockTab.IsSelected)
+                SelectedTab = StockTab;
+            else if (RecipiesTab.IsSelected)
+                SelectedTab = RecipiesTab;
+            else if (UsersTab.IsSelected)
+                SelectedTab = UsersTab;
+            
             if (LastSelected == OrdersTab)
             {
+                IsSelectionChanging = true;
                 if (!ordersViewModel.LostFocusAction())
                 {
-                    IsSelectionChanging = true;
                     tabControl.SelectedIndex = 0;
-                    e.Handled = true;
+                    IsSelectionChanging = false;
                     return;
                 }
+                IsSelectionChanging = false;
             }
 
             if (LastSelected == StockTab)
             {
+                IsSelectionChanging = true;
                 if (!stockViewModel.LostFocusAction())
                 {
-                    IsSelectionChanging = true;
                     tabControl.SelectedIndex = 1;
-                    e.Handled = true;
+                    IsSelectionChanging = false;
                     return;
                 }
+                IsSelectionChanging = false;
             }
 
             if (LastSelected == RecipiesTab)
             {
+                IsSelectionChanging = true;
                 if (!recipiesViewModel.LostFocusAction())
                 {
-                    IsSelectionChanging = true;
                     tabControl.SelectedIndex = 2;
-                    e.Handled = true;
+                    IsSelectionChanging = false;
                     return;
                 }
+                IsSelectionChanging = false;
             }
 
             if (LastSelected == UsersTab)
             {
+                IsSelectionChanging = true;
                 if (!usersViewModel.LostFocusAction())
                 {
-                    IsSelectionChanging = true;
                     tabControl.SelectedIndex = 3;
-                    e.Handled = true;
+                    IsSelectionChanging = false;
                     return;
                 }
+                IsSelectionChanging = false;
             }
 
-            if (StockTab.IsSelected)
+            if (StockTab == SelectedTab)
             {
-
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 1;
+                IsSelectionChanging = false;
                 stockViewModel.GotFocusAction();
                 LastSelected = StockTab;
             }
 
-            if (OrdersTab.IsSelected)
+            if (OrdersTab == SelectedTab)
             {
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 0;
+                IsSelectionChanging = false;
                 ordersViewModel.GotFocusAction();
                 LastSelected = OrdersTab;
             }
 
-            if (RecipiesTab.IsSelected)
+            if (RecipiesTab == SelectedTab)
             {
-                recipiesViewModel.RecipiesView.RefreshRecipies();
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 2;
+                IsSelectionChanging = false;
+                recipiesViewModel.GotFocusAction();
                 LastSelected = RecipiesTab;
             }
 
-            if (UsersTab.IsSelected)
+            if (UsersTab == SelectedTab)
             {
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 3;
+                IsSelectionChanging = false;
                 usersViewModel.GotFocusAction();
                 LastSelected = UsersTab;
             }

@@ -1,4 +1,5 @@
-﻿using PizzaNetControls.Views;
+﻿using PizzaNetControls.Common;
+using PizzaNetControls.Views;
 using PizzaNetControls.Workers;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,7 @@ namespace PizzaNetControls.ViewModels
 
         private void TextBoxRecipeName_SourceUpdated(object sender, DataTransferEventArgs e)
         {
+            RecipiesView.Modified = true;
             if (RecipesContainer.SelectedIndex < 0) return;
             _vo.UpdateRecipe(RecipesContainer.SelectedIndex);
         }
@@ -105,20 +107,28 @@ namespace PizzaNetControls.ViewModels
             }
         }
 
+        private void CheckLastBinding()
+        {
+            if (RecipesContainer.SelectedIndex < 0) return;
+            RecipeControl rc = RecipiesView.RecipesCollection[RecipesContainer.SelectedIndex];
+            this.RecipiesView.Modified |= rc.Recipe.Name != tbName.Text;
+        }
+
         private void ButtonSaveChanges_Click(object sender, RoutedEventArgs e)
         {
             RecipiesView.SaveChanges();
         }
 
-        public bool LostFocusAction()
-        {
-            //TODO
-            return true;
-        }
-
         public void GotFocusAction()
         {
-            //TODO
+            RecipiesView.RefreshRecipies();
+        }
+        public bool LostFocusAction()
+        {
+            CheckLastBinding();
+            if (RecipiesView.Modified)
+                return Utils.showChangesDialog();
+            else return true;
         }
     }
 }
