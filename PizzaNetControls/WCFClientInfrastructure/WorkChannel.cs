@@ -97,9 +97,9 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         }
 
 
-        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req)
+        public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRemoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req)
         {
-            return Channel.UpdateOrRmoveRecipe(req);
+            return Channel.UpdateOrRemoveRecipe(req);
         }
 
 
@@ -108,9 +108,15 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
             return Channel.UpdateOrRemoveUser(req);
         }
 
-        public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<RegisterUserDTO> req)
+        public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<UserDTO> req)
         {
             return Channel.RegisterUser(req);
+        }
+
+
+        public SingleItemResponse<UserDTO> UpdateUser(UpdateRequest<UserDTO> req)
+        {
+            return Channel.UpdateUser(req);
         }
     }
 }

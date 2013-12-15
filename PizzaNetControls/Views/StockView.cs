@@ -297,7 +297,7 @@ namespace PizzaNetControls.Views
             //StockView.RefreshStockItems();
             if (Modified)
             {
-                if (!showSaveChangesDialog()) return;
+                if (!Utils.showChangesDialog()) return;
                 RefreshStockItems();
             }
             var dlg = new OrderIngredientsDialog();
@@ -314,11 +314,6 @@ namespace PizzaNetControls.Views
             StockItemsCollection.NotifyCollectionChanged();
             if (SuppliesOrdered != null)
                 SuppliesOrdered(this, new EventArgs());
-        }
-
-        public bool showSaveChangesDialog()
-        {
-            return Utils.showChangesDialog();
         }
     }
 }

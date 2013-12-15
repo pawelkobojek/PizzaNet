@@ -1,4 +1,5 @@
 ﻿using PizzaNetCommon.DTOs;
+using PizzaNetControls.Common;
 using PizzaNetControls.Controls;
 using PizzaNetControls.Dialogs;
 using PizzaNetControls.Views;
@@ -152,7 +153,7 @@ namespace PizzaNetControls.ViewModels
         {
             CheckLastBinding();
             if (StockView.Modified)
-                return StockView.showSaveChangesDialog();
+                return Utils.showChangesDialog();
             else return true;
         }
 

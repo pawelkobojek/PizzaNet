@@ -18,7 +18,7 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         [FaultContract(typeof(PizzaServiceFault))]
-        SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<RegisterUserDTO> req);
+        SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<UserDTO> req);
 
         [OperationContract]
         TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req);
@@ -60,9 +60,13 @@ namespace PizzaNetCommon.Services
         void InsertRecipe(UpdateRequest<RecipeDTO> req);
 
         [OperationContract]
-        TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRmoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req);
+        TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRemoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req);
 
         [OperationContract]
         ListResponse<UserDTO> UpdateOrRemoveUser(UpdateOrRemoveRequest<List<UserDTO>> req);
+
+        [OperationContract]
+        [FaultContract(typeof(PizzaServiceFault))]
+        SingleItemResponse<UserDTO> UpdateUser(UpdateRequest<UserDTO> req);
     }
 }

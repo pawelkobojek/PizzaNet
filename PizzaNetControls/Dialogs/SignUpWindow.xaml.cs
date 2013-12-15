@@ -52,7 +52,7 @@ namespace PizzaNetControls.Dialogs
             }
             int phone = 0;
             int.TryParse(phoneInput.Text, out phone);
-            RegisterUserDTO user = new RegisterUserDTO()
+            UserDTO user = new UserDTO()
             {
                 Address = addressInput.Text,
                 Email = emailInput.Text,
@@ -62,14 +62,14 @@ namespace PizzaNetControls.Dialogs
             };
             worker.EnqueueTask(new WorkerTask((args) =>
                 {
-                    var us = args[0] as RegisterUserDTO;
+                    var us = args[0] as UserDTO;
                     if (us == null)
                         return null;
                     try
                     {
                         using (var proxy = new WorkChannel())
                         {
-                            return proxy.RegisterUser(new UpdateRequest<RegisterUserDTO>()
+                            return proxy.RegisterUser(new UpdateRequest<UserDTO>()
                             {
                                 Data = user
                             });

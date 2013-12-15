@@ -34,7 +34,19 @@ namespace PizzaService.Assemblers
             //user.Password = userDto.Password;
         }
 
-        public User ToUser(RegisterUserDTO user)
+        internal void UpdateEntityUserLevel(User user, UserDTO userDto)
+        {
+            if (userDto.Address != null)
+                user.Address = userDto.Address;
+            if (userDto.Name != null)
+                user.Name = userDto.Name;
+            if (userDto.Password != null)
+                user.Password = userDto.Password;
+            if (userDto.Phone >= 0)
+                user.Phone = userDto.Phone;
+        }
+
+        public User ToUser(UserDTO user)
         {
             return new User
             {
