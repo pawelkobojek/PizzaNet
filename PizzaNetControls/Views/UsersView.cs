@@ -35,7 +35,6 @@ namespace PizzaNetControls.Views
 
         internal void RefreshUsers()
         {
-            UsersCollection.Clear();
             Worker.EnqueueTask(new WorkerTask(args =>
                 {
                     try
@@ -56,13 +55,19 @@ namespace PizzaNetControls.Views
                     }
                 }, (s, e) =>
                     {
+                        if( e.Result is Exception)
+                        {
+                            Utils.HandleException(e.Result as Exception);
+                            return;
+                        }
                         var result = e.Result as ListResponse<UserDTO>;
                         if (result == null)
                         {
-                            Utils.showError("blabla");
+                            Utils.showError(Utils.Messages.UNKNOWN_ERROR);
                             return;
                         }
 
+                        UsersCollection.Clear();
                         foreach (var user in result.Data)
                         {
                             UsersCollection.Add(user);
