@@ -43,12 +43,6 @@
     <ApplicationIcon>PizzaSliceIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -107,7 +101,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -125,10 +118,6 @@
     <ProjectReference Include="..\PizzaNetControls\PizzaNetControls.csproj">
       <Project>{1e4bd86e-9d85-4284-b5d7-c4aba7ead238}</Project>
       <Name>PizzaNetControls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PizzaNetDataModel\PizzaNetDataModel.csproj">
-      <Project>{7c8d9142-6cd2-4ddb-9bd4-fba4c425ddd1}</Project>
-      <Name>PizzaNetDataModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
