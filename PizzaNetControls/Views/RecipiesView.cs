@@ -31,14 +31,8 @@ namespace PizzaNetControls.Views
         public ObservableCollection<IngredientsRowWork> IngredientsRowsCollection { get; set; }
         public ObservableCollection<RecipeControl> RecipesCollection { get; set; }
         public List<RecipeDTO> RemovedRecipes { get; set; }
-        private const string TITLE = "PizzaNetWorkClient";
         private int SelectedRecipe { get; set; }
         public bool Modified { get; set; }
-
-        private void showError(string message)
-        {
-            Utils.showError(message);
-        }
 
         internal void UpdateRecipe(int index)
         {
