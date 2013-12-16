@@ -40,8 +40,19 @@ namespace PizzaNetClient
 
             this.worker.Lock = this.tabControl;
             this.Closed += PizzaNetClientWindow_Closed;
+            this.Closing += PizzaNetClientWindow_Closing;
             this.worker.RefreshButtonClicked += worker_RefreshButtonClicked;
             LastSelected = MainTab;
+        }
+
+        void PizzaNetClientWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (LastSelected == MainTab && !clientMainViewModel.LostFocusAction())
+                e.Cancel = true;
+            else if (LastSelected == OrdersTab && !myOrdersViewModel.LostFocusAction())
+                e.Cancel = true;
+            else if (LastSelected == SettingsTab && !settingsViewModel.LostFocusAction())
+                e.Cancel = true;
         }
 
         void PizzaNetClientWindow_Closed(object sender, EventArgs e)

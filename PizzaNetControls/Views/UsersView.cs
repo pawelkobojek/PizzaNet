@@ -10,6 +10,7 @@ using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaNetControls.Configuration;
 using PizzaNetCommon.Requests;
 using PizzaNetControls.Common;
+using PizzaNetControls.Dialogs;
 
 namespace PizzaNetControls.Views
 {
@@ -31,6 +32,7 @@ namespace PizzaNetControls.Views
                     "Employee",
                     "Admin"
                 };
+            Modified = false;
         }
 
         internal void RefreshUsers()
@@ -72,14 +74,16 @@ namespace PizzaNetControls.Views
                         {
                             UsersCollection.Add(user);
                         }
-
+                        Modified = false;
                     }, null));
         }
 
         private int counter = 1;
         internal void AddUser()
         {
-            UsersCollection.Add(new UserDTO { Address = "Address", Email = "Email " + counter.ToString(), Name = "Name", UserID = -counter, Phone = -1, Rights = 1 });
+            var pass = InputPassword.Show("Insert password for new user:", "Insert password");
+            if (string.IsNullOrEmpty(pass)) return;
+            UsersCollection.Add(new UserDTO { Address = "Address", Email = "Email " + counter.ToString(), Name = "Name", UserID = -counter, Phone = 0, Rights = 1, Password=pass });
             counter++;
             Modified = true;
         }
@@ -88,6 +92,7 @@ namespace PizzaNetControls.Views
         {
             RemovedUsers.Add(UsersCollection[index]);
             UsersCollection.RemoveAt(index);
+            Modified = true;
         }
 
         internal void SaveChanges()
@@ -121,14 +126,19 @@ namespace PizzaNetControls.Views
                     }
                     catch (Exception exc)
                     {
-                        return null;
+                        return exc;
                     }
                 }, (s, e) =>
                     {
+                        if (e.Result is Exception)
+                        {
+                            Utils.HandleException(e.Result as Exception);
+                            return;
+                        }
                         var result = e.Result as ListResponse<UserDTO>;
                         if (result == null)
                         {
-                            Utils.showError("bla");
+                            Utils.showError(Utils.Messages.UNKNOWN_ERROR);
                             return;
                         }
                         UsersCollection.Clear();
@@ -137,6 +147,7 @@ namespace PizzaNetControls.Views
                         {
                             UsersCollection.Add(item);
                         }
+                        Modified = false;
                     }, null));
         }
     }

@@ -90,10 +90,14 @@
     <Compile Include="Controls\IngredientsListItem.xaml.cs">
       <DependentUpon>IngredientsListItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\InputPassword.xaml.cs">
+      <DependentUpon>InputPassword.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\ModalDialog.cs" />
+    <Compile Include="Dialogs\OkEventArgs.cs" />
     <Compile Include="Dialogs\OrderIngredientForm.xaml.cs">
       <DependentUpon>OrderIngredientForm.xaml</DependentUpon>
     </Compile>
@@ -187,6 +191,10 @@
       <DependentUpon>IngredientsRow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Dialogs\InputPassword.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\LoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

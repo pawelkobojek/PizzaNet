@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using PizzaNetCommon.DTOs;
 using System.Reflection;
 using System.Globalization;
+using PizzaNetControls.Common;
 
 namespace PizzaNetControls.ViewModels
 {
@@ -96,13 +97,15 @@ namespace PizzaNetControls.ViewModels
         {
             UsersView.RefreshUsers();
         }
-
         public bool LostFocusAction()
         {
-            return true;
+            CheckLastBinding();
+            if (UsersView.Modified)
+                return Utils.showChangesDialog();
+            else return true;
         }
 
-        private void TextBoxStockDetails_SourceUpdated(object sender, DataTransferEventArgs e)
+        private void datails_SourceUpdated(object sender, DataTransferEventArgs e)
         {
             if (listUsers.SelectedIndex < 0) return;
             //MODIFIED _vo.UpdateStockItem(listStock.SelectedIndex);
@@ -133,14 +136,12 @@ namespace PizzaNetControls.ViewModels
         {
             if (listUsers.SelectedIndex < 0) return;
             UserDTO rc = UsersView.UsersCollection[listUsers.SelectedIndex];
-            NumberFormatInfo nfi = new CultureInfo("en-US", true).NumberFormat;
-            //TODO Nie wiem co
-            //UsersView.Modified |=
-            //    tbId.Text != rc.IngredientID.ToString() ||
-            //    tbName.Text != rc.Name.ToString() ||
-            //    tbNW.Text != rc.NormalWeight.ToString() ||
-            //    tbEW.Text != rc.ExtraWeight.ToString() ||
-            //    tbPU.Text != rc.PricePerUnit.ToString("0.########", nfi);
+            UsersView.Modified |=
+                tbId.Text != rc.UserID.ToString() ||
+                tbName.Text != rc.Name.ToString() ||
+                tbAddress.Text != rc.Address ||
+                tbEmail.Text != rc.Email ||
+                tbPhone.Text != rc.Phone.ToString();
         }
     }
 }

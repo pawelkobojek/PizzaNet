@@ -30,7 +30,7 @@
                     <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}" />
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Phone" DisplayMemberBinding="{Binding Phone}" />
-                    <GridViewColumn Header="Password" DisplayMemberBinding="{Binding Password}"/>
+                    <!--<GridViewColumn Header="Password" DisplayMemberBinding="{Binding Password}"/>-->
                     <GridViewColumn Header="Rights" DisplayMemberBinding="{Binding Rights, Converter={ StaticResource ResourceKey=rightsConverter}}" />
                 </GridView>
             </ListView.View>
@@ -55,29 +55,34 @@
                 </StackPanel.Resources>
                 <DockPanel>
                     <TextBlock Text="Id:"/>
-                    <TextBox IsReadOnly="True"
-                             Text="{Binding ElementName=listUsers, Path=SelectedItem.UserID}"/>
+                    <TextBox Name="tbId" IsReadOnly="True" SourceUpdated="datails_SourceUpdated"
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.UserID, NotifyOnSourceUpdated=True}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Email:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Email}"/>
+                    <TextBox Name="tbEmail" SourceUpdated="datails_SourceUpdated" 
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.Email, NotifyOnSourceUpdated=True}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Address:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Address}"/>
+                    <TextBox Name="tbAddress" SourceUpdated="datails_SourceUpdated" 
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.Address, NotifyOnSourceUpdated=True}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Name:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Name}"/>
+                    <TextBox Name="tbName" SourceUpdated="datails_SourceUpdated" 
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.Name, NotifyOnSourceUpdated=True}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Phone:"/>
-                    <TextBox Text="{Binding ElementName=listUsers, Path=SelectedItem.Phone}"/>
+                    <TextBox Name="tbPhone" SourceUpdated="datails_SourceUpdated" 
+                             Text="{Binding ElementName=listUsers, Path=SelectedItem.Phone, NotifyOnSourceUpdated=True}"/>
                 </DockPanel>
                 <DockPanel>
                     <TextBlock Text="Rights:"/>
-                    <ComboBox ItemsSource="{Binding UsersView.Rights}" HorizontalContentAlignment="Right"
-                            SelectedValue="{Binding ElementName=listUsers, Path=SelectedItem.Rights, Converter={StaticResource ResourceKey=rightsConverter}}"/>
+                    <ComboBox ItemsSource="{Binding UsersView.Rights}" HorizontalContentAlignment="Right" SourceUpdated="datails_SourceUpdated"
+                            SelectedValue="{Binding ElementName=listUsers, Path=SelectedItem.Rights, NotifyOnSourceUpdated=True, 
+                                            Converter={StaticResource ResourceKey=rightsConverter}}"/>
                 </DockPanel>
             </StackPanel>
             <StackPanel Margin="0, 20, 0, 0">

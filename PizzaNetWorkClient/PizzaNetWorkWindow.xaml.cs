@@ -23,8 +23,21 @@ namespace PizzaNetWorkClient
             this.DataContext = this;
             this.worker.Lock = this.tabControl;
             this.Closed += PizzaNetWorkWindow_Closed;
+            this.Closing += PizzaNetWorkWindow_Closing;
             this.worker.RefreshButtonClicked += worker_RefreshButtonClicked;
             LastSelected = OrdersTab;
+        }
+
+        void PizzaNetWorkWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (LastSelected == OrdersTab && !ordersViewModel.LostFocusAction())
+                e.Cancel = true;
+            else if (LastSelected == StockTab && !stockViewModel.LostFocusAction())
+                e.Cancel = true;
+            else if (LastSelected == RecipiesTab && !recipiesViewModel.LostFocusAction())
+                e.Cancel = true;
+            else if (LastSelected == UsersTab && !usersViewModel.LostFocusAction())
+                e.Cancel = true;
         }
 
         void PizzaNetWorkWindow_Closed(object sender, System.EventArgs e)
