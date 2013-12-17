@@ -73,6 +73,7 @@ namespace PizzaNetControls.Views
             //    StockItemsCollection.Add(new StockItem(ing));
             //    Console.WriteLine("Added " + ing.Name);
             //}));
+
             int nextId = NextId();
             string newName = "New Ingredient" + ((int.MinValue - nextId - 1 == -1) ? "" : String.Format(" {0}", -(int.MinValue - nextId - 1)));
             StockItemsCollection.Add(new StockIngredientDTO { IngredientID = nextId, Name = newName, StockQuantity = 0, PricePerUnit = 1, NormalWeight = 1, ExtraWeight = 2, IsPartOfRecipe = false });

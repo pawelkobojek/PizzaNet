@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using PizzaNetDataModel.Model;
@@ -12,7 +13,7 @@ namespace PizzaNetDataModel
     /// Initializer for the appliaction's database.
     /// It prefills the database.
     /// </summary>
-    internal class PizzaContextInitializer : DropCreateDatabaseIfModelChanges<PizzaContext>
+    internal class PizzaContextInitializer : DropCreateDatabaseAlways<PizzaContext>
     {
         /// <summary>
         /// Populates the database with default data.
@@ -41,9 +42,30 @@ namespace PizzaNetDataModel
             const int EXTRA_W = 700;
             const int STOCK_QUANTITY = 10000;
 
-            User admin = new User { Address = "", Email = "Admin", Name = "Admin", Phone = 1, Rights = 3, Password="123" };
-            User employee = new User { Address = "EmployeeAddress", Email = "Employee", Name = "Pulasky", Phone = 2552, Rights = 2, Password="323"};
-            User customer = new User { Address = "CustomerAddress", Email = "Customer", Name = "Max", Phone = 4242, Rights = 1, Password="1998" };
+            User admin = new User { Address = "", Email = "Admin", Name = "Admin", Phone = 1, Rights = 3 };
+            SHA256 hash = SHA256Managed.Create();
+            string password = "123";
+            string hashedPassword;
+            byte[] pswd = Encoding.Default.GetBytes(password);
+            byte[] hashed;
+            hashed = hash.ComputeHash(pswd);
+            hashedPassword = System.Text.Encoding.Default.GetString(hashed);
+            admin.Password = hashedPassword;
+
+            User employee = new User { Address = "EmployeeAddress", Email = "Employee", Name = "Pulasky", Phone = 2552, Rights = 2};
+            password = "323";
+            pswd = Encoding.Default.GetBytes(password);
+            hashed = hash.ComputeHash(pswd);
+            hashedPassword = System.Text.Encoding.Default.GetString(hashed);
+            employee.Password = hashedPassword;
+
+            User customer = new User { Address = "CustomerAddress", Email = "Customer", Name = "Max", Phone = 4242, Rights = 1};
+            password = "1998";
+            pswd = Encoding.Default.GetBytes(password);
+            hashed = hash.ComputeHash(pswd);
+            hashedPassword = System.Text.Encoding.Default.GetString(hashed);
+            customer.Password = hashedPassword;
+
             context.Users.Add(admin);
             context.Users.Add(employee);
             context.Users.Add(customer);

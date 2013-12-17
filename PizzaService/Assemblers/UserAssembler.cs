@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using PizzaNetCommon.DTOs;
 using PizzaNetDataModel.Model;
@@ -55,8 +57,16 @@ namespace PizzaService.Assemblers
                 Address = user.Address,
                 Phone = user.Phone,
                 Rights = 1,
-                Password = user.Password
+                Password = GetHashedPassword(user.Password)
             };
+        }
+
+        private static string GetHashedPassword(string password)
+        {
+            SHA256 hash = SHA256Managed.Create();
+            byte[] pswd = Encoding.Default.GetBytes(password);
+            byte[] hashed = hash.ComputeHash(pswd);
+            return Encoding.Default.GetString(hashed);
         }
     }
 }

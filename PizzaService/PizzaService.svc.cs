@@ -12,6 +12,7 @@ using PizzaNetDataModel.Model;
 using PizzaNetDataModel.Repository;
 using PizzaService.Assemblers;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace PizzaService
 {
@@ -271,7 +272,7 @@ namespace PizzaService
 
         private static bool PerformValidation(User user, RequestBase req)
         {
-            return (user.Email == req.Login && user.Password == req.Password);
+            return (user.Email == req.Login && user.Password == GetHashedPassword(req.Password));
         }
 
         public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
@@ -534,15 +535,7 @@ namespace PizzaService
                                 }
                                 else
                                 {
-                                    user = new User
-                                    {
-                                        Address = userDto.Address,
-                                        Email = userDto.Email,
-                                        Name = userDto.Name,
-                                        Password = userDto.Password,
-                                        Phone = userDto.Phone,
-                                        Rights = userDto.Rights
-                                    };
+                                    user = userAssembler.ToUser(userDto);
                                     uow.Db.Users.Insert(user);
                                 }
                             }
@@ -638,6 +631,14 @@ namespace PizzaService
             public const string INGS_LIST_OUT_OF_DATE = "Ingredients list is out of date!";
             public const string INVALID_USER_OR_PASSWORD = "Invalid user or password!";
             public const string SERVER_INTERNAL_ERROR = "Server internal error!";
+        }
+
+        private static string GetHashedPassword(string password)
+        {
+            SHA256 hash = SHA256Managed.Create();
+            byte[] pswd = Encoding.Default.GetBytes(password);
+            byte[] hashed = hash.ComputeHash(pswd);
+            return Encoding.Default.GetString(hashed);
         }
     }
 }
