@@ -60,7 +60,7 @@ namespace PizzaNetControls.Common
         {
             public const string REGISTRATION_FAILED = "Registration failed!";
             public const string REGISTRATION_COMPLETED = "Registration completed!";
-            public const string UNKNOWN_ERROR = "Unknown error!";
+            public const string UNKNOWN_ERROR_FORMAT = "Unknown error!\nDetails: {0}";
             public const string ORDERED_SUCCESSFULLY = "Ordered successfully!";
             public const string ORDERING_ERROR = "Error while ordering!";
             public const string ORDERS_REFRESH_FAILED = "Refreshing orders failed!";
@@ -115,7 +115,7 @@ namespace PizzaNetControls.Common
             else if (exc is System.TimeoutException)
                 showExclamation(Messages.TIMED_OUT);
             else
-                showError(Messages.UNKNOWN_ERROR);
+                showError(String.Format(Messages.UNKNOWN_ERROR_FORMAT,exc.Message));
         }
     }
 }

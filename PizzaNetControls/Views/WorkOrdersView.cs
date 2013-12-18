@@ -156,7 +156,7 @@ namespace PizzaNetControls.Views
                 var res = s.Result as SingleItemResponse<OrderDTO>;
                 if (res == null)
                 {
-                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                     return;
                 }
                 o.Order.State = res.Data.State;
@@ -279,7 +279,7 @@ namespace PizzaNetControls.Views
                 var res = s.Result as SingleItemResponse<OrderDTO>;
                 if (res == null)
                 {
-                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                     return;
                 }
                 o.Order.State = res.Data.State;
@@ -334,7 +334,7 @@ namespace PizzaNetControls.Views
                 }
                 if ((a.Result as bool?)??false)
                 {
-                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                     return;
                 }
                 RefreshCurrentOrders();
