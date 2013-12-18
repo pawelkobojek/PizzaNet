@@ -21,7 +21,7 @@ namespace PizzaService.Assemblers
                 Phone = user.Phone,
                 Rights = user.Rights,
                 UserID = user.UserID,
-                Password = user.Password
+                Password = string.Empty
             };
         }
 
@@ -32,8 +32,6 @@ namespace PizzaService.Assemblers
             user.Name = userDto.Name;
             user.Phone = userDto.Phone;
             user.Rights = userDto.Rights;
-            //TODO przedyskutować
-            //user.Password = userDto.Password;
         }
 
         internal void UpdateEntityUserLevel(User user, UserDTO userDto)
@@ -43,7 +41,7 @@ namespace PizzaService.Assemblers
             if (userDto.Name != null)
                 user.Name = userDto.Name;
             if (userDto.Password != null)
-                user.Password = userDto.Password;
+                user.Password = GetHashedPassword(userDto.Password);
             if (userDto.Phone >= 0)
                 user.Phone = userDto.Phone;
         }
@@ -61,12 +59,13 @@ namespace PizzaService.Assemblers
             };
         }
 
-        private static string GetHashedPassword(string password)
+        public static string GetHashedPassword(string password)
         {
             SHA256 hash = SHA256Managed.Create();
             byte[] pswd = Encoding.Default.GetBytes(password);
             byte[] hashed = hash.ComputeHash(pswd);
-            return Encoding.Default.GetString(hashed);
+            string res = Encoding.Default.GetString(hashed);
+            return res;
         }
     }
 }

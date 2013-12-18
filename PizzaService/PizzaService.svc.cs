@@ -260,7 +260,9 @@ namespace PizzaService
                         if (!PerformValidation(user, req))
                             throw PizzaServiceFault.Create(Messages.INVALID_USER_OR_PASSWORD);
 
-                        return SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
+                        var res = SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
+                        res.Data.Password = req.Password;
+                        return res;
                     });
             }
         }
@@ -272,7 +274,7 @@ namespace PizzaService
 
         private static bool PerformValidation(User user, RequestBase req)
         {
-            return (user.Email == req.Login && user.Password == GetHashedPassword(req.Password));
+            return (user.Email == req.Login && user.Password == UserAssembler.GetHashedPassword(req.Password));
         }
 
         public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
@@ -588,7 +590,9 @@ namespace PizzaService
                         ins.UserID = -1;
                         uow.Db.Users.Insert(ins);
                         uow.Db.Commit();
-                        return SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Find(ins.Email)));
+                        var res = SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Find(ins.Email)));
+                        res.Data.Password = req.Password;
+                        return res;
                     });
             }
         }
@@ -618,7 +622,9 @@ namespace PizzaService
 
                         userAssembler.UpdateEntityUserLevel(user, request.Data);
                         uow.Db.Commit();
-                        return SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Get(request.Data.UserID)));
+                        var res = SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Get(request.Data.UserID)));
+                        res.Data.Password = request.Data.Password;
+                        return res;
                     });
             }
         }
@@ -631,14 +637,6 @@ namespace PizzaService
             public const string INGS_LIST_OUT_OF_DATE = "Ingredients list is out of date!";
             public const string INVALID_USER_OR_PASSWORD = "Invalid user or password!";
             public const string SERVER_INTERNAL_ERROR = "Server internal error!";
-        }
-
-        private static string GetHashedPassword(string password)
-        {
-            SHA256 hash = SHA256Managed.Create();
-            byte[] pswd = Encoding.Default.GetBytes(password);
-            byte[] hashed = hash.ComputeHash(pswd);
-            return Encoding.Default.GetString(hashed);
         }
     }
 }

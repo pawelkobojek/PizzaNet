@@ -228,6 +228,7 @@ namespace PizzaNetControls.Views
                         return;
                     }
                     User.Password = userRes.Data.Password;
+                    Password = User.Password;
                     CurrentPassword = PasswordRepeated = NewPassword = "";
                     ModifiedPasssword = false;
                     Utils.showInformation(Utils.Messages.PASSWORD_CHANGED);
