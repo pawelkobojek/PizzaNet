@@ -73,11 +73,12 @@ namespace PizzaNetControls.Common
             public const string REPEATED_PASSWORD_DIFF = "Repeated password is diffrent than new password!";
             public const string SAVED_SUCCESSFULLY = "Saved successfully!";
             public const string PASSWORD_CHANGED = "Password has been changed successfully!";
-            public const string LOGIN_FAILED = "Login failed";
-            public const string RIGHTS_LEVEL_FAILURE = "You don't have enough rights level";
-            public const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it";
-            public const string SAVE_CHANGES_FAILURE = "Save changes failed";
-            public const string ORDER_FAILURE = "Ordering supplies failed";
+            public const string LOGIN_FAILED = "Login failed!";
+            public const string RIGHTS_LEVEL_FAILURE = "You don't have enough rights level!";
+            public const string ING_REMOVE_IMPOSSIBLE = "Can't remove this ingredient because there are recipies containing it!";
+            public const string SAVE_CHANGES_FAILURE = "Save changes failed!";
+            public const string ORDER_FAILURE = "Ordering supplies failed!";
+            public const string TIMED_OUT = "Server connection timed out!";
         }
 
         public static XmlNode SerializeObjectToXmlNode(Object obj)
@@ -111,6 +112,8 @@ namespace PizzaNetControls.Common
                 showExclamation((exc as FaultException<PizzaServiceFault>).Detail.Reason);
             else if (exc is PizzaNetException)
                 showExclamation((exc as PizzaNetException).Message);
+            else if (exc is System.TimeoutException)
+                showExclamation(Messages.TIMED_OUT);
             else
                 showError(Messages.UNKNOWN_ERROR);
         }
