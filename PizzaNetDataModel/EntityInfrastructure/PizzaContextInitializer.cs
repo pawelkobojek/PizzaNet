@@ -13,7 +13,7 @@ namespace PizzaNetDataModel
     /// Initializer for the appliaction's database.
     /// It prefills the database.
     /// </summary>
-    internal class PizzaContextInitializer : DropCreateDatabaseAlways<PizzaContext>
+    internal class PizzaContextInitializer : DropCreateDatabaseIfModelChanges<PizzaContext>
     {
         /// <summary>
         /// Populates the database with default data.
@@ -46,24 +46,24 @@ namespace PizzaNetDataModel
             SHA256 hash = SHA256Managed.Create();
             string password = "123";
             string hashedPassword;
-            byte[] pswd = Encoding.Default.GetBytes(password);
+            byte[] pswd = Encoding.UTF8.GetBytes(password);
             byte[] hashed;
             hashed = hash.ComputeHash(pswd);
-            hashedPassword = System.Text.Encoding.Default.GetString(hashed);
+            hashedPassword = System.Text.Encoding.UTF8.GetString(hashed);
             admin.Password = hashedPassword;
 
             User employee = new User { Address = "EmployeeAddress", Email = "Employee", Name = "Pulasky", Phone = 2552, Rights = 2};
             password = "323";
-            pswd = Encoding.Default.GetBytes(password);
+            pswd = Encoding.UTF8.GetBytes(password);
             hashed = hash.ComputeHash(pswd);
-            hashedPassword = System.Text.Encoding.Default.GetString(hashed);
+            hashedPassword = System.Text.Encoding.UTF8.GetString(hashed);
             employee.Password = hashedPassword;
 
             User customer = new User { Address = "CustomerAddress", Email = "Customer", Name = "Max", Phone = 4242, Rights = 1};
             password = "1998";
-            pswd = Encoding.Default.GetBytes(password);
+            pswd = Encoding.UTF8.GetBytes(password);
             hashed = hash.ComputeHash(pswd);
-            hashedPassword = System.Text.Encoding.Default.GetString(hashed);
+            hashedPassword = System.Text.Encoding.UTF8.GetString(hashed);
             customer.Password = hashedPassword;
 
             context.Users.Add(admin);

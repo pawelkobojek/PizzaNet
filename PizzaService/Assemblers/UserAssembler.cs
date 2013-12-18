@@ -21,7 +21,7 @@ namespace PizzaService.Assemblers
                 Phone = user.Phone,
                 Rights = user.Rights,
                 UserID = user.UserID,
-                Password = user.Password
+                //Password = user.Password
             };
         }
 
@@ -64,9 +64,9 @@ namespace PizzaService.Assemblers
         private static string GetHashedPassword(string password)
         {
             SHA256 hash = SHA256Managed.Create();
-            byte[] pswd = Encoding.Default.GetBytes(password);
+            byte[] pswd = Encoding.UTF8.GetBytes(password);
             byte[] hashed = hash.ComputeHash(pswd);
-            return Encoding.Default.GetString(hashed);
+            return Encoding.UTF8.GetString(hashed);
         }
     }
 }

@@ -260,7 +260,9 @@ namespace PizzaService
                         if (!PerformValidation(user, req))
                             throw PizzaServiceFault.Create(Messages.INVALID_USER_OR_PASSWORD);
 
-                        return SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
+                        var res = SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
+                        res.Data.Password = req.Password;
+                        return res;
                     });
             }
         }
@@ -272,6 +274,7 @@ namespace PizzaService
 
         private static bool PerformValidation(User user, RequestBase req)
         {
+            string hashedPassword = GetHashedPassword(req.Password);
             return (user.Email == req.Login && user.Password == GetHashedPassword(req.Password));
         }
 
@@ -636,9 +639,10 @@ namespace PizzaService
         private static string GetHashedPassword(string password)
         {
             SHA256 hash = SHA256Managed.Create();
-            byte[] pswd = Encoding.Default.GetBytes(password);
+            byte[] pswd = Encoding.UTF8.GetBytes(password);
             byte[] hashed = hash.ComputeHash(pswd);
-            return Encoding.Default.GetString(hashed);
+            string hashedPassword = Encoding.UTF8.GetString(hashed);
+            return hashedPassword;
         }
     }
 }
