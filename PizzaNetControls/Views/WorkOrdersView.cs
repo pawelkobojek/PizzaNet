@@ -27,8 +27,8 @@ namespace PizzaNetControls.Views
             this.PizzasCollection = new ObservableCollection<PizzaRow>();
             this.IngredientsCollection = new ObservableCollection<OrderIngredientDTO>();
             this.OrdersCollection = new NotifiedObservableCollection<OrdersRow>();
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
-            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
+            //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(OrdersCollection);
+            //view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order.State.StateValue", System.ComponentModel.ListSortDirection.Descending));
 
             OrdersRefresher = new BackgroundWorker();
             OrdersRefresher.DoWork += OrdersRefresher_DoWork;
