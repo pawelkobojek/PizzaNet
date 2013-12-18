@@ -102,6 +102,9 @@ namespace PizzaService
                 {
                     return db.inTransaction(uof =>
                     {
+                        if (!HasRights(GetUser(req).Data, 2))
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
+
                         if (GetUser(req).Data == null)
                             return null;
 
