@@ -155,7 +155,7 @@ namespace PizzaNetControls.Views
             if (e.Result as ListResponse<StockIngredientDTO> == null)
             {
                 Console.WriteLine("Result is null");
-                Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                 return;
             }
             List<StockIngredientDTO> ings = ((ListResponse<StockIngredientDTO>)e.Result).Data;

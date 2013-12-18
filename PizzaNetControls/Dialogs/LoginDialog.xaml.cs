@@ -98,7 +98,7 @@ namespace PizzaNetControls.Dialogs
                 }
                 else
                 {
-                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                     return;
                 }
             },emailInput.Text, passwordInput.Password);

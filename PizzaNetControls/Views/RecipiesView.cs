@@ -192,7 +192,7 @@ namespace PizzaNetControls.Views
                 if (result == null)
                 {
                     Console.WriteLine("Result is null");
-                    Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                    Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                     return;
                 }
                 foreach (var item in result.First)
@@ -406,7 +406,7 @@ namespace PizzaNetControls.Views
                         var result = e.Result as TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int>;
                         if (result == null)
                         {
-                            Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                            Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                             return;
                         }
 

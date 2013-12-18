@@ -65,7 +65,7 @@ namespace PizzaNetControls.Views
                         var result = e.Result as ListResponse<UserDTO>;
                         if (result == null)
                         {
-                            Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                            Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                             return;
                         }
 
@@ -138,7 +138,7 @@ namespace PizzaNetControls.Views
                         var result = e.Result as ListResponse<UserDTO>;
                         if (result == null)
                         {
-                            Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                            Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                             return;
                         }
                         UsersCollection.Clear();

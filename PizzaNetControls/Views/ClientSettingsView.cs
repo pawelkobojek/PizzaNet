@@ -154,7 +154,7 @@ namespace PizzaNetControls.Views
                     var userRes = e.Result as SingleItemResponse<UserDTO>;
                     if (userRes == null)
                     {
-                        Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                        Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                         return;
                     }
                     ClientConfig.CurrentUser.UpdateWithUserDTO(userRes.Data);
@@ -224,10 +224,11 @@ namespace PizzaNetControls.Views
                     var userRes = e.Result as SingleItemResponse<UserDTO>;
                     if (userRes == null || userRes.Data == null)
                     {
-                        Utils.showError(Utils.Messages.UNKNOWN_ERROR);
+                        Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                         return;
                     }
                     User.Password = userRes.Data.Password;
+                    Password = User.Password;
                     CurrentPassword = PasswordRepeated = NewPassword = "";
                     ModifiedPasssword = false;
                     Utils.showInformation(Utils.Messages.PASSWORD_CHANGED);

@@ -102,6 +102,9 @@ namespace PizzaService
                 {
                     return db.inTransaction(uof =>
                     {
+                        if (!HasRights(GetUser(req).Data, 2))
+                            throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
+
                         if (GetUser(req).Data == null)
                             return null;
 
@@ -274,8 +277,7 @@ namespace PizzaService
 
         private static bool PerformValidation(User user, RequestBase req)
         {
-            string hashedPassword = GetHashedPassword(req.Password);
-            return (user.Email == req.Login && user.Password == GetHashedPassword(req.Password));
+            return (user.Email == req.Login && user.Password == UserAssembler.GetHashedPassword(req.Password));
         }
 
         public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
@@ -371,7 +373,6 @@ namespace PizzaService
                             Address = o.Address,
                             CustomerPhone = o.CustomerPhone,
                             Date = o.Date,
-                            OrderID = o.OrderID,
                             User = user,
                             State = st,
                             UserID = user.UserID,
@@ -591,7 +592,9 @@ namespace PizzaService
                         ins.UserID = -1;
                         uow.Db.Users.Insert(ins);
                         uow.Db.Commit();
-                        return SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Find(ins.Email)));
+                        var res = SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Find(ins.Email)));
+                        res.Data.Password = req.Password;
+                        return res;
                     });
             }
         }
@@ -621,7 +624,9 @@ namespace PizzaService
 
                         userAssembler.UpdateEntityUserLevel(user, request.Data);
                         uow.Db.Commit();
-                        return SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Get(request.Data.UserID)));
+                        var res = SingleItemResponse.Create(userAssembler.ToSimpleDto(uow.Db.Users.Get(request.Data.UserID)));
+                        res.Data.Password = request.Data.Password;
+                        return res;
                     });
             }
         }
