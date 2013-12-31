@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PizzaNetCommon.DTOs;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 
 namespace WebClient.Controllers
@@ -10,19 +11,18 @@ namespace WebClient.Controllers
     public class HomeController : Controller
     {
 
-        public string Index()
+        public ActionResult Index()
         {
-            //ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
-
-            // ŻEBY SPRAWDZIC CZY DZIAŁA
-            string wtf;
             using (var proxy = new WorkChannel())
             {
-                var result = proxy.GetOrders(new PizzaNetCommon.Requests.EmptyRequest { Login = "Admin", Password = "123" });
-                wtf = result.Data[0].Address;
-            }
+                var data = proxy.GetRecipeTabData(new PizzaNetCommon.Requests.EmptyRequest
+                {
+                    Login = "Admin",
+                    Password = "123"
+                });
 
-            return wtf;
+                return View(data);
+            }
         }
 
         public ActionResult About()
@@ -41,7 +41,13 @@ namespace WebClient.Controllers
 
         public ActionResult MyOrders()
         {
-            return View();
+            List<OrderDTO> orders = new List<OrderDTO>();
+            using (var proxy = new WorkChannel())
+            {
+                var result = proxy.GetOrders(new PizzaNetCommon.Requests.EmptyRequest { Login = "Admin", Password = "123" });
+                orders = result.Data;
+            }
+            return View(orders);
         }
 
         public ActionResult Profile()

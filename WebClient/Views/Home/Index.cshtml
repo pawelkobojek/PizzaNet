@@ -1,3 +1,109 @@
-﻿@{
+﻿@model PizzaNetCommon.Requests.TrioResponse<List<PizzaNetCommon.DTOs.RecipeDTO>, List<PizzaNetCommon.DTOs.SizeDTO>, List<PizzaNetCommon.DTOs.OrderIngredientDTO>>
+
+@{
     ViewBag.Title = "Home Page";
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#pizza-details').children("*").hide();
+        //$("#ingredient-legend").show();
+        //$("#ingredient-legend").children("*").show();
+
+
+        $('.recipe-container').mouseenter(function () {
+            $(this).animate({
+                height: '+=15px'
+            });
+        });
+
+        $('.recipe-container').mouseleave(function () {
+            $(this).animate({
+                height: '-=15px'
+            });
+        });
+
+        $('.recipe-container').click(function () {
+            //$('.recipe-list').children('*').toggle(1000);
+            //$(this).css({ backgroundColor: "#42BDE4" });
+            var wasSelected = $(this).hasClass('checked');
+            $('.recipe-container').removeClass('checked');
+            $('#pizza-details').children("*").hide(1500);
+
+            if (!wasSelected) {
+                $(this).addClass('checked');
+                $('#' + $(this).attr('itemid')).show(500);
+                //$('#ingredient-legend').show(500);
+            } else {
+                $('#' + $(this).attr('itemid')).hide(500);
+                //$('#ingredient-legend').hide(500);
+            }
+        });
+
+    });
+</script>
+
+
+<div class="float-left">
+    <p id="label-choose-pizzas">
+        Choose Pizzas for your order:
+    </p>
+    <ul class="recipe-list">
+        @foreach (var item in Model.First)
+        {
+            <li>
+                <div class="recipe-container" itemid="@item.RecipeID">
+                    @Html.DisplayFor(modelItem => item.Name)
+                    <p class="recipe-ingredients">
+                        @for (int i = 0; i < item.Ingredients.Count - 1; i++)
+                        {
+                            @Html.DisplayFor(modelItem => item.Ingredients[i].Name) @:/
+                        }
+                        @Html.DisplayFor(modelItem => item.Ingredients[item.Ingredients.Count - 1].Name)
+                    </p>
+                </div>
+            </li>        
+        }
+    </ul>
+</div>
+
+<div class="divider">
+</div>
+
+<div id="pizza-details" class="float-right">
+
+    @foreach (var item in Model.First)
+    {
+        <div id="@item.RecipeID" style="width: 480px; position: relative; top:0px; left:0px;">
+            <div class="ingredient-legend">
+                <ul class="legend-list">
+                    <li>
+                        <div class="quantity-indicator" style="background-color: #999;"></div>
+                        <span>No ingredient</span>
+                    </li>
+                    <li>
+                        <div class="quantity-indicator" style="background-color: #b6ff00;"></div>
+                        <span>Normal quantity</span>
+                    </li>
+                    <li>
+                        <div class="quantity-indicator" style="background-color: #ff6a00;"></div>
+                        <span>Extra Quantity</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="pizza-info">
+                <ul class="ingredients-list">
+                    @foreach (var ing in item.Ingredients)
+                    {
+                        <li>
+                            <div class="ingredient-container">
+                                @Html.DisplayFor(modelItem => ing.Name)
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+</div>

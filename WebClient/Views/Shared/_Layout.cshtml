@@ -7,15 +7,20 @@
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
 </head>
 <body>
     <header>
         <div class="content-wrapper">
             <div class="float-left">
                 <p class="site-title">
-                    <a href="/"><img src="~/Images/PizzaSliceIcon.png"/></a>
+                    <a href="/">
+                        <img src="~/Images/PizzaSliceIcon.png" /></a>
                     Pizza Net
-                    @*@Html.ActionLink("your logo here", "Index", "Home")*@</p>
+                    @*@Html.ActionLink("your logo here", "Index", "Home")*@
+                </p>
             </div>
             <div class="float-right">
                 <section id="login">
@@ -34,7 +39,6 @@
     <div id="body">
         @RenderSection("featured", required: false)
         <section class="content-wrapper main-content clear-fix">
-            <p>wtf</p>
             @RenderBody()
         </section>
     </div>
