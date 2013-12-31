@@ -332,7 +332,7 @@ namespace PizzaNetControls.Views
                     Utils.HandleException(a.Result as Exception);
                     return;
                 }
-                if ((a.Result as bool?)??false)
+                if (!((a.Result as bool?)??false))
                 {
                     Utils.showError(Utils.Messages.UNKNOWN_ERROR_FORMAT);
                     return;

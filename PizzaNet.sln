@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaNetCommon", "PizzaNetC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaService", "PizzaService\PizzaService.csproj", "{81E02345-8544-4D78-A261-3866A48DCF78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClient", "WebClient\WebClient.csproj", "{B3A1BABA-A554-4C8B-8FCC-92FBD1750978}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{81E02345-8544-4D78-A261-3866A48DCF78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81E02345-8544-4D78-A261-3866A48DCF78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81E02345-8544-4D78-A261-3866A48DCF78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3A1BABA-A554-4C8B-8FCC-92FBD1750978}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3A1BABA-A554-4C8B-8FCC-92FBD1750978}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3A1BABA-A554-4C8B-8FCC-92FBD1750978}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3A1BABA-A554-4C8B-8FCC-92FBD1750978}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

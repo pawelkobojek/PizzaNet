@@ -329,7 +329,8 @@ namespace PizzaService
                             throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
 
                         Order o = db.Orders.Get(request.DataToRemove.OrderID);
-                        db.Orders.Delete(o);
+                        if (o != null)
+                            db.Orders.Delete(o);
 
                         uow.Db.Commit();
                     });
