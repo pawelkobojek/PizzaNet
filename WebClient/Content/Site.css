@@ -102,11 +102,13 @@ nav, section
 
     .ingredient-container.normal
     {
+        border: 2px solid;
         background-color: #b6ff00;
     }
 
     .ingredient-container.extra
     {
+        border: 2px solid;
         background-color: #ff6a00;
     }
 

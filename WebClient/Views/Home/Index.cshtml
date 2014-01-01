@@ -7,11 +7,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        //$('#pizza-details').children("*").hide();
         $('#pizza-details').hide();
-        //$("#ingredient-legend").show();
-        //$("#ingredient-legend").children("*").show();
-
 
         $('.recipe-container').mouseenter(function () {
             $(this).animate({
@@ -34,9 +30,32 @@
             if (!wasSelected) {
                 $(this).addClass('checked');
                 $('#pizza-details').show(500);
+
+                var selected = $(this);
+
             } else {
                 $('#pizza-details').hide(500);
             }
+
+            // Code below is responsible for pre-selecting proper ingredients 
+            var array = $(this).children('.recipe-ingredients').children('*');
+
+            for (var i = 0; i < array.length; i++) {
+                var ingredientId = $(array[i]).attr('itemid');
+                $('#' + ingredientId).addClass('normal');
+            }
+        });
+
+        $('.ingredient-container').mouseenter(function () {
+            $(this).animate({
+                height: '+=10px'
+            });
+        });
+
+        $('.ingredient-container').mouseleave(function () {
+            $(this).animate({
+                height: '-=10px'
+            });
         });
 
         $('.ingredient-container').click(function () {
@@ -68,12 +87,18 @@
             <li>
                 <div class="recipe-container" itemid="@item.RecipeID">
                     @Html.DisplayFor(modelItem => item.Name)
+                    <br />
+
                     <p class="recipe-ingredients">
                         @for (int i = 0; i < item.Ingredients.Count - 1; i++)
                         {
-                            @Html.DisplayFor(modelItem => item.Ingredients[i].Name) @:/
+                            <span itemid="@item.Ingredients[i].IngredientID">
+                                @Html.DisplayFor(modelItem => item.Ingredients[i].Name) /
+                            </span>
                         }
-                        @Html.DisplayFor(modelItem => item.Ingredients[item.Ingredients.Count - 1].Name)
+                        <span itemid="@item.Ingredients[item.Ingredients.Count - 1].IngredientID">
+                            @Html.DisplayFor(modelItem => item.Ingredients[item.Ingredients.Count - 1].Name)
+                        </span>
                     </p>
                 </div>
             </li>        
@@ -107,7 +132,7 @@
             @foreach (var ing in Model.Third)
             {
                 <li>
-                    <div class="ingredient-container">
+                    <div id="@ing.IngredientID" class="ingredient-container">
                         @Html.DisplayFor(modelItem => ing.Name)
                     </div>
                 </li>
