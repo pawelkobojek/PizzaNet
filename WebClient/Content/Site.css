@@ -42,6 +42,16 @@ nav, section
     display: block;
 }
 
+.text-selection-disabled
+{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .recipe-container
 {
     text-align: left;
@@ -49,6 +59,7 @@ nav, section
     display: block;
     width: 400px;
     padding: 10px;
+    clear: left;
     margin: 5px;
     border: none;
     background-color: #999;
@@ -82,7 +93,7 @@ nav, section
 {
     font-size: 22px;
     padding: 10px;
-    margin: 5px;
+    margin-left: 7.5%;
     border: none;
     background-color: #a6dbed;
     border-radius: 5px;
@@ -109,6 +120,29 @@ nav, section
     .ingredient-container.extra
     {
         border: 2px solid;
+        background-color: #ff6a00;
+    }
+
+.size-chooser
+{
+    background-color: #999;
+    border-radius: 5px;
+    border: none;
+    font-size: 20px;
+    width: 7%;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    display: table-cell;
+}
+
+    .size-chooser.normal
+    {
+        background-color: #ffd800;
+    }
+
+    .size-chooser.big
+    {
         background-color: #ff6a00;
     }
 
@@ -153,6 +187,7 @@ nav, section
 .pizza-details
 {
     display: inline-block;
+    height: 100%;
 }
 
 .divider
