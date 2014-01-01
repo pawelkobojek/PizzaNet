@@ -7,7 +7,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        $('#pizza-details').children("*").hide();
+        //$('#pizza-details').children("*").hide();
+        $('#pizza-details').hide();
         //$("#ingredient-legend").show();
         //$("#ingredient-legend").children("*").show();
 
@@ -25,19 +26,31 @@
         });
 
         $('.recipe-container').click(function () {
-            //$('.recipe-list').children('*').toggle(1000);
-            //$(this).css({ backgroundColor: "#42BDE4" });
             var wasSelected = $(this).hasClass('checked');
             $('.recipe-container').removeClass('checked');
-            $('#pizza-details').children("*").hide(1500);
+            $('.ingredient-container').removeClass('normal');
+            $('.ingredient-container').removeClass('extra');
 
             if (!wasSelected) {
                 $(this).addClass('checked');
-                $('#' + $(this).attr('itemid')).show(500);
-                //$('#ingredient-legend').show(500);
+                $('#pizza-details').show(500);
             } else {
-                $('#' + $(this).attr('itemid')).hide(500);
-                //$('#ingredient-legend').hide(500);
+                $('#pizza-details').hide(500);
+            }
+        });
+
+        $('.ingredient-container').click(function () {
+
+            var wasNormal = $(this).hasClass('normal');
+            var wasExtra = $(this).hasClass('extra');
+
+            if (wasNormal) {
+                $(this).removeClass('normal');
+                $(this).addClass('extra');
+            } else if (wasExtra) {
+                $(this).removeClass('extra');
+            } else {
+                $(this).addClass('normal');
             }
         });
 
@@ -73,37 +86,32 @@
 
 <div id="pizza-details" class="float-right">
 
-    @foreach (var item in Model.First)
-    {
-        <div id="@item.RecipeID" style="width: 480px; position: relative; top:0px; left:0px;">
-            <div class="ingredient-legend">
-                <ul class="legend-list">
-                    <li>
-                        <div class="quantity-indicator" style="background-color: #999;"></div>
-                        <span>No ingredient</span>
-                    </li>
-                    <li>
-                        <div class="quantity-indicator" style="background-color: #b6ff00;"></div>
-                        <span>Normal quantity</span>
-                    </li>
-                    <li>
-                        <div class="quantity-indicator" style="background-color: #ff6a00;"></div>
-                        <span>Extra Quantity</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="pizza-info">
-                <ul class="ingredients-list">
-                    @foreach (var ing in item.Ingredients)
-                    {
-                        <li>
-                            <div class="ingredient-container">
-                                @Html.DisplayFor(modelItem => ing.Name)
-                            </div>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-    }
+    <div class="ingredient-legend">
+        <ul class="legend-list">
+            <li>
+                <div class="quantity-indicator" style="background-color: #999;"></div>
+                <span>No ingredient</span>
+            </li>
+            <li>
+                <div class="quantity-indicator" style="background-color: #b6ff00;"></div>
+                <span>Normal quantity</span>
+            </li>
+            <li>
+                <div class="quantity-indicator" style="background-color: #ff6a00;"></div>
+                <span>Extra Quantity</span>
+            </li>
+        </ul>
+    </div>
+    <div class="pizza-info">
+        <ul class="ingredients-list">
+            @foreach (var ing in Model.Third)
+            {
+                <li>
+                    <div class="ingredient-container">
+                        @Html.DisplayFor(modelItem => ing.Name)
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
 </div>

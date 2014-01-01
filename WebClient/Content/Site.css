@@ -81,7 +81,6 @@ nav, section
 .pizza-info
 {
     font-size: 22px;
-    height: auto;
     padding: 10px;
     margin: 5px;
     border: none;
@@ -101,9 +100,20 @@ nav, section
     border-radius: 5px;
 }
 
+    .ingredient-container.normal
+    {
+        background-color: #b6ff00;
+    }
+
+    .ingredient-container.extra
+    {
+        background-color: #ff6a00;
+    }
+
 .ingredient-legend
 {
     background-color: #ffffff;
+    align-content: flex-end;
 }
 
 .legend-list
@@ -113,7 +123,7 @@ nav, section
     .legend-list li
     {
         display: inline-block;
-        font-size: 50px;
+        font-size: 30px;
         margin: 5px;
     }
 
@@ -121,7 +131,7 @@ nav, section
         {
             display: inline-block;
             font-size: 15px;
-            text-align: center;
+            text-align: right;
         }
 
 .quantity-indicator
@@ -140,7 +150,7 @@ nav, section
 
 .pizza-details
 {
-    display: inline;
+    display: inline-block;
 }
 
 .divider
