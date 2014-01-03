@@ -13,6 +13,7 @@ using PizzaNetDataModel.Repository;
 using PizzaService.Assemblers;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using PizzaNetCommon.Queries;
 
 namespace PizzaService
 {
@@ -649,6 +650,121 @@ namespace PizzaService
             byte[] hashed = hash.ComputeHash(pswd);
             string hashedPassword = Encoding.UTF8.GetString(hashed);
             return hashedPassword;
+        }
+
+
+        public ListResponse<OrderIngredientDTO> QueryIngredients(QueryRequest<IngredientsQuery> request)
+        {
+            if (request.Query.IngredientIds == null)
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
+
+            return db.inTransaction(uow =>
+                {
+                    return ListResponse.Create(uow.Db.Ingredients.Find(request.Query.IngredientIds).ToList()
+                        .Select(ingAssembler.ToOrderIngredientDto).ToList());
+                });
+        }
+
+
+        public void MakeOrderFromWeb(UpdateOrRemoveRequest<List<OrderInfoDTO>> req)
+        {
+            if (req.Data == null)
+                throw PizzaServiceFault.Create(Messages.NO_DATA);
+
+            db.inTransaction(uow =>
+                {
+                    UserDTO userDto = GetUser(req).Data;
+                    if (!HasRights(userDto, 1))
+                        throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
+
+
+                    User user = uow.Db.Users.Get(userDto.UserID);
+
+                    List<OrderInfoDTO> data = req.Data;
+                    List<OrderDetail> od = new List<OrderDetail>();
+
+                    foreach (var item in data)
+                    {
+                        var sizeVal = Size.SMALL;
+                        switch (item.Size)
+                        {
+                            case "normal":
+                                sizeVal = Size.MEDIUM;
+                                break;
+                            case "big":
+                                sizeVal = Size.GREAT;
+                                break;
+                            default:
+                                break;
+                        }
+                        var size = uow.Db.Sizes.Find(sizeVal);
+                        var ings = (List<Ingredient>)uow.Db.Ingredients.Find(item.Ingredients);
+                        List<OrderIngredient> oings = new List<OrderIngredient>();
+
+                        for (int i = 0; i < item.Quantities.Length; i++)
+                        {
+                            int quant = (item.Quantities[i] == "normal") ? ings[i].NormalWeight : ings[i].ExtraWeight;
+                            oings.Add(new OrderIngredient
+                            {
+                                Ingredient = ings[i],
+                                Quantity = quant
+                            });
+                        }
+
+                        od.Add(new OrderDetail
+                        {
+                            Ingredients = oings,
+                            Size = size
+                        });
+                    }
+
+                    Order o = new Order
+                    {
+                        Address = userDto.Address,
+                        CustomerPhone = userDto.Phone,
+                        Date = DateTime.Now,
+                        OrderDetails = od,
+                        State = uow.Db.States.Find(State.NEW),
+                        User = user
+                    };
+
+                    uow.Db.Orders.Insert(o);
+                    uow.Db.Commit();
+
+                    /*State st = uow.Db.States.Find(State.NEW);
+
+                    List<OrderDetail> od = new List<OrderDetail>();
+                    foreach (var ordDto in o.OrderDetailsDTO)
+                    {
+                        List<OrderIngredient> oIngs = new List<OrderIngredient>();
+                        foreach (var oIng in ordDto.Ingredients)
+                        {
+                            oIngs.Add(new OrderIngredient
+                            {
+                                Ingredient = uow.Db.Ingredients.Get(oIng.IngredientID),
+                                Quantity = oIng.Quantity
+                            });
+                        }
+                        od.Add(new OrderDetail
+                        {
+                            Size = uow.Db.Sizes.Get(ordDto.Size.SizeID),
+                            Ingredients = oIngs
+                        });
+                    }
+                    Order order = new Order
+                    {
+                        Address = o.Address,
+                        CustomerPhone = o.CustomerPhone,
+                        Date = o.Date,
+                        User = user,
+                        State = st,
+                        UserID = user.UserID,
+                        OrderDetails = od
+                    };
+
+                    uow.Db.Orders.Insert(order);
+                    uow.Db.Commit();*/
+                });
         }
     }
 }

@@ -11,7 +11,8 @@ body
     border-top: solid 10px #000;
     color: #333;
     font-size: .85em;
-    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    /*font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;*/
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -42,6 +43,19 @@ nav, section
     display: block;
 }
 
+.add-pizza
+{
+    text-align: center;
+    font-size: 22px;
+    width: 100%;
+    display: block;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    background-color: #42BDE4;
+    border-radius: 5px;
+}
+
 .text-selection-disabled
 {
     -webkit-touch-callout: none;
@@ -64,6 +78,7 @@ nav, section
     border: none;
     background-color: #999;
     border-radius: 5px;
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 }
 
     .recipe-container.checked
@@ -79,7 +94,6 @@ nav, section
 
 .recipe-ingredients
 {
-    font-family: Verdana;
     font-style: italic;
     font-size: 15px;
 }
@@ -186,6 +200,7 @@ nav, section
 
 .pizza-details
 {
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
     display: inline-block;
     height: 100%;
 }
@@ -198,6 +213,63 @@ nav, section
     bottom: 5%;
     border-left: 2px solid white;
 }
+
+.order-list
+{
+    background-color: #ffffff;
+    width: 100%;
+    margin-top: 20px;
+    display: inline-block;
+    background-color: #b6ff00;
+    border-radius: 20px;
+    border: 2px dashed #42BDE4;
+    padding: 15px;
+}
+
+    .order-list button
+    {
+        align-self: center;
+        text-align: center;
+        font-size: 22px;
+        padding: 10px;
+        margin-top: 15px;
+        border: none;
+        background-color: #42BDE4;
+        border-radius: 5px;
+    }
+
+.order-item-container
+{
+    border: 1px dotted blue;
+    border-radius: 4px;
+    width: 100%;
+    background-color: #ddd;
+    color: #111;
+    padding: 3px;
+}
+
+.order-item-top
+{
+    overflow: hidden;
+    border-bottom: 3px solid black;
+}
+
+    .order-item-top span
+    {
+        font-size: 25px;
+    }
+
+.order-item-main
+{
+    padding: 15px;
+}
+
+    .order-item-main p
+    {
+        font-size: 15px;
+        font-weight: bold;
+    }
+
 
 mark
 {
@@ -223,6 +295,13 @@ mark
     display: block;
     height: 0;
     visibility: hidden;
+}
+
+.main-sub-header
+{
+    font-size: 4em;
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+    text-align: center;
 }
 
 h1, h2, h3,
@@ -263,7 +342,6 @@ h5, h6
         padding: 0;
         text-decoration: none;
     }
-
 
 /* main layout
 ----------------------------------------------------------*/

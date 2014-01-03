@@ -118,5 +118,16 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         {
             return Channel.UpdateUser(req);
         }
+
+
+        public ListResponse<OrderIngredientDTO> QueryIngredients(QueryRequest<IngredientsQuery> req)
+        {
+            return Channel.QueryIngredients(req);
+        }
+
+        public void MakeOrderFromWeb(UpdateOrRemoveRequest<List<OrderInfoDTO>> req)
+        {
+            Channel.MakeOrderFromWeb(req);
+        }
     }
 }

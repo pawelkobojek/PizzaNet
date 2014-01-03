@@ -1,0 +1,30 @@
+﻿@model PizzaNetCommon.DTOs.OrderDTO
+
+@foreach (var item in Model.OrderDetailsDTO)
+{
+    <div class="order-item-container">
+        <div class="order-item-top">
+
+            <span class="float-left">@item.Size</span>
+            <span class="float-right">@item.Size</span>
+
+        </div>
+        <div class="order-item-main">
+            @foreach (var ingredient in item.Ingredients)
+            {
+                <p>
+                    <span>@ingredient.Name</span>
+                    <span>@if (ingredient.Quantity == ingredient.NormalWeight)
+                          {
+                        @:Normal
+                          }
+                          else
+                          {
+                        @:Extra
+                          }
+                    </span>
+                </p>
+            }
+        </div>
+    </div>
+}

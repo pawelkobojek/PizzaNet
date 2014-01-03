@@ -191,6 +191,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\OrderInfo.cs" />
+    <Compile Include="Models\OrderInfoList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +255,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\PizzaSliceIcon.png" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Scripts\index.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
@@ -310,6 +313,9 @@
     <Content Include="Views\Home\MyOrders.cshtml" />
     <Content Include="Views\Home\Profile.cshtml" />
     <Content Include="Views\Index\Index.cshtml" />
+    <Content Include="Views\Home\AddToOrder.cshtml" />
+    <Content Include="Views\Home\_OrderList.cshtml" />
+    <Content Include="Views\Home\MakeOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

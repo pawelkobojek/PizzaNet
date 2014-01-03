@@ -84,5 +84,11 @@ namespace PizzaNetCommon.Services
         [OperationContract]
         [FaultContract(typeof(PizzaServiceFault))]
         SingleItemResponse<UserDTO> UpdateUser(UpdateRequest<UserDTO> req);
+
+        [OperationContract]
+        ListResponse<OrderIngredientDTO> QueryIngredients(QueryRequest<IngredientsQuery> req);
+
+        [OperationContract]
+        void MakeOrderFromWeb(UpdateOrRemoveRequest<List<OrderInfoDTO>> req);
     }
 }

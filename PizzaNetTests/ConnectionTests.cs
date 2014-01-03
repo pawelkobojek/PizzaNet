@@ -212,5 +212,28 @@ namespace PizzaNetTests
                     }
                 });
         }
+
+        [TestMethod]
+        public void IngredientsQueryTest()
+        {
+            PizzaService.PizzaService svc = new PizzaService.PizzaService();
+
+            var result = svc.QueryIngredients(new QueryRequest<IngredientsQuery>
+            {
+                Query = new IngredientsQuery
+                {
+                    Login = this.admin.Email,
+                    Password = this.admin.Password,
+                    IngredientIds = new int[] { 1, 2, 3 }
+                }
+            });
+
+            Assert.IsTrue(result.Data.Count == 3);
+
+            for (int i = 0; i < result.Data.Count; i++)
+            {
+                Assert.IsTrue(result.Data[i].IngredientID == i + 1);
+            }
+        }
     }
 }

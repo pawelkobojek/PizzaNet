@@ -4,201 +4,87 @@
     ViewBag.Title = "Home Page";
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#pizza-details').hide();
-
-        $('.recipe-container').mouseenter(function () {
-            $(this).animate({
-                height: '+=15px'
-            });
-        });
-
-        $('.recipe-container').mouseleave(function () {
-            $(this).animate({
-                height: '-=15px'
-            });
-        });
-
-        $('.recipe-container').click(function () {
-            var wasSelected = $(this).hasClass('checked');
-            $('.recipe-container').removeClass('checked');
-            $('.ingredient-container').removeClass('normal');
-            $('.ingredient-container').removeClass('extra');
-
-            if (!wasSelected) {
-                $(this).addClass('checked');
-                $('#pizza-details').show(500, function () {
-                    varMaxSizeHeight = $('.pizza-info').outerHeight(false);
-                    currentSizeHeight = varMaxSizeHeight / 3;
-                    varDiffer = currentSizeHeight;
-                    $('.size-chooser').animate({
-                        height: currentSizeHeight + 'px'
-                    });
-                    $('.size-chooser').html('S<br/>m<br/>a<br/>l<br/>l');
-
-                    $('.size-chooser').removeClass('big');
-                    $('.size-chooser').removeClass('normal');
-                });
-
-                var selected = $(this);
-
-            } else {
-                $('#pizza-details').hide(500);
-            }
-
-            // Code below is responsible for pre-selecting proper ingredients 
-            var array = $(this).children('.recipe-ingredients').children('*');
-
-            for (var i = 0; i < array.length; i++) {
-                var ingredientId = $(array[i]).attr('data-ingredient-id');
-                $("div[data-ingredient-id='" + ingredientId + "']").addClass('normal');
-            }
-        });
-
-        $('.ingredient-container').mouseenter(function () {
-            $(this).animate({
-                width: '-=10px'
-            });
-        });
-
-        $('.ingredient-container').mouseleave(function () {
-            $(this).animate({
-                width: '+=10px'
-            });
-        });
-
-        $('.ingredient-container').click(function () {
-
-            var wasNormal = $(this).hasClass('normal');
-            var wasExtra = $(this).hasClass('extra');
-
-            if (wasNormal) {
-                $(this).removeClass('normal');
-                $(this).addClass('extra');
-            } else if (wasExtra) {
-                $(this).removeClass('extra');
-            } else {
-                $(this).addClass('normal');
-            }
-        });
-
-        $('.size-chooser').mouseenter(function () {
-            var sign = '+';
-            if ($(this).hasClass('big')) {
-                sign = '-';
-            }
-            $(this).animate({
-                height: sign + '=10px'
-            });
-        });
-
-        $('.size-chooser').mouseleave(function () {
-            var sign = '-';
-            if ($(this).hasClass('big')) {
-                sign = '+';
-            }
-            $(this).animate({
-                height: sign + '=10px'
-            });
-        });
-
-        $('.size-chooser').click(function () {
-            var elem = $(this);
-            if (elem.hasClass('normal')) {
-                currentSizeHeight = varMaxSizeHeight;
-
-                elem.animate({
-                    height: currentSizeHeight - 10 + 'px'
-                });
-                elem.removeClass('normal');
-                elem.addClass('big');
-                elem.html('B<br/>i<br/>g<br/>');
-
-            } else if (elem.hasClass('big')) {
-                currentSizeHeight = varMaxSizeHeight / 3;
-
-                elem.animate({
-                    height: currentSizeHeight + 'px'
-                });
-
-                elem.html('S<br/>m<br/>a<br/>l<br/>l');
-
-                elem.removeClass('big');
-            } else {
-                currentSizeHeight += varDiffer;
-                elem.animate({
-                    height: currentSizeHeight + 'px'
-                });
-                elem.addClass('normal');
-
-                elem.html('N<br/>o<br/>r<br/>m<br/>a<br/>l');
-            }
-        });
-    });
-</script>
-
-
-<div class="float-left">
-    <p id="label-choose-pizzas">
-        Choose Pizzas for your order:
-    </p>
-    @foreach (var item in Model.First)
-    {
-        <div class="recipe-container text-selection-disabled" data-recipe-id="@item.RecipeID">
-            @Html.DisplayFor(modelItem => item.Name)
-            <br />
-
-            <p class="recipe-ingredients">
-                @for (int i = 0; i < item.Ingredients.Count - 1; i++)
-                {
-                    <span data-ingredient-id="@item.Ingredients[i].IngredientID">
-                        @Html.DisplayFor(modelItem => item.Ingredients[i].Name) /
-                    </span>
-                }
-                <span data-ingredient-id="@item.Ingredients[item.Ingredients.Count - 1].IngredientID">
-                    @Html.DisplayFor(modelItem => item.Ingredients[item.Ingredients.Count - 1].Name)
-                </span>
-            </p>
-        </div>
-    }
-</div>
-
-<div class="divider">
-</div>
-
-<div id="pizza-details" class="float-right">
-    <div class="ingredient-legend">
-        <ul class="legend-list">
-            <li>
-                <div class="quantity-indicator" style="background-color: #999;"></div>
-                <span>No ingredient</span>
-            </li>
-            <li>
-                <div class="quantity-indicator" style="background-color: #b6ff00;"></div>
-                <span>Normal quantity</span>
-            </li>
-            <li>
-                <div class="quantity-indicator" style="background-color: #ff6a00;"></div>
-                <span>Extra Quantity</span>
-            </li>
-        </ul>
-    </div>
-
-    <div class="size-chooser float-left text-selection-disabled">
-        S<br />
-        m<br />
-        a<br />
-        l<br />
-        l
-    </div>
-
-    <div class="pizza-info">
-        @foreach (var ing in Model.Third)
+<div style="overflow: hidden; display: block;">
+    <div class="float-left">
+        <p id="label-choose-pizzas">
+            Choose Pizzas for your order:
+        </p>
+        @foreach (var item in Model.First)
         {
-            <div data-ingredient-id="@ing.IngredientID" class="ingredient-container text-selection-disabled">
-                @Html.DisplayFor(modelItem => ing.Name)
+            <div class="recipe-container text-selection-disabled" data-recipe-id="@item.RecipeID">
+                @Html.DisplayFor(modelItem => item.Name)
+                <br />
+
+                <p class="recipe-ingredients">
+                    @for (int i = 0; i < item.Ingredients.Count - 1; i++)
+                    {
+                        <span data-ingredient-id="@item.Ingredients[i].IngredientID">
+                            @Html.DisplayFor(modelItem => item.Ingredients[i].Name) /
+                        </span>
+                    }
+                    <span data-ingredient-id="@item.Ingredients[item.Ingredients.Count - 1].IngredientID">
+                        @Html.DisplayFor(modelItem => item.Ingredients[item.Ingredients.Count - 1].Name)
+                    </span>
+                </p>
             </div>
         }
+    </div>
+
+    <div class="divider">
+    </div>
+
+    <div id="pizza-details" class="float-right">
+        <form method="post" action="@Url.Action("AddToOrder")" data-pizza-ajax="true">
+            <button class="add-pizza" type="submit">
+                Add to order
+            </button>
+        </form>
+        <div class="ingredient-legend">
+            <ul class="legend-list">
+                <li>
+                    <div class="quantity-indicator" style="background-color: #999;"></div>
+                    <span>No ingredient</span>
+                </li>
+                <li>
+                    <div class="quantity-indicator" style="background-color: #b6ff00;"></div>
+                    <span>Normal quantity</span>
+                </li>
+                <li>
+                    <div class="quantity-indicator" style="background-color: #ff6a00;"></div>
+                    <span>Extra Quantity</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="size-chooser float-left text-selection-disabled">
+            S<br />
+            m<br />
+            a<br />
+            l<br />
+            l
+        </div>
+
+        <div class="pizza-info">
+            @foreach (var ing in Model.Third)
+            {
+                <div data-ingredient-id="@ing.IngredientID" class="ingredient-container text-selection-disabled">
+                    @Html.DisplayFor(modelItem => ing.Name)
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="order-list">
+    <p class="main-sub-header">Your Order:</p>
+    <div class="orders">
+    </div>
+
+    <div style="width: 100%; text-align: center;">
+        <form id="make-order" action="@Url.Action("MakeOrder")" method="post">
+            <button type="submit">
+                Make Order
+            </button>
+        </form>
     </div>
 </div>

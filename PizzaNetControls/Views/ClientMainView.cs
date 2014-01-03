@@ -108,39 +108,6 @@ namespace PizzaNetControls.Views
                 {
                     return e;
                 }
-                //var cfg = args[0] as ClientConfig;
-                //var det = args[1] as List<OrderDetail>;
-                //if (cfg == null || det == null) return false;
-                //try
-                //{
-                //    using (var ctx = new PizzaUnitOfWork())
-                //    {
-                //        ctx.inTransaction(uof =>
-                //        {
-                //            det = mergeIngredients(det, uof.Db.Ingredients.FindAll());
-                //            det = mergeSizes(det, uof.Db.Sizes.FindAll());
-
-                //            foreach (var d in det)
-                //                foreach (var ingr in d.Ingredients)
-                //                    ingr.Quantity = (int)(ingr.Quantity * d.Size.SizeValue);
-
-                //            uof.Db.Orders.Insert(new Order()
-                //            {
-                //                Address = cfg.User.Address,
-                //                CustomerPhone = cfg.User.Phone,
-                //                Date = DateTime.Now,
-                //                OrderDetails = det,
-                //                State = new State() { StateValue = State.NEW }
-                //            });
-                //            uof.Db.Commit();
-                //        });
-                //    }
-                //}
-                //catch (Exception)
-                //{
-                //    return false;
-                //}
-                //return true;
             }, (s, args) =>
             {
                 if (args.Result is Exception)
