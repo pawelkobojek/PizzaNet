@@ -3,10 +3,10 @@
 @foreach (var item in Model.OrderDetailsDTO)
 {
     <div class="order-item-container">
-        <div class="order-item-top">
+        <div class="order-item-top" data-price="@item.Price">
 
             <span class="float-left">@item.Size</span>
-            <span class="float-right">@item.Size</span>
+            <span class="float-right">@item.Price.ToString(".00")</span>
 
         </div>
         <div class="order-item-main">

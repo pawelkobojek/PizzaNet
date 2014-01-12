@@ -4,15 +4,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using PizzaNetCommon.Requests;
 
 namespace PizzaNetCommon.Queries
 {
     [DataContract]
-    public abstract class QueryBase
+    public abstract class QueryBase : RequestBase
     {
-        [DataMember]
-        public string Login { get; set; }
-        [DataMember]
-        public string Password { get; set; }
     }
 }

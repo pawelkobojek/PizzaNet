@@ -18,7 +18,8 @@ namespace WebClient
                         "~/Scripts/jquery.unobtrusive*",
                         "~/Scripts/jquery.validate*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/main-scripts").Include("~/Scripts/index.js"));
+            bundles.Add(new ScriptBundle("~/bundles/main-scripts").Include("~/Scripts/index.js",
+                "~/Scripts/my-orders.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.

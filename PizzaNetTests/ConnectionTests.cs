@@ -235,5 +235,31 @@ namespace PizzaNetTests
                 Assert.IsTrue(result.Data[i].IngredientID == i + 1);
             }
         }
+
+        [TestMethod]
+        public void OrdersQueryTest()
+        {
+            PizzaService.PizzaService svc = new PizzaService.PizzaService();
+
+            var orders = svc.GetOrders(new EmptyRequest
+            {
+                Login = this.admin.Email,
+                Password = this.admin.Password
+            });
+
+            if (orders == null || orders.Data.Count <= 0)
+                return;
+
+            int orderId = orders.Data[0].OrderID;
+
+            var result = svc.GetOrderInfo(new OrdersQuery
+            {
+                Login = this.admin.Email,
+                Password = this.admin.Password,
+                Ids = new int[] { orderId }
+            });
+
+            Assert.IsTrue(result.Data[0].OrderID == orderId);
+        }
     }
 }

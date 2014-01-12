@@ -15,6 +15,9 @@ namespace PizzaNetCommon.Queries
         public int StateValue { get; set; }
 
         [DataMember]
+        public int[] Ids { get; set; }
+
+        [DataMember]
         public Func<OrderDTO, bool> Predicate { get; set; }
     }
 }

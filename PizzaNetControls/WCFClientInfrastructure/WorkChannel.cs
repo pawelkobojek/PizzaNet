@@ -129,5 +129,10 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         {
             Channel.MakeOrderFromWeb(req);
         }
+
+        public ListResponse<OrderDTO> GetOrderInfo(OrdersQuery req)
+        {
+            return Channel.GetOrderInfo(req);
+        }
     }
 }

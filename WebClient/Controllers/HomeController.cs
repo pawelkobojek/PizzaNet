@@ -64,7 +64,22 @@ namespace WebClient.Controllers
             return View(orders);
         }
 
-        public ActionResult AsProfile()
+        public ActionResult GetOrderInfo(int id)
+        {
+            using (var proxy = new WorkChannel())
+            {
+                var result = proxy.GetOrderInfo(new OrdersQuery
+                {
+                    Login = "Admin",
+                    Password = "123",
+                    Ids = new int[] { id }
+                });
+
+                return PartialView("_ExpandedOrderInfo", result.Data[0]);
+            }
+        }
+
+        public ActionResult ProfileSettings()
         {
             return View();
         }

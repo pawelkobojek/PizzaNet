@@ -246,6 +246,7 @@ nav, section
     background-color: #ddd;
     color: #111;
     padding: 3px;
+    margin-bottom: 15px;
 }
 
 .order-item-top
@@ -269,6 +270,41 @@ nav, section
         font-size: 15px;
         font-weight: bold;
     }
+
+.order-details-container
+{
+    border: 2px dashed;
+    border-radius: 3px;
+    background-color: #c7d1d6;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 50%;
+    padding: 10px 10px 10px 10px;
+}
+
+    .order-details-container span
+    {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .order-details-container.order-in-realization
+    {
+        background-color: #42BDE4;
+    }
+
+    .order-details-container.order-new
+    {
+        background-color: #ff6a00;
+    }
+
+    .order-details-container.order-done
+    {
+    }
+
+.expanded-order-details-container
+{
+}
 
 
 mark
@@ -300,6 +336,13 @@ mark
 .main-sub-header
 {
     font-size: 4em;
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+    text-align: center;
+}
+
+.minor-sub-header
+{
+    font-size: 2em;
     font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
     text-align: center;
 }

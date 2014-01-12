@@ -33,6 +33,9 @@ namespace PizzaNetTests
             admin = db.Users.Find("Admin");
             emp = db.Users.Find("Employee");
             customer = db.Users.Find("Customer");
+            admin.Password = "123";
+            emp.Password = "323";
+            customer.Password = "1998";
 
             adminRequest = new EmptyRequest { Login = admin.Email, Password = admin.Password };
             empRequest = new EmptyRequest { Login = emp.Email, Password = emp.Password };

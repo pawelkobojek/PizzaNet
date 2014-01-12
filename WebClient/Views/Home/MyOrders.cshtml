@@ -4,45 +4,14 @@
     ViewBag.Title = "My Orders";
 }
 
-<h2>My Orders</h2>
-
-<table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.OrderID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CustomerPhone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr style="background: #34c434">
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerPhone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-        
-    }
-
-</table>
+@foreach (var item in Model)
+{
+    string stateClass = (item.State.StateValue == PizzaNetCommon.DTOs.StateDTO.NEW)
+        ? "order-new" :
+        (item.State.StateValue == PizzaNetCommon.DTOs.StateDTO.IN_REALISATION)
+        ? "order-in-realization" : "order-done";
+    
+    <div class="order-details-container @stateClass" data-order-id="@item.OrderID">
+        <span>@item.Date</span>
+    </div>
+}

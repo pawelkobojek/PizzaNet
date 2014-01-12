@@ -90,5 +90,8 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         void MakeOrderFromWeb(UpdateOrRemoveRequest<List<OrderInfoDTO>> req);
+
+        [OperationContract]
+        ListResponse<OrderDTO> GetOrderInfo(OrdersQuery req);
     }
 }

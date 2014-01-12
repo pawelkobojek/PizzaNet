@@ -1,0 +1,22 @@
+﻿@model PizzaNetCommon.DTOs.OrderDTO
+
+@{
+    var counter = 0;
+}
+
+<div class=".expanded-order-details-container">
+    @foreach (var orderDetail in Model.OrderDetailsDTO)
+    {
+        counter++;
+        
+        <h4>Pizza#@counter</h4>
+        <ul>
+            @foreach (var ingredient in orderDetail.Ingredients)
+            {
+                <li>
+                    @ingredient.Name
+                </li>
+            }
+        </ul>
+    }
+</div>

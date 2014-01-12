@@ -766,5 +766,22 @@ namespace PizzaService
                     uow.Db.Commit();*/
                 });
         }
+
+
+        public ListResponse<OrderDTO> GetOrderInfo(OrdersQuery req)
+        {
+            using (var db = new PizzaUnitOfWork())
+            {
+                if (!HasRights(GetUser(req).Data, 1))
+                    throw PizzaServiceFault.Create(Messages.NO_PERMISSIONS);
+
+                return db.inTransaction(uow =>
+                    {
+                        return ListResponse.Create(uow.Db.Orders.FindAllEagerlyWhere(o => req.Ids.Contains(o.OrderID))
+                            .ToList().Select(orderAssembler.ToSimpleDto)
+                            .ToList());
+                    });
+            }
+        }
     }
 }

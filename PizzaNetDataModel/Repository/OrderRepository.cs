@@ -34,7 +34,7 @@ namespace PizzaNetDataModel.Repository
         /// <returns></returns>
         List<Order> FindAllEagerlyWhere(Func<Order, bool> predicate);
     }
-    
+
     /// <summary>
     /// Repository of Orders.
     /// It gives access to orders in database.
@@ -90,7 +90,7 @@ namespace PizzaNetDataModel.Repository
             return db.Orders
                 .Include(o => o.OrderDetails.Select(od => od.Ingredients))
                 .Include(o => o.OrderDetails.Select(od => od.Ingredients.Select(ing => ing.Ingredient)))
-                .Include(o=>o.OrderDetails.Select(od=>od.Size))
+                .Include(o => o.OrderDetails.Select(od => od.Size))
                 .Include(o => o.State)
                 .ToList();
         }

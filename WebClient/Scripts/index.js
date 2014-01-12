@@ -200,6 +200,16 @@
             //$('.order-list').html(data);
             $('.order-list').show(500);
             $('.orders').append(data);
+
+            // TODO: Liczenie ceny
+            //var price = 0;
+            //$('.order-list').each(function (index, element) {
+            //    alert(price);
+            //    price += parseFloat($(element).attr('data-price'));
+            //});
+
+            //$('.minor-sub-header').text(price);
+
             scrollTo('.order-list');
         });
 
