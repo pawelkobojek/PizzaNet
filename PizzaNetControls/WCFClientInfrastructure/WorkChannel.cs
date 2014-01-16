@@ -11,7 +11,7 @@ using PizzaNetCommon.Services;
 
 namespace PizzaNetWorkClient.WCFClientInfrastructure
 {
-    public interface IWorkChannel : IPizzaService
+    public interface IWorkChannel : IPizzaService, IDisposable
     {
     }
 

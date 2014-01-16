@@ -157,6 +157,8 @@
     <Compile Include="Views\StockView.cs" />
     <Compile Include="Views\UsersView.cs" />
     <Compile Include="Views\WorkOrdersView.cs" />
+    <Compile Include="WCFClientInfrastructure\BasicWorkChannelFactory.cs" />
+    <Compile Include="WCFClientInfrastructure\IWorkChannelFactory.cs" />
     <Compile Include="WCFClientInfrastructure\WorkChannel.cs" />
     <Compile Include="Workers\IWorker.cs" />
     <Compile Include="Workers\WorkerControl.xaml.cs">

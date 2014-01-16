@@ -11,13 +11,23 @@ using WebMatrix.WebData;
 using WebClient.Filters;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using WebClient.Models;
+using PizzaNetControls.WCFClientInfrastructure;
 
 namespace WebClient.Controllers
 {
+
     [Authorize]
     [InitializeSimpleMembership]
     public class AccountController : Controller
     {
+        IWorkChannelFactory factory = new BasicWorkChannelFactory();
+
+
+        public AccountController(IWorkChannelFactory fact)
+        {
+            factory = fact;
+        }
+
         //
         // GET: /Account/Login
 
@@ -41,7 +51,7 @@ namespace WebClient.Controllers
                 )
             {
 
-                using (var proxy = new WorkChannel())
+                using (var proxy = factory.GetWorkChannel())
                 {
                     //TODO Try/catch (leci wyjatek jak nieprawidlowe dane)
                     var user = proxy.GetUser(new PizzaNetCommon.Requests.EmptyRequest
@@ -67,11 +77,14 @@ namespace WebClient.Controllers
         //
         // POST: /Account/LogOff
 
-        [HttpPost]
+        //[HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            WebSecurity.Logout();
+            //WebSecurity.Logout();
+            this.Session["Email"] = null;
+            this.Session["Password"] = null;
+            this.Session["LoggedIn"] = false;
 
             return RedirectToAction("Index", "Home");
         }

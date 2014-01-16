@@ -58,17 +58,18 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\User.cs" />
+    <Compile Include="EntityInfrastructure\Model\Complaint.cs" />
+    <Compile Include="EntityInfrastructure\Model\User.cs" />
     <Compile Include="Monitors\IMonitor.cs" />
     <Compile Include="Monitors\IngredientMonitor.cs" />
-    <Compile Include="Model\Entity.cs" />
-    <Compile Include="Model\Ingredient.cs" />
-    <Compile Include="Model\Order.cs" />
-    <Compile Include="Model\OrderDetail.cs" />
-    <Compile Include="Model\OrderIngredient.cs" />
-    <Compile Include="Model\Recipe.cs" />
-    <Compile Include="Model\Size.cs" />
-    <Compile Include="Model\State.cs" />
+    <Compile Include="EntityInfrastructure\Model\Entity.cs" />
+    <Compile Include="EntityInfrastructure\Model\Ingredient.cs" />
+    <Compile Include="EntityInfrastructure\Model\Order.cs" />
+    <Compile Include="EntityInfrastructure\Model\OrderDetail.cs" />
+    <Compile Include="EntityInfrastructure\Model\OrderIngredient.cs" />
+    <Compile Include="EntityInfrastructure\Model\Recipe.cs" />
+    <Compile Include="EntityInfrastructure\Model\Size.cs" />
+    <Compile Include="EntityInfrastructure\Model\State.cs" />
     <Compile Include="EntityInfrastructure\PizzaContext.cs" />
     <Compile Include="EntityInfrastructure\PizzaContextInitializer.cs" />
     <Compile Include="Repository\IngredientRepository.cs" />

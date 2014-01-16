@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using PizzaNetCommon.DTOs;
 using PizzaNetCommon.Queries;
 using PizzaNetCommon.Requests;
+using PizzaNetControls.WCFClientInfrastructure;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using WebClient.Models;
 
@@ -15,6 +16,12 @@ namespace WebClient.Controllers
 {
     public class HomeController : Controller
     {
+        IWorkChannelFactory factory = new BasicWorkChannelFactory();
+
+        public HomeController(IWorkChannelFactory fact)
+        {
+            factory = fact;
+        }
 
         public ActionResult Index()
         {
@@ -22,7 +29,7 @@ namespace WebClient.Controllers
                 return RedirectToAction("Login", "Account");
 
 
-            using (var proxy = new WorkChannel())
+            using (var proxy = factory.GetWorkChannel())
             {
                 if (Request.IsAjaxRequest())
                 {
@@ -62,9 +69,9 @@ namespace WebClient.Controllers
                 return RedirectToAction("Login", "Account");
 
             List<OrderDTO> orders = new List<OrderDTO>();
-            using (var proxy = new WorkChannel())
+            using (var proxy = factory.GetWorkChannel())
             {
-                var result = proxy.GetOrders(new PizzaNetCommon.Requests.EmptyRequest
+                var result = proxy.GetOrdersForUser(new PizzaNetCommon.Requests.EmptyRequest
                 {
                     Login = (string)this.Session["Email"],
                     Password = (string)this.Session["Password"]
@@ -79,7 +86,7 @@ namespace WebClient.Controllers
             if (!((bool?)this.Session["LoggedIn"] ?? false))
                 return RedirectToAction("Login", "Account");
 
-            using (var proxy = new WorkChannel())
+            using (var proxy = factory.GetWorkChannel())
             {
                 var result = proxy.GetOrderInfo(new OrdersQuery
                 {
@@ -104,7 +111,7 @@ namespace WebClient.Controllers
 
             if (Request.IsAjaxRequest())
             {
-                using (var proxy = new WorkChannel())
+                using (var proxy = factory.GetWorkChannel())
                 {
                     List<OrderIngredientDTO> ings = proxy.QueryIngredients(new QueryRequest<IngredientsQuery>
                     {
@@ -174,7 +181,7 @@ namespace WebClient.Controllers
 
             try
             {
-                using (var proxy = new WorkChannel())
+                using (var proxy = factory.GetWorkChannel())
                 {
                     proxy.MakeOrderFromWeb(new UpdateOrRemoveRequest<List<OrderInfoDTO>>
                     {
