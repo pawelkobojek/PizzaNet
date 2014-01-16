@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebClient
+namespace PizzaWebClient
 {
     public class CustomX509Validator : X509CertificateValidator
     {

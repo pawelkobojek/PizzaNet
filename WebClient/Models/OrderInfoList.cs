@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using PizzaNetCommon.DTOs;
 
-namespace WebClient.Models
+namespace PizzaWebClient.Models
 {
     public class OrderInfoList
     {

@@ -74,6 +74,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assemblers\ComplaintAssembler.cs" />
     <Compile Include="Assemblers\IngredientAssembler.cs" />
     <Compile Include="Assemblers\OrderAssembler.cs" />
     <Compile Include="Assemblers\RecipeAssembler.cs" />

@@ -13,6 +13,7 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
 {
     public interface IWorkChannel : IPizzaService, IDisposable
     {
+
     }
 
     public class WorkChannel : ServiceProxyBase<IPizzaService>, IWorkChannel
@@ -133,6 +134,16 @@ namespace PizzaNetWorkClient.WCFClientInfrastructure
         public ListResponse<OrderDTO> GetOrderInfo(OrdersQuery req)
         {
             return Channel.GetOrderInfo(req);
+        }
+
+        public void CreateComplaint(UpdateRequest<ComplaintDTO> req)
+        {
+            Channel.CreateComplaint(req);
+        }
+
+        public ListResponse<ComplaintDTO> GetComplaints(EmptyRequest req)
+        {
+            return Channel.GetComplaints(req);
         }
     }
 }

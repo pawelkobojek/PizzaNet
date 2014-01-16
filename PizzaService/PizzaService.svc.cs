@@ -28,6 +28,7 @@ namespace PizzaService
         private OrderAssembler orderAssembler = new OrderAssembler();
         private UserAssembler userAssembler = new UserAssembler();
         private StateAssembler stateAssembler = new StateAssembler();
+        private ComplaintAssembler complaintAssembler = new ComplaintAssembler();
 
         private PizzaUnitOfWork db = new PizzaUnitOfWork();
 
@@ -780,6 +781,31 @@ namespace PizzaService
                     {
                         return ListResponse.Create(uow.Db.Orders.FindAllEagerlyWhere(o => req.Ids.Contains(o.OrderID))
                             .ToList().Select(orderAssembler.ToSimpleDto)
+                            .ToList());
+                    });
+            }
+        }
+
+
+        public void CreateComplaint(UpdateRequest<ComplaintDTO> req)
+        {
+            using (var db = new PizzaUnitOfWork())
+            {
+                db.inTransaction(uow =>
+                    {
+                        db.Complaints.Insert(complaintAssembler.ToComplaint(req.Data));
+                    });
+            }
+        }
+
+        public ListResponse<ComplaintDTO> GetComplaints(EmptyRequest req)
+        {
+            using (var db = new PizzaUnitOfWork())
+            {
+                return db.inTransaction(uow =>
+                    {
+                        return ListResponse.Create(uow.Db.Complaints.FindAll()
+                            .Select(complaintAssembler.ToSimpleDto)
                             .ToList());
                     });
             }

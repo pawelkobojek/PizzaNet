@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PizzaNetDataModel.Model;
+using PizzaNetDataModelEntityInfrastructure.Model;
 
 namespace PizzaNetDataModel
 {
@@ -18,6 +19,7 @@ namespace PizzaNetDataModel
         public DbSet<Size> Sizes { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Complaint> Complaint { get; set; }
 
         public PizzaContext()
         {

@@ -23,6 +23,7 @@ namespace PizzaNetDataModel.Repository
         public SizeRepository Sizes { get; set; }
         public StateRepository States { get; set; }
         public UserRepository Users { get; set; }
+        public ComplaintRepository Complaints { get; set; }
 
         public bool RequestRollback { get; set; }
 
@@ -43,6 +44,7 @@ namespace PizzaNetDataModel.Repository
             Sizes = new SizeRepository(db);
             States = new StateRepository(db);
             Users = new UserRepository(db);
+            Complaints = new ComplaintRepository(db);
         }
 
         public PizzaUnitOfWork(bool reqRollback)
@@ -92,10 +94,10 @@ namespace PizzaNetDataModel.Repository
                 }
             }
         }
-        
+
         public void inTransaction(Action<TransactionUnitOfWork> action)
         {
-            inTransaction( Uof => 
+            inTransaction(Uof =>
                 {
                     action(Uof);
                     return 0;

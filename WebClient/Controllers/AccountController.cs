@@ -8,12 +8,12 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
-using WebClient.Filters;
+using PizzaWebClient.Filters;
 using PizzaNetWorkClient.WCFClientInfrastructure;
-using WebClient.Models;
+using PizzaWebClient.Models;
 using PizzaNetControls.WCFClientInfrastructure;
 
-namespace WebClient.Controllers
+namespace PizzaWebClient.Controllers
 {
 
     [Authorize]
@@ -22,6 +22,10 @@ namespace WebClient.Controllers
     {
         IWorkChannelFactory factory = new BasicWorkChannelFactory();
 
+        public AccountController()
+        {
+
+        }
 
         public AccountController(IWorkChannelFactory fact)
         {

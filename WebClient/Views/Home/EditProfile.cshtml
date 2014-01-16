@@ -1,4 +1,4 @@
-﻿@model PizzaNetCommon.DTOs.UserDTO
+﻿@model PizzaWebClient.Models.ViewModels.UserViewModel
 
 @{
     ViewBag.Title = "EditProfile";
@@ -44,6 +44,22 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.Password)
             @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NewPassword)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NewPassword)
+            @Html.ValidationMessageFor(model => model.NewPassword)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NewPasswordAgain)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NewPasswordAgain)
+            @Html.ValidationMessageFor(model => model.NewPasswordAgain)
         </div>
 
         <p>

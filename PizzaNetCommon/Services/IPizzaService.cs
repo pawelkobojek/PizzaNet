@@ -93,5 +93,11 @@ namespace PizzaNetCommon.Services
 
         [OperationContract]
         ListResponse<OrderDTO> GetOrderInfo(OrdersQuery req);
+
+        [OperationContract]
+        void CreateComplaint(UpdateRequest<ComplaintDTO> req);
+
+        [OperationContract]
+        ListResponse<ComplaintDTO> GetComplaints(EmptyRequest req);
     }
 }

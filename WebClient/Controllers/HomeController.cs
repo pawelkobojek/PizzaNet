@@ -10,13 +10,18 @@ using PizzaNetCommon.Queries;
 using PizzaNetCommon.Requests;
 using PizzaNetControls.WCFClientInfrastructure;
 using PizzaNetWorkClient.WCFClientInfrastructure;
-using WebClient.Models;
+using PizzaWebClient.Models;
 
-namespace WebClient.Controllers
+namespace PizzaWebClient.Controllers
 {
     public class HomeController : Controller
     {
         IWorkChannelFactory factory = new BasicWorkChannelFactory();
+
+        public HomeController()
+        {
+
+        }
 
         public HomeController(IWorkChannelFactory fact)
         {
@@ -206,6 +211,47 @@ namespace WebClient.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult CreateComplaint()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateComplaint(string body)
+        {
+            using (var proxy = factory.GetWorkChannel())
+            {
+                proxy.CreateComplaint(new UpdateRequest<ComplaintDTO>
+                {
+                    Login = (string)this.Session["Email"],
+                    Password = (string)this.Session["Password"],
+                    Data = new ComplaintDTO { Body = body }
+                });
+                return RedirectToAction("Index");
+            }
+        }
+
+        // Following code may be used in order to get all complaints in db
+        //public string GetComps()
+        //{
+        //    using (var proxy = factory.GetWorkChannel())
+        //    {
+        //        string str = "";
+        //        var res = proxy.GetComplaints(new EmptyRequest
+        //            {
+        //                Login = (string)this.Session["Email"],
+        //                Password = (string)this.Session["Password"]
+        //            }); ;
+
+        //        foreach (var item in res.Data)
+        //        {
+        //            str += item.Body + "\n";
+        //        }
+
+        //        return str;
+        //    }
+        //}
 
         public class JsonFilter : ActionFilterAttribute
         {

@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 
-namespace WebClient
+namespace PizzaWebClient
 {
     public class FilterConfig
     {

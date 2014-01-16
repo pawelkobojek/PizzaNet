@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Web.Security;
 
-namespace WebClient.Models
+namespace PizzaWebClient.Models
 {
     public class UsersContext : DbContext
     {
