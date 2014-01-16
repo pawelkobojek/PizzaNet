@@ -4,9 +4,9 @@
     ViewBag.Title = "ProfileSettings";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ChangePassword", "Home"))
 {
-    <fieldset>
+    <fieldset class="float-left">
         <legend>Profile settings</legend>
 
         <div>
@@ -17,11 +17,65 @@
         </div>
 
         <div>
-            @Html.LabelFor(model => model.Password)
+            @Html.Label("Old password:")
         </div>
 
         <div>
             @Html.PasswordFor(model => model.Password)
         </div>
+
+        <div>
+            @Html.Label("New password:")
+        </div>
+
+        <div>
+            @Html.Password("new-password")
+        </div>
+
+        <button>
+            Change Password
+        </button>
+    </fieldset>
+}
+@using (Html.BeginForm())
+{
+    <fieldset class="float-right">
+        <legend>Account details</legend>
+
+        <div>
+            @Html.LabelFor(model => model.Email)
+        </div>
+
+        <div>
+            @Html.TextBoxFor(model => model.Email)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Name)
+        </div>
+
+        <div>
+            @Html.TextBoxFor(model => model.Name)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Phone)
+        </div>
+
+        <div>
+            @Html.TextBoxFor(model => model.Phone)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Address)
+        </div>
+
+        <div>
+            @Html.TextBoxFor(model => model.Address)
+        </div>
+
+        <button>
+            Confirm
+        </button>
     </fieldset>
 }

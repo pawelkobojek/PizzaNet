@@ -9,6 +9,7 @@ using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using WebClient.Filters;
+using PizzaNetWorkClient.WCFClientInfrastructure;
 using WebClient.Models;
 
 namespace WebClient.Controllers
@@ -35,8 +36,26 @@ namespace WebClient.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid
+                //  && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)
+                )
             {
+
+                using (var proxy = new WorkChannel())
+                {
+                    //TODO Try/catch (leci wyjatek jak nieprawidlowe dane)
+                    var user = proxy.GetUser(new PizzaNetCommon.Requests.EmptyRequest
+                    {
+                        Login = model.Email,
+                        Password = model.Password
+                    });
+
+                    this.Session["Email"] = user.Data.Email;
+                    this.Session["Password"] = user.Data.Password;
+                    this.Session["LoggedIn"] = true;
+                    this.ViewBag.Email = user.Data.Email;
+                    this.ViewBag.LoggedIn = true;
+                }
                 return RedirectToLocal(returnUrl);
             }
 

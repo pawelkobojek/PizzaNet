@@ -18,6 +18,10 @@ namespace WebClient.Controllers
 
         public ActionResult Index()
         {
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
+
+
             using (var proxy = new WorkChannel())
             {
                 if (Request.IsAjaxRequest())
@@ -27,11 +31,10 @@ namespace WebClient.Controllers
                 }
                 else
                 {
-
                     var data = proxy.GetRecipeTabData(new PizzaNetCommon.Requests.EmptyRequest
                     {
-                        Login = "Admin",
-                        Password = "123"
+                        Login = (string)this.Session["Email"],
+                        Password = (string)this.Session["Password"]
                     });
 
                     return View(data);
@@ -55,10 +58,17 @@ namespace WebClient.Controllers
 
         public ActionResult MyOrders()
         {
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
+
             List<OrderDTO> orders = new List<OrderDTO>();
             using (var proxy = new WorkChannel())
             {
-                var result = proxy.GetOrders(new PizzaNetCommon.Requests.EmptyRequest { Login = "Admin", Password = "123" });
+                var result = proxy.GetOrders(new PizzaNetCommon.Requests.EmptyRequest
+                {
+                    Login = (string)this.Session["Email"],
+                    Password = (string)this.Session["Password"]
+                });
                 orders = result.Data;
             }
             return View(orders);
@@ -66,12 +76,15 @@ namespace WebClient.Controllers
 
         public ActionResult GetOrderInfo(int id)
         {
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
+
             using (var proxy = new WorkChannel())
             {
                 var result = proxy.GetOrderInfo(new OrdersQuery
                 {
-                    Login = "Admin",
-                    Password = "123",
+                    Login = (string)this.Session["Email"],
+                    Password = (string)this.Session["Password"],
                     Ids = new int[] { id }
                 });
 
@@ -79,13 +92,16 @@ namespace WebClient.Controllers
             }
         }
 
-        public ActionResult ProfileSettings()
+        public ActionResult EditProfile()
         {
             return View();
         }
 
         public ActionResult AddToOrder(OrderInfoDTO info)
         {
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
+
             if (Request.IsAjaxRequest())
             {
                 using (var proxy = new WorkChannel())
@@ -94,8 +110,8 @@ namespace WebClient.Controllers
                     {
                         Query = new IngredientsQuery
                         {
-                            Login = "Admin",
-                            Password = "123",
+                            Login = (string)this.Session["Email"],
+                            Password = (string)this.Session["Password"],
                             IngredientIds = info.Ingredients
                         }
                     }).Data;
@@ -153,14 +169,17 @@ namespace WebClient.Controllers
             if (info == null || info.Count <= 0)
                 return View("Error");
 
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
+
             try
             {
                 using (var proxy = new WorkChannel())
                 {
                     proxy.MakeOrderFromWeb(new UpdateOrRemoveRequest<List<OrderInfoDTO>>
                     {
-                        Login = "Admin",
-                        Password = "123",
+                        Login = (string)this.Session["Email"],
+                        Password = (string)this.Session["Password"],
                         DataToRemove = null,
                         Data = info
                     });

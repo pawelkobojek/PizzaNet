@@ -265,6 +265,7 @@ namespace PizzaService
                             throw PizzaServiceFault.Create(Messages.INVALID_USER_OR_PASSWORD);
 
                         var res = SingleItemResponse.Create(userAssembler.ToSimpleDto(user));
+                        res.Data.Email = req.Login;
                         res.Data.Password = req.Password;
                         return res;
                     });

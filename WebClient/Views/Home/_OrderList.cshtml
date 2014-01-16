@@ -14,14 +14,15 @@
             {
                 <p>
                     <span>@ingredient.Name</span>
-                    <span>@if (ingredient.Quantity == ingredient.NormalWeight)
+                    <span>@ingredient.Quantity g
+                        @*@if (ingredient.Quantity == ingredient.NormalWeight)
                           {
                         @:Normal
                           }
                           else
                           {
                         @:Extra
-                          }
+                          }*@
                     </span>
                 </p>
             }
