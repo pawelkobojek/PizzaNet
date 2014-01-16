@@ -43,7 +43,8 @@ namespace PizzaNetTests.Mocks
 
             var hcontext = new Mock<HttpContextBase>();
             hcontext.SetupGet(x => x.Request).Returns(request.Object);
-            hcontext.SetupGet(x => x.Session).Returns(new FakeControllerSession());
+            var session = new FakeControllerSession();
+            hcontext.SetupGet(x => x.Session).Returns(session);
 
             var context = new Mock<ControllerContext>();
             context.SetupGet(x => x.HttpContext).Returns(hcontext.Object);

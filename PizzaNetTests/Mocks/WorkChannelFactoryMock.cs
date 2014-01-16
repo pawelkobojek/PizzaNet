@@ -1,4 +1,5 @@
 ﻿using PizzaNetControls.WCFClientInfrastructure;
+using PizzaNetWorkClient.WCFClientInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,10 @@ namespace PizzaNetTests.Mocks
     {
         public PizzaNetWorkClient.WCFClientInfrastructure.IWorkChannel GetWorkChannel()
         {
-            return new WorkChannelMock();
+            LastWorkChannel = new WorkChannelMock();
+            return LastWorkChannel;
         }
+
+        public WorkChannelMock LastWorkChannel { get; set; }
     }
 }

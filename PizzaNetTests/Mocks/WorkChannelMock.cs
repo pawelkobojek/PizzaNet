@@ -1,4 +1,5 @@
 ﻿using PizzaNetCommon.DTOs;
+using PizzaNetCommon.Queries;
 using PizzaNetCommon.Requests;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using System;
@@ -11,6 +12,9 @@ namespace PizzaNetTests.Mocks
 {
     public class WorkChannelMock : IWorkChannel
     {
+        public List<OrderInfoDTO> OrdersMade { get; set; }
+        public List<OrderInfoDTO> OrdersRemoved { get; set; }
+
         public ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req)
         {
             throw new NotImplementedException();
@@ -99,7 +103,12 @@ namespace PizzaNetTests.Mocks
 
         public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
         {
-            throw new NotImplementedException();
+            return new ListResponse<OrderDTO>(new List<OrderDTO>()
+                {
+                    new OrderDTO()
+                    {
+                    }
+                });
         }
 
         public void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> request)
@@ -132,19 +141,30 @@ namespace PizzaNetTests.Mocks
             throw new NotImplementedException();
         }
 
-        public ListResponse<OrderIngredientDTO> QueryIngredients(QueryRequest<PizzaNetCommon.Queries.IngredientsQuery> req)
+        public ListResponse<OrderIngredientDTO> QueryIngredients(QueryRequest<IngredientsQuery> req)
         {
-            throw new NotImplementedException();
+            var list = new List<OrderIngredientDTO>();
+            foreach (var i in req.Query.IngredientIds)
+                list.Add(new OrderIngredientDTO()
+                    {
+                        Name = String.Format("Ingredient {0}",i),
+                        IngredientID = i
+                    });
+            return new ListResponse<OrderIngredientDTO>(list);
         }
 
         public void MakeOrderFromWeb(UpdateOrRemoveRequest<List<OrderInfoDTO>> req)
         {
-            throw new NotImplementedException();
+            OrdersMade = req.Data;
+            OrdersRemoved = req.DataToRemove;
         }
 
         public ListResponse<OrderDTO> GetOrderInfo(PizzaNetCommon.Queries.OrdersQuery req)
         {
-            throw new NotImplementedException();
+            List<OrderDTO> list = new List<OrderDTO>();
+            foreach (int i in req.Ids)
+                list.Add(new OrderDTO() { OrderID = i });
+            return new ListResponse<OrderDTO>(list);
         }
 
         public void Dispose()
