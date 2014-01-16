@@ -112,7 +112,7 @@ namespace PizzaNetTests
 
                 db.Commit();
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 return false;
             }

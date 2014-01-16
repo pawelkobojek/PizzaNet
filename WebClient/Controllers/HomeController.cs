@@ -23,6 +23,10 @@ namespace WebClient.Controllers
             factory = fact;
         }
 
+        public HomeController()
+        {
+        }
+
         public ActionResult Index()
         {
             if (!((bool?)this.Session["LoggedIn"] ?? false))
@@ -192,7 +196,7 @@ namespace WebClient.Controllers
                     });
                 }
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 return View("Error");
             }

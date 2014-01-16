@@ -28,6 +28,10 @@ namespace WebClient.Controllers
             factory = fact;
         }
 
+        public AccountController()
+        {
+        }
+
         //
         // GET: /Account/Login
 
