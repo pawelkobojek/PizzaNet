@@ -11,6 +11,7 @@ using PizzaNetCommon.Requests;
 using PizzaNetControls.WCFClientInfrastructure;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaWebClient.Models;
+using PizzaWebClient.Models.ViewModels;
 
 namespace PizzaWebClient.Controllers
 {
@@ -45,8 +46,10 @@ namespace PizzaWebClient.Controllers
                 {
                     var data = proxy.GetRecipeTabData(new PizzaNetCommon.Requests.EmptyRequest
                     {
-                        Login = (string)this.Session["Email"],
-                        Password = (string)this.Session["Password"]
+                        //Login = (string)this.Session["Email"],
+                        //Password = (string)this.Session["Password"]
+                        Login = ((UserDTO)this.Session["User"]).Email,
+                        Password = ((UserDTO)this.Session["User"]).Password
                     });
 
                     return View(data);
@@ -78,8 +81,8 @@ namespace PizzaWebClient.Controllers
             {
                 var result = proxy.GetOrdersForUser(new PizzaNetCommon.Requests.EmptyRequest
                 {
-                    Login = (string)this.Session["Email"],
-                    Password = (string)this.Session["Password"]
+                    Login = ((UserDTO)this.Session["User"]).Email,
+                    Password = ((UserDTO)this.Session["User"]).Password
                 });
                 orders = result.Data;
             }
@@ -95,8 +98,8 @@ namespace PizzaWebClient.Controllers
             {
                 var result = proxy.GetOrderInfo(new OrdersQuery
                 {
-                    Login = (string)this.Session["Email"],
-                    Password = (string)this.Session["Password"],
+                    Login = ((UserDTO)this.Session["User"]).Email,
+                    Password = ((UserDTO)this.Session["User"]).Password,
                     Ids = new int[] { id }
                 });
 
@@ -104,9 +107,48 @@ namespace PizzaWebClient.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult EditProfile()
         {
-            return View();
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
+
+            UserDTO user = ((UserDTO)this.Session["User"]);
+            return View(new UserViewModel
+                {
+                    Address = user.Address,
+                    Phone = user.Phone,
+                    Email = user.Email,
+                    Name = user.Name
+                });
+        }
+
+        [HttpPost]
+        public ActionResult EditProfile(UserViewModel user)
+        {
+            using (var proxy = factory.GetWorkChannel())
+            {
+                UserDTO currUser = ((UserDTO)this.Session["User"]);
+                var newUser = proxy.UpdateUser(new UpdateRequest<UserDTO>
+                {
+                    Login = ((UserDTO)this.Session["User"]).Email,
+                    Password = ((UserDTO)this.Session["User"]).Password,
+                    Data = new UserDTO
+                    {
+                        Address = user.Address,
+                        Email = user.Email,
+                        Name = user.Name,
+                        Password = currUser.Password,
+                        Phone = user.Phone,
+                        UserID = ((UserDTO)this.Session["User"]).UserID,
+                        Rights = ((UserDTO)this.Session["User"]).Rights
+                    }
+                });
+
+                this.Session["User"] = newUser.Data;
+                return RedirectToAction("Index");
+                //return View();
+            }
         }
 
         public ActionResult AddToOrder(OrderInfoDTO info)
@@ -122,8 +164,8 @@ namespace PizzaWebClient.Controllers
                     {
                         Query = new IngredientsQuery
                         {
-                            Login = (string)this.Session["Email"],
-                            Password = (string)this.Session["Password"],
+                            Login = ((UserDTO)this.Session["User"]).Email,
+                            Password = ((UserDTO)this.Session["User"]).Password,
                             IngredientIds = info.Ingredients
                         }
                     }).Data;
@@ -190,8 +232,8 @@ namespace PizzaWebClient.Controllers
                 {
                     proxy.MakeOrderFromWeb(new UpdateOrRemoveRequest<List<OrderInfoDTO>>
                     {
-                        Login = (string)this.Session["Email"],
-                        Password = (string)this.Session["Password"],
+                        Login = ((UserDTO)this.Session["User"]).Email,
+                        Password = ((UserDTO)this.Session["User"]).Password,
                         DataToRemove = null,
                         Data = info
                     });
@@ -224,8 +266,8 @@ namespace PizzaWebClient.Controllers
             {
                 proxy.CreateComplaint(new UpdateRequest<ComplaintDTO>
                 {
-                    Login = (string)this.Session["Email"],
-                    Password = (string)this.Session["Password"],
+                    Login = ((UserDTO)this.Session["User"]).Email,
+                    Password = ((UserDTO)this.Session["User"]).Password,
                     Data = new ComplaintDTO { Body = body }
                 });
                 return RedirectToAction("Index");
@@ -252,6 +294,40 @@ namespace PizzaWebClient.Controllers
         //        return str;
         //    }
         //}
+
+        [HttpGet]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(PasswordViewModel viewModel)
+        {
+            using (var proxy = factory.GetWorkChannel())
+            {
+                UserDTO user = ((UserDTO)this.Session["User"]);
+                var newUser = proxy.UpdateUser(new UpdateRequest<UserDTO>
+                {
+                    Login = user.Email,
+                    Password = user.Password,
+                    Data = new UserDTO
+                    {
+                        UserID = user.UserID,
+                        Email = user.Email,
+                        Name = user.Name,
+                        Password = viewModel.NewPassword,
+                        Phone = user.Phone,
+                        Address = user.Address,
+                        Rights = user.Rights
+                    }
+                });
+
+                this.Session["User"] = newUser.Data;
+            }
+
+            return RedirectToAction("Index");
+        }
 
         public class JsonFilter : ActionFilterAttribute
         {

@@ -4,69 +4,85 @@
     ViewBag.Title = "EditProfile";
 }
 
-<h2>EditProfile</h2>
+@*<h2>Profile Info</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+<div class="user-info">
+    <div class="user-info-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <hr />
+    <div class="display-text">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+    <hr />
+    <div class="user-info-label">
+        @Html.LabelFor(model => model.Email)
+    </div>
+    <hr />
 
-    <fieldset>
-        <legend>User</legend>
+    <div class="display-text">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+    <div class="user-info-label">
+        @Html.LabelFor(model => model.Phone)
+    </div>
+    <hr />
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </div>
+    <div class="display-text">
+        @Html.DisplayFor(model => model.Phone)
+    </div>
+    <div class="user-info-label">
+        @Html.LabelFor(model => model.Address)
+    </div>
+    <hr />
+    <div class="display-text">
+        @Html.DisplayFor(model => model.Address)
+    </div>
+</div>*@
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Phone)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Phone)
-            @Html.ValidationMessageFor(model => model.Phone)
-        </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Address)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Address)
-            @Html.ValidationMessageFor(model => model.Address)
-        </div>
+<h2 style="margin-top: 40px">Edit profile</h2>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Password)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Password)
-            @Html.ValidationMessageFor(model => model.Password)
-        </div>
+<div>
+    @using (Html.BeginForm("EditProfile", "Home"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.NewPassword)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.NewPassword)
-            @Html.ValidationMessageFor(model => model.NewPassword)
-        </div>
+        <fieldset>
+            <legend>User</legend>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.NewPasswordAgain)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.NewPasswordAgain)
-            @Html.ValidationMessageFor(model => model.NewPasswordAgain)
-        </div>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
 
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-}
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Phone)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Phone)
+                @Html.ValidationMessageFor(model => model.Phone)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Address)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Address)
+                @Html.ValidationMessageFor(model => model.Address)
+            </div>
+
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+    }
+</div>
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")

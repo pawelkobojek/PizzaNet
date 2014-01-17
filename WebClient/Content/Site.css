@@ -198,6 +198,25 @@ nav, section
     font-size: 35px;
 }
 
+.user-info-label
+{
+    font-size: 20px;
+    font-weight: 200;
+}
+
+.user-info
+{
+    margin-bottom: 20px;
+}
+
+.display-text
+{
+    padding-left: 5px;
+    font-size: 15px;
+    font-weight: 100;
+    font-family: Arial, sans-serif;
+}
+
 .pizza-details
 {
     font-family: 'Ubuntu', Helvetica, Arial, sans-serif;

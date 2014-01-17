@@ -63,12 +63,13 @@ namespace PizzaWebClient.Controllers
                         Login = model.Email,
                         Password = model.Password
                     });
-
-                    this.Session["Email"] = user.Data.Email;
-                    this.Session["Password"] = user.Data.Password;
+                    this.Session["User"] = user.Data;
+                    //this.Session["Email"] = user.Data.Email;
+                    //this.Session["Password"] = user.Data.Password;
                     this.Session["LoggedIn"] = true;
-                    this.ViewBag.Email = user.Data.Email;
+                    this.ViewBag.Name = user.Data.Name;
                     this.ViewBag.LoggedIn = true;
+                    FormsAuthentication.SetAuthCookie(user.Data.Email, false);
                 }
                 return RedirectToLocal(returnUrl);
             }
@@ -86,9 +87,11 @@ namespace PizzaWebClient.Controllers
         public ActionResult LogOff()
         {
             //WebSecurity.Logout();
-            this.Session["Email"] = null;
-            this.Session["Password"] = null;
+            this.Session["User"] = null;
             this.Session["LoggedIn"] = false;
+            this.Session.Clear();
+            //this.Session["Email"] = null;
+            //this.Session["Password"] = null;
 
             return RedirectToAction("Index", "Home");
         }
