@@ -44,9 +44,17 @@
     <Reference Include="KellermanSoftware.Compare-NET-Objects">
       <HintPath>..\packages\CompareNETObjects.1.7.3.0\lib\KellermanSoftware.Compare-NET-Objects.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1312.1622\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies\System.Web.Mvc.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -63,11 +71,15 @@
   <ItemGroup>
     <Compile Include="DbTest.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Mocks\FakeControllerSession.cs" />
+    <Compile Include="Mocks\WorkChannelFactoryMock.cs" />
+    <Compile Include="Mocks\WorkChannelMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PersistanceTests.cs" />
     <Compile Include="AssemblingTests.cs" />
     <Compile Include="ConnectionTests.cs" />
     <Compile Include="ValidationTests.cs" />
+    <Compile Include="WebApplicationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PizzaNetClient\PizzaNetClient.csproj">
@@ -94,14 +106,16 @@
       <Project>{81e02345-8544-4d78-a261-3866a48dcf78}</Project>
       <Name>PizzaService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebClient\WebClient.csproj">
+      <Project>{b3a1baba-a554-4c8b-8fcc-92fbd1750978}</Project>
+      <Name>WebClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mocks\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
