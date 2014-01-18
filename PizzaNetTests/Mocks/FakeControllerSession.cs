@@ -34,6 +34,10 @@ namespace PizzaNetTests.Mocks
             set { m_SessionStorage[name] = value; }
         }
 
+        public override void Clear()
+        {
+        }
+
         public static void SetFakeControllerContext(Controller controller, bool isAjax = false)
         {
             var routes = new RouteCollection();
@@ -51,12 +55,12 @@ namespace PizzaNetTests.Mocks
                     });
             }
 
-            request.SetupGet(x => x.ApplicationPath).Returns("/");
-            request.SetupGet(x => x.Url).Returns(new Uri("http://localhost/a", UriKind.Absolute));
-            request.SetupGet(x => x.ServerVariables).Returns(new System.Collections.Specialized.NameValueCollection());
-
+            request.SetupGet(r => r.HttpMethod).Returns("GET");
+            request.SetupGet(r => r.ApplicationPath).Returns("/");
+            request.SetupGet(r => r.Url).Returns(new Uri("http://localhost/app", UriKind.Absolute));
+  
             var response = new Mock<HttpResponseBase>(MockBehavior.Strict);
-            response.Setup(x => x.ApplyAppPathModifier("/post1")).Returns("http://localhost/post1");
+            response.Setup(r => r.ApplyAppPathModifier(It.IsAny<string>())).Returns((String url) => url);
 
             var hcontext = new Mock<HttpContextBase>();
             hcontext.SetupGet(x => x.Request).Returns(request.Object);

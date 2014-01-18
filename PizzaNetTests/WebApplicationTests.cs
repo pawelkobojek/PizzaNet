@@ -359,5 +359,43 @@ namespace PizzaNetTests
             var res3 = ctrl.Login(info, returnUrl) as HttpNotFoundResult;
             Assert.IsNotNull(res3);
         }
+
+        [TestMethod]
+        public void AccountControllerLogoff()
+        {
+            const bool ISAJAX = true;
+
+            var factory = new WorkChannelFactoryMock();
+            var auth = new FakeAuthenticationService();
+            var ctrl = new AccountController(factory, auth);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
+
+            var res2 = ctrl.LogOff() as RedirectToRouteResult;
+            Assert.IsNotNull(res2);
+            Assert.AreEqual(res2.RouteValues["action"], "Index");
+        }
+
+        [TestMethod]
+        public void AccountControllerRegister()
+        {
+            const bool ISAJAX = true;
+            var info = new RegisterModel()
+            {
+                UserName = "Admin",
+                Password = "123",
+                ConfirmPassword = "123"
+            };
+
+            var factory = new WorkChannelFactoryMock();
+            var auth = new FakeAuthenticationService();
+            var ctrl = new AccountController(factory, auth);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
+
+            var res2 = ctrl.Register(info) as RedirectToRouteResult;
+            Assert.IsNotNull(res2);
+            Assert.AreEqual(res2.RouteValues["action"], "Index");
+            Assert.AreEqual(auth.AccountsCreated.Count, 1);
+            Assert.AreEqual(auth.AccountsCreated[0].Email, "Admin");
+        }
     }
 }

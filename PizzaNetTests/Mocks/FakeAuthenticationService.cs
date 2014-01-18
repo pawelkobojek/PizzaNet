@@ -1,4 +1,5 @@
 ﻿using Moq;
+using PizzaNetCommon.DTOs;
 using PizzaWebClient.Common;
 using System;
 using System.Collections.Generic;
@@ -10,23 +11,31 @@ namespace PizzaNetTests.Mocks
 {
     public class FakeAuthenticationService : IAuthenticationService
     {
+        public List<UserDTO> AccountsCreated { get; set; }
+
         public void SetAuthCookie(string userName, bool createPersistentCookie)
         {
         }
 
         public string CreateUserAndAccount(string userName, string password)
         {
-            throw new NotImplementedException();
+            AccountsCreated = new List<UserDTO>();
+            AccountsCreated.Add(new UserDTO() { Email = userName, Password = password });
+            return null;
         }
 
         public string CreateAccount(string userName, string password)
         {
-            throw new NotImplementedException();
+            AccountsCreated = new List<UserDTO>();
+            AccountsCreated.Add(new UserDTO() { Email = userName, Password = password });
+            return null;
         }
 
         public bool Login(string userName, string password)
         {
-            throw new NotImplementedException();
+            if (userName != "Admin" || password != "123")
+                return false;
+            return true;
         }
 
         public int GetUserId(string userName)
