@@ -32,10 +32,6 @@ namespace PizzaWebClient.Controllers
             factory = fact;
         }
 
-        public AccountController()
-        {
-        }
-
         //
         // GET: /Account/Login
 

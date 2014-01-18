@@ -12,6 +12,8 @@ using PizzaNetControls.WCFClientInfrastructure;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaWebClient.Models;
 using PizzaWebClient.Models.ViewModels;
+using System.ServiceModel;
+using PizzaWebClient.Common;
 
 namespace PizzaWebClient.Controllers
 {
@@ -29,10 +31,6 @@ namespace PizzaWebClient.Controllers
             factory = fact;
         }
 
-        public HomeController()
-        {
-        }
-
         public ActionResult Index()
         {
             if (!((bool?)this.Session["LoggedIn"] ?? false))
@@ -48,13 +46,21 @@ namespace PizzaWebClient.Controllers
                 }
                 else
                 {
-                    var data = proxy.GetRecipeTabData(new PizzaNetCommon.Requests.EmptyRequest
+                    TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> data;
+                    try
                     {
-                        //Login = (string)this.Session["Email"],
-                        //Password = (string)this.Session["Password"]
-                        Login = ((UserDTO)this.Session["User"]).Email,
-                        Password = ((UserDTO)this.Session["User"]).Password
-                    });
+                        data = proxy.GetRecipeTabData(new PizzaNetCommon.Requests.EmptyRequest
+                        {
+                            //Login = (string)this.Session["Email"],
+                            //Password = (string)this.Session["Password"]
+                            Login = ((UserDTO)this.Session["User"]).Email,
+                            Password = ((UserDTO)this.Session["User"]).Password
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        return Utils.HandleFaults(e);
+                    }
 
                     return View(data);
                 }
@@ -81,14 +87,21 @@ namespace PizzaWebClient.Controllers
                 return RedirectToAction("Login", "Account");
 
             List<OrderDTO> orders = new List<OrderDTO>();
-            using (var proxy = factory.GetWorkChannel())
+            try
             {
-                var result = proxy.GetOrdersForUser(new PizzaNetCommon.Requests.EmptyRequest
+                using (var proxy = factory.GetWorkChannel())
                 {
-                    Login = ((UserDTO)this.Session["User"]).Email,
-                    Password = ((UserDTO)this.Session["User"]).Password
-                });
-                orders = result.Data;
+                    var result = proxy.GetOrdersForUser(new PizzaNetCommon.Requests.EmptyRequest
+                    {
+                        Login = ((UserDTO)this.Session["User"]).Email,
+                        Password = ((UserDTO)this.Session["User"]).Password
+                    });
+                    orders = result.Data;
+                }
+            }
+            catch (Exception e)
+            {
+                return Utils.HandleFaults(e);
             }
             return View(orders);
         }
@@ -98,16 +111,23 @@ namespace PizzaWebClient.Controllers
             if (!((bool?)this.Session["LoggedIn"] ?? false))
                 return RedirectToAction("Login", "Account");
 
-            using (var proxy = factory.GetWorkChannel())
+            try
             {
-                var result = proxy.GetOrderInfo(new OrdersQuery
+                using (var proxy = factory.GetWorkChannel())
                 {
-                    Login = ((UserDTO)this.Session["User"]).Email,
-                    Password = ((UserDTO)this.Session["User"]).Password,
-                    Ids = new int[] { id }
-                });
+                    var result = proxy.GetOrderInfo(new OrdersQuery
+                    {
+                        Login = ((UserDTO)this.Session["User"]).Email,
+                        Password = ((UserDTO)this.Session["User"]).Password,
+                        Ids = new int[] { id }
+                    });
 
-                return PartialView("_ExpandedOrderInfo", result.Data[0]);
+                    return PartialView("_ExpandedOrderInfo", result.Data[0]);
+                }
+            }
+            catch (Exception e)
+            {
+                return Utils.HandleFaults(e);
             }
         }
 
@@ -130,28 +150,35 @@ namespace PizzaWebClient.Controllers
         [HttpPost]
         public ActionResult EditProfile(UserViewModel user)
         {
-            using (var proxy = factory.GetWorkChannel())
+            try
             {
-                UserDTO currUser = ((UserDTO)this.Session["User"]);
-                var newUser = proxy.UpdateUser(new UpdateRequest<UserDTO>
+                using (var proxy = factory.GetWorkChannel())
                 {
-                    Login = ((UserDTO)this.Session["User"]).Email,
-                    Password = ((UserDTO)this.Session["User"]).Password,
-                    Data = new UserDTO
+                    UserDTO currUser = ((UserDTO)this.Session["User"]);
+                    var newUser = proxy.UpdateUser(new UpdateRequest<UserDTO>
                     {
-                        Address = user.Address,
-                        Email = user.Email,
-                        Name = user.Name,
-                        Password = currUser.Password,
-                        Phone = user.Phone,
-                        UserID = ((UserDTO)this.Session["User"]).UserID,
-                        Rights = ((UserDTO)this.Session["User"]).Rights
-                    }
-                });
+                        Login = ((UserDTO)this.Session["User"]).Email,
+                        Password = ((UserDTO)this.Session["User"]).Password,
+                        Data = new UserDTO
+                        {
+                            Address = user.Address,
+                            Email = user.Email,
+                            Name = user.Name,
+                            Password = currUser.Password,
+                            Phone = user.Phone,
+                            UserID = ((UserDTO)this.Session["User"]).UserID,
+                            Rights = ((UserDTO)this.Session["User"]).Rights
+                        }
+                    });
 
-                this.Session["User"] = newUser.Data;
-                return RedirectToAction("Index");
-                //return View();
+                    this.Session["User"] = newUser.Data;
+                    return RedirectToAction("Index");
+                    //return View();
+                }
+            }
+            catch (Exception e)
+            {
+                return Utils.HandleFaults(e);
             }
         }
 
@@ -162,28 +189,30 @@ namespace PizzaWebClient.Controllers
 
             if (Request.IsAjaxRequest())
             {
-                using (var proxy = factory.GetWorkChannel())
+                try
                 {
-                    List<OrderIngredientDTO> ings = proxy.QueryIngredients(new QueryRequest<IngredientsQuery>
+                    using (var proxy = factory.GetWorkChannel())
                     {
-                        Query = new IngredientsQuery
+                        List<OrderIngredientDTO> ings = proxy.QueryIngredients(new QueryRequest<IngredientsQuery>
                         {
-                            Login = ((UserDTO)this.Session["User"]).Email,
-                            Password = ((UserDTO)this.Session["User"]).Password,
-                            IngredientIds = info.Ingredients
+                            Query = new IngredientsQuery
+                            {
+                                Login = ((UserDTO)this.Session["User"]).Email,
+                                Password = ((UserDTO)this.Session["User"]).Password,
+                                IngredientIds = info.Ingredients
+                            }
+                        }).Data;
+
+                        for (int i = 0; i < ings.Count; i++)
+                        {
+                            ings[i].Quantity = (info.Quantities[i] == "normal") ? ings[i].NormalWeight : ings[i].ExtraWeight;
                         }
-                    }).Data;
 
-                    for (int i = 0; i < ings.Count; i++)
-                    {
-                        ings[i].Quantity = (info.Quantities[i] == "normal") ? ings[i].NormalWeight : ings[i].ExtraWeight;
-                    }
+                        double sizeValue = GetSize(info);
 
-                    double sizeValue = GetSize(info);
+                        SizeDTO size = new SizeDTO { SizeValue = sizeValue };
 
-                    SizeDTO size = new SizeDTO { SizeValue = sizeValue };
-
-                    List<OrderDetailDTO> od = new List<OrderDetailDTO>
+                        List<OrderDetailDTO> od = new List<OrderDetailDTO>
                     {
                         new OrderDetailDTO
                         { 
@@ -191,12 +220,17 @@ namespace PizzaWebClient.Controllers
                             Size=size
                         }
                     };
-                    OrderDTO data = new OrderDTO
-                    {
-                        OrderDetailsDTO = od
-                    };
+                        OrderDTO data = new OrderDTO
+                        {
+                            OrderDetailsDTO = od
+                        };
 
-                    return PartialView("_OrderList", data);
+                        return PartialView("_OrderList", data);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return Utils.HandleFaults(e);
                 }
             }
             return View();
@@ -243,9 +277,9 @@ namespace PizzaWebClient.Controllers
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return View("Error");
+                return Utils.HandleFaults(e);
             }
 
             return View();
@@ -266,15 +300,22 @@ namespace PizzaWebClient.Controllers
         [HttpPost]
         public ActionResult CreateComplaint(string body)
         {
-            using (var proxy = factory.GetWorkChannel())
+            try
             {
-                proxy.CreateComplaint(new UpdateRequest<ComplaintDTO>
+                using (var proxy = factory.GetWorkChannel())
                 {
-                    Login = ((UserDTO)this.Session["User"]).Email,
-                    Password = ((UserDTO)this.Session["User"]).Password,
-                    Data = new ComplaintDTO { Body = body }
-                });
-                return RedirectToAction("Index");
+                    proxy.CreateComplaint(new UpdateRequest<ComplaintDTO>
+                    {
+                        Login = ((UserDTO)this.Session["User"]).Email,
+                        Password = ((UserDTO)this.Session["User"]).Password,
+                        Data = new ComplaintDTO { Body = body }
+                    });
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception e)
+            {
+                return Utils.HandleFaults(e);
             }
         }
 
@@ -308,26 +349,33 @@ namespace PizzaWebClient.Controllers
         [HttpPost]
         public ActionResult ChangePassword(PasswordViewModel viewModel)
         {
-            using (var proxy = factory.GetWorkChannel())
+            try
             {
-                UserDTO user = ((UserDTO)this.Session["User"]);
-                var newUser = proxy.UpdateUser(new UpdateRequest<UserDTO>
+                using (var proxy = factory.GetWorkChannel())
                 {
-                    Login = user.Email,
-                    Password = user.Password,
-                    Data = new UserDTO
+                    UserDTO user = ((UserDTO)this.Session["User"]);
+                    var newUser = proxy.UpdateUser(new UpdateRequest<UserDTO>
                     {
-                        UserID = user.UserID,
-                        Email = user.Email,
-                        Name = user.Name,
-                        Password = viewModel.NewPassword,
-                        Phone = user.Phone,
-                        Address = user.Address,
-                        Rights = user.Rights
-                    }
-                });
+                        Login = user.Email,
+                        Password = user.Password,
+                        Data = new UserDTO
+                        {
+                            UserID = user.UserID,
+                            Email = user.Email,
+                            Name = user.Name,
+                            Password = viewModel.NewPassword,
+                            Phone = user.Phone,
+                            Address = user.Address,
+                            Rights = user.Rights
+                        }
+                    });
 
-                this.Session["User"] = newUser.Data;
+                    this.Session["User"] = newUser.Data;
+                }
+            }
+            catch (Exception e)
+            {
+                return Utils.HandleFaults(e);
             }
 
             return RedirectToAction("Index");

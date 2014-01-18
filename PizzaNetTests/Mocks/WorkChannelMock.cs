@@ -5,6 +5,7 @@ using PizzaNetWorkClient.WCFClientInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,10 @@ namespace PizzaNetTests.Mocks
     {
         public List<OrderInfoDTO> OrdersMade { get; set; }
         public List<OrderInfoDTO> OrdersRemoved { get; set; }
+
+        public List<UserDTO> UsersUpdated { get; set; }
+
+        public List<ComplaintDTO> ComplaintsMade { get; set; }
 
         public ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req)
         {
@@ -27,6 +32,7 @@ namespace PizzaNetTests.Mocks
 
         public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             List<RecipeDTO> lr = new List<RecipeDTO>()
             {
                 new RecipeDTO()
@@ -63,46 +69,55 @@ namespace PizzaNetTests.Mocks
 
         public ListResponse<OrderDTO> GetOrders(EmptyRequest req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public ListResponse<OrderDTO> GetUndoneOrders(EmptyRequest req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public ListResponse<UserDTO> GetUsers(EmptyRequest req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
-        public SingleItemResponse<OrderDTO> SetOrderState(UpdateRequest<OrderDTO> request)
+        public SingleItemResponse<OrderDTO> SetOrderState(UpdateRequest<OrderDTO> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
-        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<List<OrderSuppliesDTO>> request)
+        public ListResponse<OrderSuppliesDTO> OrderSupplies(UpdateRequest<List<OrderSuppliesDTO>> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
-        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<List<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateIngredient(UpdateRequest<List<StockIngredientDTO>> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
-        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<List<StockIngredientDTO>> request)
+        public ListResponse<StockIngredientDTO> UpdateOrRemoveIngredient(UpdateOrRemoveRequest<List<StockIngredientDTO>> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public SingleItemResponse<UserDTO> GetUser(EmptyRequest req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             return new ListResponse<OrderDTO>(new List<OrderDTO>()
                 {
                     new OrderDTO()
@@ -111,38 +126,48 @@ namespace PizzaNetTests.Mocks
                 });
         }
 
-        public void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> request)
+        public void RemoveOrder(UpdateOrRemoveRequest<OrderDTO> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public void MakeOrder(UpdateRequest<OrderDTO> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public void InsertRecipe(UpdateRequest<RecipeDTO> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public TrioResponse<List<RecipeDTO>, List<OrderIngredientDTO>, int> UpdateOrRemoveRecipe(UpdateOrRemoveRequest<List<RecipeDTO>> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public ListResponse<UserDTO> UpdateOrRemoveUser(UpdateOrRemoveRequest<List<UserDTO>> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             throw new NotImplementedException();
         }
 
         public SingleItemResponse<UserDTO> UpdateUser(UpdateRequest<UserDTO> req)
         {
-            throw new NotImplementedException();
+            if (req.Login != "Admin" || req.Password!="123")
+                throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user or password"));
+            UsersUpdated = new List<UserDTO>();
+            UsersUpdated.Add(req.Data);
+            return new SingleItemResponse<UserDTO>(req.Data);
         }
 
         public ListResponse<OrderIngredientDTO> QueryIngredients(QueryRequest<IngredientsQuery> req)
         {
+            if (req.Query.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             var list = new List<OrderIngredientDTO>();
             foreach (var i in req.Query.IngredientIds)
                 list.Add(new OrderIngredientDTO()
@@ -155,12 +180,14 @@ namespace PizzaNetTests.Mocks
 
         public void MakeOrderFromWeb(UpdateOrRemoveRequest<List<OrderInfoDTO>> req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             OrdersMade = req.Data;
             OrdersRemoved = req.DataToRemove;
         }
 
         public ListResponse<OrderDTO> GetOrderInfo(PizzaNetCommon.Queries.OrdersQuery req)
         {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
             List<OrderDTO> list = new List<OrderDTO>();
             foreach (int i in req.Ids)
                 list.Add(new OrderDTO() { OrderID = i });
@@ -169,6 +196,20 @@ namespace PizzaNetTests.Mocks
 
         public void Dispose()
         {
+        }
+
+
+        public void CreateComplaint(UpdateRequest<ComplaintDTO> req)
+        {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
+            ComplaintsMade = new List<ComplaintDTO>();
+            ComplaintsMade.Add(req.Data);
+        }
+
+        public ListResponse<ComplaintDTO> GetComplaints(EmptyRequest req)
+        {
+            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
+            throw new NotImplementedException();
         }
     }
 }

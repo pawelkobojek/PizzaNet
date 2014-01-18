@@ -1,4 +1,5 @@
 ﻿using Moq;
+using PizzaNetCommon.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,14 @@ namespace PizzaNetTests.Mocks
         {
             m_SessionStorage = new Dictionary<string, object>();
             m_SessionStorage.Add("LoggedIn", true);
-            m_SessionStorage.Add("Email", "Admin");
-            m_SessionStorage.Add("Password", "123");
+            m_SessionStorage.Add("User", new UserDTO()
+                {
+                    Email = "Admin",
+                    Password = "123",
+                    Address = "Address",
+                    Phone = 999,
+                    Name = "AdminName"
+                });
         }
 
         public override object this[string name]
