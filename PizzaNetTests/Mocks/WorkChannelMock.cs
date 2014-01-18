@@ -111,8 +111,8 @@ namespace PizzaNetTests.Mocks
 
         public SingleItemResponse<UserDTO> GetUser(EmptyRequest req)
         {
-            if (req.Login != "Admin") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
-            throw new NotImplementedException();
+            if (req.Login != "Admin" || req.Password != "123") throw new FaultException<PizzaServiceFault>(new PizzaServiceFault("wrong user"));
+            return new SingleItemResponse<UserDTO>(new UserDTO() { Email = "Admin", Password = "123" });
         }
 
         public ListResponse<OrderDTO> GetOrdersForUser(EmptyRequest req)

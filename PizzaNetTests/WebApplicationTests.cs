@@ -3,6 +3,7 @@ using PizzaNetCommon.DTOs;
 using PizzaNetCommon.Requests;
 using PizzaNetTests.Mocks;
 using PizzaWebClient.Controllers;
+using PizzaWebClient.Models;
 using PizzaWebClient.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,11 @@ namespace PizzaNetTests
     public class WebApplicationTests
     {
         [TestMethod]
-        public void HomeControllerIndexTest()
+        public void HomeControllerIndex()
         {
             const bool ISAJAX = false;
             HomeController ctrl = new HomeController(new WorkChannelFactoryMock());
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             // Redirect when not logged in
             ctrl.Session["LoggedIn"] = false;
@@ -48,11 +49,11 @@ namespace PizzaNetTests
         }
 
         [TestMethod]
-        public void HomeControllerMyOrdersTest()
+        public void HomeControllerMyOrders()
         {
             const bool ISAJAX = false;
             HomeController ctrl = new HomeController(new WorkChannelFactoryMock());
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             // Redirect when not logged in
             ctrl.Session["LoggedIn"] = false;
@@ -77,13 +78,13 @@ namespace PizzaNetTests
         }
 
         [TestMethod]
-        public void HomeControllerGetOrderInfoTest()
+        public void HomeControllerGetOrderInfo()
         {
             const bool ISAJAX = false;
             int orderId = 1;
 
             HomeController ctrl = new HomeController(new WorkChannelFactoryMock());
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             // Redirect when not logged in
             ctrl.Session["LoggedIn"] = false;
@@ -108,7 +109,7 @@ namespace PizzaNetTests
         }
 
         [TestMethod]
-        public void HomeControllerAddToOrderTest()
+        public void HomeControllerAddToOrder()
         {
             const bool ISAJAX = true;
             OrderInfoDTO info = new OrderInfoDTO()
@@ -119,7 +120,7 @@ namespace PizzaNetTests
             };
 
             HomeController ctrl = new HomeController(new WorkChannelFactoryMock());
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             //Redirect if not logged
             ctrl.Session["LoggedIn"] = false;
@@ -146,7 +147,7 @@ namespace PizzaNetTests
         }
 
         [TestMethod]
-        public void HomeControllerMakeOrderTest()
+        public void HomeControllerMakeOrder()
         {
             const bool ISAJAX = false;
             var info = new List<OrderInfoDTO>()
@@ -161,7 +162,7 @@ namespace PizzaNetTests
 
             var factory = new WorkChannelFactoryMock();
             HomeController ctrl = new HomeController(factory);
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             //Redirect if not logged
             ctrl.Session["LoggedIn"] = false;
@@ -190,7 +191,7 @@ namespace PizzaNetTests
             const bool ISAJAX = false;
             var factory = new WorkChannelFactoryMock();
             HomeController ctrl = new HomeController(factory);
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             //Redirect if not logged
             ctrl.Session["LoggedIn"] = false;
@@ -226,7 +227,7 @@ namespace PizzaNetTests
 
             var factory = new WorkChannelFactoryMock();
             HomeController ctrl = new HomeController(factory);
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             //Redirect if not logged
             // TODO - maybe we need to remove this
@@ -261,7 +262,7 @@ namespace PizzaNetTests
 
             var factory = new WorkChannelFactoryMock();
             HomeController ctrl = new HomeController(factory);
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             //Redirect if not logged
             // TODO - maybe we need to remove this
@@ -300,7 +301,7 @@ namespace PizzaNetTests
 
             var factory = new WorkChannelFactoryMock();
             HomeController ctrl = new HomeController(factory);
-            ctrl.ControllerContext = FakeControllerSession.GetFakeControllerContext(ISAJAX);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
 
             //Redirect if not logged
             // TODO - maybe we need to remove this
@@ -324,6 +325,38 @@ namespace PizzaNetTests
             //Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.ChangePassword(info) as HttpNotFoundResult;
+            Assert.IsNotNull(res3);
+        }
+
+        [TestMethod]
+        public void AccountControllerLogin()
+        {
+            const bool ISAJAX = true;
+            var info = new LoginModel()
+            {
+                Email = "Admin",
+                Password = "123"
+            };
+            string returnUrl = "returnUrl";
+
+            var factory = new WorkChannelFactoryMock();
+            var auth = new FakeAuthenticationService();
+            var ctrl = new AccountController(factory, auth);
+            FakeControllerSession.SetFakeControllerContext(ctrl, ISAJAX);
+
+            //Pass if everything ok
+            var res2 = ctrl.Login(info, returnUrl) as RedirectToRouteResult;
+            Assert.IsNotNull(res2);
+            Assert.AreEqual(res2.RouteValues["action"], "Index");
+
+            var user = ctrl.Session["User"] as UserDTO;
+            Assert.IsNotNull(user);
+            Assert.AreEqual(user.Email, "Admin");
+            Assert.AreEqual(user.Password, "123");
+
+            //Fault when wrong user
+            info.Email = "unknown";
+            var res3 = ctrl.Login(info, returnUrl) as HttpNotFoundResult;
             Assert.IsNotNull(res3);
         }
     }

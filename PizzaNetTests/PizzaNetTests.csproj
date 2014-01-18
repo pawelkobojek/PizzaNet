@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="DbTest.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Mocks\FakeAuthenticationService.cs" />
     <Compile Include="Mocks\FakeControllerSession.cs" />
     <Compile Include="Mocks\WorkChannelFactoryMock.cs" />
     <Compile Include="Mocks\WorkChannelMock.cs" />

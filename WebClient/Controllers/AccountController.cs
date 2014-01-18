@@ -12,6 +12,7 @@ using PizzaWebClient.Filters;
 using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaWebClient.Models;
 using PizzaNetControls.WCFClientInfrastructure;
+using PizzaWebClient.Common;
 
 namespace PizzaWebClient.Controllers
 {
@@ -21,15 +22,17 @@ namespace PizzaWebClient.Controllers
     public class AccountController : Controller
     {
         IWorkChannelFactory factory = new BasicWorkChannelFactory();
+        IAuthenticationService auth = new AuthenticationService();
 
         public AccountController()
         {
 
         }
 
-        public AccountController(IWorkChannelFactory fact)
+        public AccountController(IWorkChannelFactory fact, IAuthenticationService service)
         {
             factory = fact;
+            auth = service;
         }
 
         //
@@ -54,22 +57,27 @@ namespace PizzaWebClient.Controllers
                 //  && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)
                 )
             {
-
-                using (var proxy = factory.GetWorkChannel())
+                try
                 {
-                    //TODO Try/catch (leci wyjatek jak nieprawidlowe dane)
-                    var user = proxy.GetUser(new PizzaNetCommon.Requests.EmptyRequest
+                    using (var proxy = factory.GetWorkChannel())
                     {
-                        Login = model.Email,
-                        Password = model.Password
-                    });
-                    this.Session["User"] = user.Data;
-                    //this.Session["Email"] = user.Data.Email;
-                    //this.Session["Password"] = user.Data.Password;
-                    this.Session["LoggedIn"] = true;
-                    this.ViewBag.Name = user.Data.Name;
-                    this.ViewBag.LoggedIn = true;
-                    FormsAuthentication.SetAuthCookie(user.Data.Email, false);
+                        var user = proxy.GetUser(new PizzaNetCommon.Requests.EmptyRequest
+                        {
+                            Login = model.Email,
+                            Password = model.Password
+                        });
+                        this.Session["User"] = user.Data;
+                        //this.Session["Email"] = user.Data.Email;
+                        //this.Session["Password"] = user.Data.Password;
+                        this.Session["LoggedIn"] = true;
+                        this.ViewBag.Name = user.Data.Name;
+                        this.ViewBag.LoggedIn = true;
+                        auth.SetAuthCookie(user.Data.Email, false);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return Utils.HandleFaults(e);
                 }
                 return RedirectToLocal(returnUrl);
             }
@@ -118,8 +126,8 @@ namespace PizzaWebClient.Controllers
                 // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
+                    auth.CreateUserAndAccount(model.UserName, model.Password);
+                    auth.Login(model.UserName, model.Password);
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
@@ -148,7 +156,7 @@ namespace PizzaWebClient.Controllers
                 // Use a transaction to prevent the user from deleting their last login credential
                 using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
                 {
-                    bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+                    bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(auth.GetUserId(User.Identity.Name));
                     if (hasLocalAccount || OAuthWebSecurity.GetAccountsFromUserName(User.Identity.Name).Count > 1)
                     {
                         OAuthWebSecurity.DeleteAccount(provider, providerUserId);
@@ -171,7 +179,7 @@ namespace PizzaWebClient.Controllers
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : "";
-            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(auth.GetUserId(User.Identity.Name));
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }
@@ -183,7 +191,7 @@ namespace PizzaWebClient.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Manage(LocalPasswordModel model)
         {
-            bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+            bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(auth.GetUserId(User.Identity.Name));
             ViewBag.HasLocalPassword = hasLocalAccount;
             ViewBag.ReturnUrl = Url.Action("Manage");
             if (hasLocalAccount)
@@ -194,7 +202,7 @@ namespace PizzaWebClient.Controllers
                     bool changePasswordSucceeded;
                     try
                     {
-                        changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
+                        changePasswordSucceeded = auth.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
                     }
                     catch (Exception)
                     {
@@ -225,7 +233,7 @@ namespace PizzaWebClient.Controllers
                 {
                     try
                     {
-                        WebSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
+                        auth.CreateAccount(User.Identity.Name, model.NewPassword);
                         return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
                     }
                     catch (Exception)
