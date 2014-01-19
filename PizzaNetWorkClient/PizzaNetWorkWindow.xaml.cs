@@ -38,6 +38,8 @@ namespace PizzaNetWorkClient
                 e.Cancel = true;
             else if (LastSelected == UsersTab && !usersViewModel.LostFocusAction())
                 e.Cancel = true;
+            else if (LastSelected == ComplaintsTab && !complaintsViewModel.LostFocusAction())
+                e.Cancel = true;
         }
 
         void PizzaNetWorkWindow_Closed(object sender, System.EventArgs e)
@@ -55,6 +57,8 @@ namespace PizzaNetWorkClient
                 recipiesViewModel.GotFocusAction();
             else if (LastSelected == UsersTab && usersViewModel.LostFocusAction())
                 usersViewModel.GotFocusAction();
+            else if (LastSelected == ComplaintsTab && complaintsViewModel.LostFocusAction())
+                complaintsViewModel.GotFocusAction();
         }
 
         public TabItem LastSelected { get; set; }
@@ -109,6 +113,8 @@ namespace PizzaNetWorkClient
                 SelectedTab = RecipiesTab;
             else if (UsersTab.IsSelected)
                 SelectedTab = UsersTab;
+            else if (ComplaintsTab.IsSelected)
+                SelectedTab = ComplaintsTab;
             
             if (LastSelected == OrdersTab)
             {
@@ -158,6 +164,18 @@ namespace PizzaNetWorkClient
                 IsSelectionChanging = false;
             }
 
+            if (LastSelected == ComplaintsTab)
+            {
+                IsSelectionChanging = true;
+                if (!complaintsViewModel.LostFocusAction())
+                {
+                    tabControl.SelectedIndex = 4;
+                    IsSelectionChanging = false;
+                    return;
+                }
+                IsSelectionChanging = false;
+            }
+
             if (StockTab == SelectedTab)
             {
                 IsSelectionChanging = true;
@@ -191,6 +209,15 @@ namespace PizzaNetWorkClient
                 tabControl.SelectedIndex = 3;
                 IsSelectionChanging = false;
                 usersViewModel.GotFocusAction();
+                LastSelected = UsersTab;
+            }
+
+            if (ComplaintsTab == SelectedTab)
+            {
+                IsSelectionChanging = true;
+                tabControl.SelectedIndex = 3;
+                IsSelectionChanging = false;
+                complaintsViewModel.GotFocusAction();
                 LastSelected = UsersTab;
             }
         }

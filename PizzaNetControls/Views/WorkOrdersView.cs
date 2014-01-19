@@ -55,7 +55,8 @@ namespace PizzaNetControls.Views
 
         void OrdersRefresher_DoWork(object sender, DoWorkEventArgs e)
         {
-            System.Threading.Thread.Sleep(ClientConfig.CurrentUser.RefreshRate * SECOND);
+            if (ClientConfig.CurrentUser!=null)
+                System.Threading.Thread.Sleep(ClientConfig.CurrentUser.RefreshRate * SECOND);
         }
 
         internal void ChangeOrderSelection(int index)

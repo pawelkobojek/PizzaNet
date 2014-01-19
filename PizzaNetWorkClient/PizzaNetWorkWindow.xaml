@@ -47,6 +47,9 @@
                 <TabItem Name="UsersTab" Header="Users" IsEnabled="{Binding AdminRightsLevel}">
                     <PizzaNetViewModels:UsersViewModel Name="usersViewModel" Worker="{Binding ElementName=worker}"/>
                 </TabItem>
+                <TabItem Name="ComplaintsTab" Header="Complaints">
+                    <PizzaNetViewModels:ComplaintsViewModel Name="complaintsViewModel" Worker="{Binding ElementName=worker}"/>
+                </TabItem>
             </TabControl>
         </DockPanel>
         <PizzaNetDialogs:LoginDialog Name="loginDialog" 

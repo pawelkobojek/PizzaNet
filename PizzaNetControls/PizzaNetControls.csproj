@@ -134,6 +134,9 @@
     <Compile Include="ViewModels\ClientSettingsViewModel.xaml.cs">
       <DependentUpon>ClientSettingsViewModel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ComplaintsViewModel.xaml.cs">
+      <DependentUpon>ComplaintsViewModel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\MyOrdersViewModel.xaml.cs">
       <DependentUpon>MyOrdersViewModel.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,7 @@
     <Compile Include="Views\BaseView.cs" />
     <Compile Include="Views\ClientMainView.cs" />
     <Compile Include="Views\ClientSettingsView.cs" />
+    <Compile Include="Views\ComplaintView.cs" />
     <Compile Include="Views\MyOrdersView.cs" />
     <Compile Include="Views\RecipiesView.cs" />
     <Compile Include="Views\StockView.cs" />
@@ -230,6 +234,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewModels\ClientSettingsViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModels\ComplaintsViewModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

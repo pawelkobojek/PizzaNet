@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="PizzaNetControls.ViewModels.ComplaintsViewModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <Grid>
+        <ListView x:Name="listUsers" ItemsSource="{Binding ComplaintView.ComplaintCollection}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding ComplaintID}" />
+                    <GridViewColumn Header="Body" DisplayMemberBinding="{Binding Body}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>
