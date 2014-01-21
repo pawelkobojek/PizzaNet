@@ -20,5 +20,7 @@ namespace PizzaWebClient.Common
         int GetUserId(string userName);
         
         bool ChangePassword(string userName, string currentPassword, string newPassword);
+
+        void Logout();
     }
 }

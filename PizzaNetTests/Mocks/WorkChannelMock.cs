@@ -20,6 +20,8 @@ namespace PizzaNetTests.Mocks
 
         public List<ComplaintDTO> ComplaintsMade { get; set; }
 
+        public List<UserDTO> UsersRegistered { get; set; }
+
         public ListResponse<StockIngredientDTO> GetIngredients(EmptyRequest req)
         {
             throw new NotImplementedException();
@@ -27,7 +29,9 @@ namespace PizzaNetTests.Mocks
 
         public SingleItemResponse<UserDTO> RegisterUser(UpdateRequest<UserDTO> req)
         {
-            throw new NotImplementedException();
+            UsersRegistered = new List<UserDTO>();
+            UsersRegistered.Add(req.Data);
+            return new SingleItemResponse<UserDTO>(req.Data);
         }
 
         public TrioResponse<List<RecipeDTO>, List<SizeDTO>, List<OrderIngredientDTO>> GetRecipeTabData(EmptyRequest req)

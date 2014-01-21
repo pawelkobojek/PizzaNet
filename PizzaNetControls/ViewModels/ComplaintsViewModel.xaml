@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1000">
     <Grid>
-        <ListView x:Name="listUsers" ItemsSource="{Binding ComplaintView.ComplaintCollection}">
+        <ListView x:Name="listComplaints" ItemsSource="{Binding ComplaintView.ComplaintsCollection}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding ComplaintID}" />

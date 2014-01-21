@@ -13,6 +13,7 @@ using PizzaNetWorkClient.WCFClientInfrastructure;
 using PizzaWebClient.Models;
 using PizzaNetControls.WCFClientInfrastructure;
 using PizzaWebClient.Common;
+using PizzaWebClient.Models.ViewModels;
 
 namespace PizzaWebClient.Controllers
 {
@@ -94,12 +95,14 @@ namespace PizzaWebClient.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            //WebSecurity.Logout();
+            auth.Logout();
             this.Session["User"] = null;
             this.Session["LoggedIn"] = false;
             this.Session.Clear();
             //this.Session["Email"] = null;
             //this.Session["Password"] = null;
+
+            //auth.SetAuthCookie("-1", false);
 
             return RedirectToAction("Index", "Home");
         }
@@ -119,20 +122,32 @@ namespace PizzaWebClient.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterModel model)
+        public ActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 // Attempt to register the user
                 try
                 {
-                    auth.CreateUserAndAccount(model.UserName, model.Password);
+                    using (var proxy = factory.GetWorkChannel())
+                    {
+                        var result = proxy.RegisterUser(new PizzaNetCommon.Requests.UpdateRequest<PizzaNetCommon.DTOs.UserDTO>
+                        {
+                            Data = new PizzaNetCommon.DTOs.UserDTO
+                            {
+                                Address = model.Address,
+                                Email = model.UserName,
+                                Password = model.Password
+                            }
+                        });
+                    }
+                    //auth.CreateUserAndAccount(model.UserName, model.Password);
                     auth.Login(model.UserName, model.Password);
                     return RedirectToAction("Index", "Home");
                 }
-                catch (MembershipCreateUserException e)
+                catch (Exception e)
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
+                    ModelState.AddModelError("", e);
                 }
             }
 

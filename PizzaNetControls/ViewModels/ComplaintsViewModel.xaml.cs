@@ -26,14 +26,14 @@ namespace PizzaNetControls.ViewModels
         #region view model init and so on
         public ComplaintsViewModel()
         {
-            this.DataContext = this;
             InitializeComponent();
-            this.Loaded += UsersViewModel_Loaded;
+            this.Loaded += ComplaintsViewModel_Loaded;
+            this.DataContext = this;
         }
 
         bool initialized = false;
 
-        void UsersViewModel_Loaded(object sender, RoutedEventArgs e)
+        void ComplaintsViewModel_Loaded(object sender, RoutedEventArgs e)
         {
             if (!initialized)
             {
@@ -46,7 +46,7 @@ namespace PizzaNetControls.ViewModels
         public ComplaintView ComplaintView
         {
             get { return _vo; }
-            set { _vo = value; NotifyPropertyChanged("UsersView"); }
+            set { _vo = value; NotifyPropertyChanged("ComplaintView"); }
         }
 
         public IWorker Worker

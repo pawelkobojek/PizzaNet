@@ -236,7 +236,7 @@ namespace PizzaNetTests
             Assert.IsNotNull(res1);
             Assert.AreEqual(res1.RouteValues["action"], "Login");
             Assert.AreEqual(res1.RouteValues["controller"], "Account");
-            
+
             //Pass if everything ok
             ctrl.Session["LoggedIn"] = true;
             var res2 = ctrl.EditProfile(info) as RedirectToRouteResult;
@@ -271,7 +271,7 @@ namespace PizzaNetTests
             Assert.IsNotNull(res1);
             Assert.AreEqual(res1.RouteValues["action"], "Login");
             Assert.AreEqual(res1.RouteValues["controller"], "Account");
-            
+
             //Pass if everything ok
             ctrl.Session["LoggedIn"] = true;
             var res2 = ctrl.CreateComplaint(body) as RedirectToRouteResult;
@@ -310,7 +310,7 @@ namespace PizzaNetTests
             Assert.IsNotNull(res1);
             Assert.AreEqual(res1.RouteValues["action"], "Login");
             Assert.AreEqual(res1.RouteValues["controller"], "Account");
-            
+
             //Pass if everything ok
             ctrl.Session["LoggedIn"] = true;
             var res2 = ctrl.ChangePassword(info) as RedirectToRouteResult;
@@ -379,11 +379,12 @@ namespace PizzaNetTests
         public void AccountControllerRegister()
         {
             const bool ISAJAX = true;
-            var info = new RegisterModel()
+            var info = new RegisterViewModel()
             {
                 UserName = "Admin",
                 Password = "123",
-                ConfirmPassword = "123"
+                ConfirmPassword = "123",
+                Address = "asd"
             };
 
             var factory = new WorkChannelFactoryMock();
@@ -394,8 +395,8 @@ namespace PizzaNetTests
             var res2 = ctrl.Register(info) as RedirectToRouteResult;
             Assert.IsNotNull(res2);
             Assert.AreEqual(res2.RouteValues["action"], "Index");
-            Assert.AreEqual(auth.AccountsCreated.Count, 1);
-            Assert.AreEqual(auth.AccountsCreated[0].Email, "Admin");
+            Assert.AreEqual(factory.LastWorkChannel.UsersRegistered.Count, 1);
+            Assert.AreEqual(factory.LastWorkChannel.UsersRegistered[0].Email, "Admin");
         }
     }
 }

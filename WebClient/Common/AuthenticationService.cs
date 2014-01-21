@@ -28,7 +28,7 @@ namespace PizzaWebClient.Common
         {
             return WebSecurity.GetUserId(userName);
         }
-        
+
         public bool ChangePassword(string userName, string currentPassword, string newPassword)
         {
             return WebSecurity.ChangePassword(userName, currentPassword, newPassword);
@@ -37,6 +37,12 @@ namespace PizzaWebClient.Common
         public string CreateAccount(string userName, string password)
         {
             return WebSecurity.CreateAccount(userName, password);
+        }
+
+
+        public void Logout()
+        {
+            WebSecurity.Logout();
         }
     }
 }

@@ -47,5 +47,11 @@ namespace PizzaNetTests.Mocks
         {
             throw new NotImplementedException();
         }
+
+
+        public void Logout()
+        {
+
+        }
     }
 }

@@ -150,6 +150,8 @@ namespace PizzaWebClient.Controllers
         [HttpPost]
         public ActionResult EditProfile(UserViewModel user)
         {
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
             try
             {
                 using (var proxy = factory.GetWorkChannel())
@@ -300,6 +302,8 @@ namespace PizzaWebClient.Controllers
         [HttpPost]
         public ActionResult CreateComplaint(string body)
         {
+            if (!((bool?)this.Session["LoggedIn"] ?? false))
+                return RedirectToAction("Login", "Account");
             try
             {
                 using (var proxy = factory.GetWorkChannel())
@@ -351,6 +355,8 @@ namespace PizzaWebClient.Controllers
         {
             try
             {
+                if (!((bool?)this.Session["LoggedIn"] ?? false))
+                    return RedirectToAction("Login", "Account");
                 using (var proxy = factory.GetWorkChannel())
                 {
                     UserDTO user = ((UserDTO)this.Session["User"]);

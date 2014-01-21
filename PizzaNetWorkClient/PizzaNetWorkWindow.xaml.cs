@@ -69,7 +69,7 @@ namespace PizzaNetWorkClient
             {
                 if (ClientConfig.CurrentUser == null)
                     return false;
-                else return ClientConfig.CurrentUser.Rights==3;
+                else return ClientConfig.CurrentUser.Rights == 3;
             }
         }
 
@@ -104,7 +104,7 @@ namespace PizzaNetWorkClient
                 return;
             }
 
-            TabItem SelectedTab=null;
+            TabItem SelectedTab = null;
             if (OrdersTab.IsSelected)
                 SelectedTab = OrdersTab;
             else if (StockTab.IsSelected)
@@ -115,7 +115,7 @@ namespace PizzaNetWorkClient
                 SelectedTab = UsersTab;
             else if (ComplaintsTab.IsSelected)
                 SelectedTab = ComplaintsTab;
-            
+
             if (LastSelected == OrdersTab)
             {
                 IsSelectionChanging = true;
@@ -215,10 +215,10 @@ namespace PizzaNetWorkClient
             if (ComplaintsTab == SelectedTab)
             {
                 IsSelectionChanging = true;
-                tabControl.SelectedIndex = 3;
+                tabControl.SelectedIndex = 4;
                 IsSelectionChanging = false;
                 complaintsViewModel.GotFocusAction();
-                LastSelected = UsersTab;
+                LastSelected = ComplaintsTab;
             }
         }
 
