@@ -44,8 +44,9 @@ namespace PizzaNetTests
 
             // Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.Index() as HttpNotFoundResult;
+            var res3 = ctrl.Index() as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user");
         }
 
         [TestMethod]
@@ -73,8 +74,9 @@ namespace PizzaNetTests
 
             // Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.MyOrders() as HttpNotFoundResult;
+            var res3 = ctrl.MyOrders() as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user");
         }
 
         [TestMethod]
@@ -104,8 +106,9 @@ namespace PizzaNetTests
 
             // Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.GetOrderInfo(orderId) as HttpNotFoundResult;
+            var res3 = ctrl.GetOrderInfo(orderId) as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user");
         }
 
         [TestMethod]
@@ -142,8 +145,9 @@ namespace PizzaNetTests
 
             //Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.AddToOrder(info) as HttpNotFoundResult;
+            var res3 = ctrl.AddToOrder(info) as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user");
         }
 
         [TestMethod]
@@ -181,8 +185,9 @@ namespace PizzaNetTests
 
             //Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.MakeOrder(info) as HttpNotFoundResult;
+            var res3 = ctrl.MakeOrder(info) as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user");
         }
 
         [TestMethod]
@@ -250,8 +255,9 @@ namespace PizzaNetTests
 
             //Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.EditProfile(info) as HttpNotFoundResult;
+            var res3 = ctrl.EditProfile(info) as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user or password");
         }
 
         [TestMethod]
@@ -284,8 +290,9 @@ namespace PizzaNetTests
 
             //Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.CreateComplaint(body) as HttpNotFoundResult;
+            var res3 = ctrl.CreateComplaint(body) as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user");
         }
 
         [TestMethod]
@@ -324,8 +331,9 @@ namespace PizzaNetTests
 
             //Fault when wrong user
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
-            var res3 = ctrl.ChangePassword(info) as HttpNotFoundResult;
+            var res3 = ctrl.ChangePassword(info) as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user or password");
         }
 
         [TestMethod]
@@ -356,8 +364,9 @@ namespace PizzaNetTests
 
             //Fault when wrong user
             info.Email = "unknown";
-            var res3 = ctrl.Login(info, returnUrl) as HttpNotFoundResult;
+            var res3 = ctrl.Login(info, returnUrl) as ViewResult;
             Assert.IsNotNull(res3);
+            Assert.AreEqual(res3.ViewName, "wrong user");
         }
 
         [TestMethod]
