@@ -46,7 +46,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.Index() as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user");
+            Assert.AreEqual(res3.Model, "wrong user");
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.MyOrders() as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user");
+            Assert.AreEqual(res3.Model, "wrong user");
         }
 
         [TestMethod]
@@ -108,7 +108,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.GetOrderInfo(orderId) as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user");
+            Assert.AreEqual(res3.Model, "wrong user");
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.AddToOrder(info) as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user");
+            Assert.AreEqual(res3.Model, "wrong user");
         }
 
         [TestMethod]
@@ -187,7 +187,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.MakeOrder(info) as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user");
+            Assert.AreEqual(res3.Model, "wrong user");
         }
 
         [TestMethod]
@@ -257,7 +257,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.EditProfile(info) as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user or password");
+            Assert.AreEqual(res3.Model, "wrong user or password");
         }
 
         [TestMethod]
@@ -292,7 +292,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.CreateComplaint(body) as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user");
+            Assert.AreEqual(res3.Model, "wrong user");
         }
 
         [TestMethod]
@@ -333,7 +333,7 @@ namespace PizzaNetTests
             ((UserDTO)ctrl.Session["User"]).Email = "Unknown";
             var res3 = ctrl.ChangePassword(info) as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user or password");
+            Assert.AreEqual(res3.Model, "wrong user or password");
         }
 
         [TestMethod]
@@ -366,7 +366,7 @@ namespace PizzaNetTests
             info.Email = "unknown";
             var res3 = ctrl.Login(info, returnUrl) as ViewResult;
             Assert.IsNotNull(res3);
-            Assert.AreEqual(res3.ViewName, "wrong user");
+            Assert.AreEqual(res3.Model, "wrong user");
         }
 
         [TestMethod]

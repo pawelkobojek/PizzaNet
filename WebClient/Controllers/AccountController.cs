@@ -14,6 +14,9 @@ using PizzaWebClient.Models;
 using PizzaNetControls.WCFClientInfrastructure;
 using PizzaWebClient.Common;
 using PizzaWebClient.Models.ViewModels;
+using System.ServiceModel;
+using PizzaNetCommon.Requests;
+using PizzaNetControls.Common;
 
 namespace PizzaWebClient.Controllers
 {
@@ -46,6 +49,19 @@ namespace PizzaWebClient.Controllers
             return View();
         }
 
+        private ActionResult HandleFaults(Exception exc)
+        {
+
+            if (exc is FaultException<PizzaServiceFault>)
+                //    return new ViewResult() { ViewName = (exc as FaultException<PizzaServiceFault>).Detail.Reason };
+                return View("Error", null, (exc as FaultException<PizzaServiceFault>).Detail.Reason);
+            else if (exc is PizzaNetException)
+                return View("Error", null, (exc as PizzaNetException).Message);
+            else if (exc is System.TimeoutException)
+                return View("Error", null, PizzaNetControls.Common.Utils.Messages.TIMED_OUT);
+            else
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError);
+        }
         //
         // POST: /Account/Login
 
@@ -78,7 +94,7 @@ namespace PizzaWebClient.Controllers
                 }
                 catch (Exception e)
                 {
-                    return Utils.HandleFaults(e);
+                    return HandleFaults(e);
                 }
                 return RedirectToLocal(returnUrl);
             }

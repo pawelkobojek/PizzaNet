@@ -14,6 +14,7 @@ using PizzaWebClient.Models;
 using PizzaWebClient.Models.ViewModels;
 using System.ServiceModel;
 using PizzaWebClient.Common;
+using PizzaNetControls.Common;
 
 namespace PizzaWebClient.Controllers
 {
@@ -29,6 +30,20 @@ namespace PizzaWebClient.Controllers
         public HomeController(IWorkChannelFactory fact)
         {
             factory = fact;
+        }
+
+        private ActionResult HandleFaults(Exception exc)
+        {
+
+            if (exc is FaultException<PizzaServiceFault>)
+                //    return new ViewResult() { ViewName = (exc as FaultException<PizzaServiceFault>).Detail.Reason };
+                return View("Error", null, (exc as FaultException<PizzaServiceFault>).Detail.Reason);
+            else if (exc is PizzaNetException)
+                return View("Error", null, (exc as PizzaNetException).Message);
+            else if (exc is System.TimeoutException)
+                return View("Error", null, PizzaNetControls.Common.Utils.Messages.TIMED_OUT);
+            else
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError);
         }
 
         public ActionResult Index()
@@ -59,7 +74,7 @@ namespace PizzaWebClient.Controllers
                     }
                     catch (Exception e)
                     {
-                        return Utils.HandleFaults(e);
+                        return HandleFaults(e);
                     }
 
                     return View(data);
@@ -101,7 +116,7 @@ namespace PizzaWebClient.Controllers
             }
             catch (Exception e)
             {
-                return Utils.HandleFaults(e);
+                return HandleFaults(e);
             }
             return View(orders);
         }
@@ -127,7 +142,7 @@ namespace PizzaWebClient.Controllers
             }
             catch (Exception e)
             {
-                return Utils.HandleFaults(e);
+                return HandleFaults(e);
             }
         }
 
@@ -180,7 +195,7 @@ namespace PizzaWebClient.Controllers
             }
             catch (Exception e)
             {
-                return Utils.HandleFaults(e);
+                return HandleFaults(e);
             }
         }
 
@@ -232,7 +247,7 @@ namespace PizzaWebClient.Controllers
                 }
                 catch (Exception e)
                 {
-                    return Utils.HandleFaults(e);
+                    return HandleFaults(e);
                 }
             }
             return View();
@@ -281,7 +296,7 @@ namespace PizzaWebClient.Controllers
             }
             catch (Exception e)
             {
-                return Utils.HandleFaults(e);
+                return HandleFaults(e);
             }
 
             return View();
@@ -319,7 +334,7 @@ namespace PizzaWebClient.Controllers
             }
             catch (Exception e)
             {
-                return Utils.HandleFaults(e);
+                return HandleFaults(e);
             }
         }
 
@@ -381,7 +396,7 @@ namespace PizzaWebClient.Controllers
             }
             catch (Exception e)
             {
-                return Utils.HandleFaults(e);
+                return HandleFaults(e);
             }
 
             return RedirectToAction("Index");
